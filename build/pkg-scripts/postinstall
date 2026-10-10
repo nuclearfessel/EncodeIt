@@ -1,5 +1,6 @@
 #!/bin/bash
-# macOS PKG — detect AE / Resolve / Premiere, create folders only for installed apps.
+# macOS PKG — detect AE / Resolve / Premiere by install location on disk
+# (Applications folders). Apps do not need to be running.
 
 set -euo pipefail
 

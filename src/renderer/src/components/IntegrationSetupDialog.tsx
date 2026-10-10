@@ -11,7 +11,7 @@ interface Props {
 /**
  * First-launch Standard / Custom picker when the installer could not ask
  * (macOS DMG, portable builds). Mirrors the Windows NSIS page.
- * Only detected host apps can be selected; Standard = all detected.
+ * Standard = detected apps only. Custom = any combination the user ticks.
  */
 export function IntegrationSetupDialog({ open, presence, onComplete }: Props) {
   const detected = presence ?? { afterEffects: false, resolve: false, premiere: false }
@@ -46,12 +46,7 @@ export function IntegrationSetupDialog({ open, presence, onComplete }: Props) {
             resolve: detected.resolve,
             premiere: detected.premiere
           }
-        : {
-            mode: 'custom',
-            afterEffects: afterEffects && detected.afterEffects,
-            resolve: resolve && detected.resolve,
-            premiere: premiere && detected.premiere
-          }
+        : { mode: 'custom', afterEffects, resolve, premiere }
     try {
       const saved = await window.encodeThis.completeIntegrationSetup(options)
       onComplete(saved)
@@ -62,9 +57,9 @@ export function IntegrationSetupDialog({ open, presence, onComplete }: Props) {
     }
   }
 
-  function label(name: string, installed: boolean): string {
-    return installed ? name : `${name} (not installed)`
-  }
+  const aeChecked = mode === 'standard' ? detected.afterEffects : afterEffects
+  const resolveChecked = mode === 'standard' ? detected.resolve : resolve
+  const premiereChecked = mode === 'standard' ? detected.premiere : premiere
 
   return (
     <div className="prefs-backdrop" role="presentation">
@@ -80,15 +75,21 @@ export function IntegrationSetupDialog({ open, presence, onComplete }: Props) {
         </header>
         <div className="prefs-body integration-setup-body">
           <p className="prefs-help">
-            Encode This only sets up watch folders for apps found on this Mac or PC. Standard
-            installs every detected host app; Custom lets you choose among them.
+            Standard sets up apps found on this computer. Custom lets you choose After Effects,
+            DaVinci Resolve, and/or Premiere Pro yourself.
           </p>
-          {!anyDetected ? (
-            <p className="prefs-muted">
-              No After Effects, DaVinci Resolve, or Premiere Pro install was detected. You can
-              continue and add watch folders later in Preferences.
-            </p>
-          ) : null}
+          <p className="prefs-muted">
+            Detected:{' '}
+            {anyDetected
+              ? [
+                  detected.afterEffects ? 'After Effects' : null,
+                  detected.resolve ? 'Resolve' : null,
+                  detected.premiere ? 'Premiere' : null
+                ]
+                  .filter(Boolean)
+                  .join(' · ')
+              : 'none'}
+          </p>
           <label className="prefs-check">
             <input
               type="radio"
@@ -104,37 +105,39 @@ export function IntegrationSetupDialog({ open, presence, onComplete }: Props) {
               name="integration-mode"
               checked={mode === 'custom'}
               onChange={() => setMode('custom')}
-              disabled={!anyDetected}
             />
-            Custom — choose among detected apps
+            Custom — choose applications
           </label>
           <div className={`integration-setup-custom ${mode === 'custom' ? '' : 'disabled'}`}>
             <label className="prefs-check">
               <input
                 type="checkbox"
-                checked={mode === 'standard' ? detected.afterEffects : afterEffects}
-                disabled={mode !== 'custom' || !detected.afterEffects}
+                checked={aeChecked}
+                disabled={mode !== 'custom'}
                 onChange={(e) => setAfterEffects(e.target.checked)}
               />
-              {label('After Effects', detected.afterEffects)}
+              After Effects
+              {detected.afterEffects ? '' : ' (not detected)'}
             </label>
             <label className="prefs-check">
               <input
                 type="checkbox"
-                checked={mode === 'standard' ? detected.resolve : resolve}
-                disabled={mode !== 'custom' || !detected.resolve}
+                checked={resolveChecked}
+                disabled={mode !== 'custom'}
                 onChange={(e) => setResolve(e.target.checked)}
               />
-              {label('DaVinci Resolve', detected.resolve)}
+              DaVinci Resolve
+              {detected.resolve ? '' : ' (not detected)'}
             </label>
             <label className="prefs-check">
               <input
                 type="checkbox"
-                checked={mode === 'standard' ? detected.premiere : premiere}
-                disabled={mode !== 'custom' || !detected.premiere}
+                checked={premiereChecked}
+                disabled={mode !== 'custom'}
                 onChange={(e) => setPremiere(e.target.checked)}
               />
-              {label('Premiere Pro', detected.premiere)}
+              Premiere Pro
+              {detected.premiere ? '' : ' (not detected)'}
             </label>
           </div>
           {error ? <div className="prefs-error">{error}</div> : null}

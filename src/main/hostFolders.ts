@@ -151,13 +151,16 @@ export function watchFolderSeedsForFlags(
 }
 
 /**
- * Resolve Standard/Custom choices, then drop apps that are not installed.
- * Standard = every *detected* host app; missing apps get no folders/watches.
+ * Resolve Standard/Custom choices into folder flags.
+ * Standard = every *detected* host app.
+ * Custom = honor user checks as-is (create folders even if the app isn't installed yet).
  */
 export function flagsFromInstallOptions(
   options: InstallOptions = DEFAULT_INSTALL_OPTIONS,
   presence: HostAppPresence = detectHostApps()
 ): HostFolderFlags {
-  const requested = resolvedInstallFlags(normalizeInstallOptions(options))
+  const normalized = normalizeInstallOptions(options)
+  const requested = resolvedInstallFlags(normalized)
+  if (normalized.mode === 'custom') return requested
   return filterFlagsByPresence(requested, presence)
 }

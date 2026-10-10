@@ -1,6 +1,6 @@
 /**
- * Detect After Effects / DaVinci Resolve / Premiere on the local machine.
- * Used by first-launch setup; installers duplicate the same path checks.
+ * Host NLE presence — based on whether the app is **installed on disk**,
+ * not whether it is currently running.
  */
 
 export interface HostAppPresence {
