@@ -60,6 +60,7 @@
         ]
       }
     ],
+    "publish": null,
     "mac": {
       "category": "public.app-category.video",
       "target": [
@@ -74,7 +75,8 @@
     "nsis": {
       "include": "build/installer.nsh",
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true
+      "allowToChangeInstallationDirectory": true,
+      "differentialPackage": false
     },
     "win": {
       "target": [
