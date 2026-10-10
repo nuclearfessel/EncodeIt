@@ -15,7 +15,8 @@ const DEFAULTS: AppSettings = {
   hardwareAcceleration: 'auto',
   intakeEnabled: true,
   intakePort: 47821,
-  watchFolders: []
+  watchFolders: [],
+  hostFoldersSeeded: false
 }
 
 function normalizeWatchFolders(value: unknown): WatchFolderSettings[] {
@@ -79,7 +80,8 @@ export async function loadSettings(): Promise<AppSettings> {
     ffprobe = (await whichBinary('ffprobe')) || bundled?.ffprobe || ffprobe
   }
   const outputDirectory =
-    stored.outputDirectory || path.join(app.getPath('videos'), 'Encode This')
+    stored.outputDirectory ||
+    path.join(app.getPath('videos'), 'Encode This', 'Output')
 
   const settings: AppSettings = {
     ...DEFAULTS,
@@ -113,7 +115,8 @@ export function normalizeAppSettings(input: AppSettings): AppSettings {
     hardwareAcceleration: normalizeHardware(input.hardwareAcceleration),
     intakeEnabled: Boolean(input.intakeEnabled),
     intakePort: Math.max(1024, Math.min(65535, Number(input.intakePort) || 47821)),
-    watchFolders: normalizeWatchFolders(input.watchFolders)
+    watchFolders: normalizeWatchFolders(input.watchFolders),
+    hostFoldersSeeded: Boolean(input.hostFoldersSeeded)
   }
 }
 

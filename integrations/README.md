@@ -2,9 +2,31 @@
 
 ## Recommended: watch folders (Windows & macOS)
 
-Point After Effects / Premiere / Resolve at a shared folder. Encode This watches it and queues new media automatically.
+### Installer choices
 
-**Edit → Preferences → Integrations → Watch folders**
+The installer (and first-launch setup) **detects** After Effects, DaVinci Resolve, and Premiere Pro on the machine. Apps that are not installed are skipped — no folders, watches, or extensions for them.
+
+| Mode | Behavior |
+| --- | --- |
+| **Standard** | Set up every **detected** host app |
+| **Custom** | Choose among **detected** apps only |
+
+- **Windows NSIS:** detects apps, then asks Standard vs Custom.
+- **macOS PKG:** Standard for detected apps only.
+- **macOS DMG / portable:** same Standard vs Custom dialog on first launch (with detection).
+
+### Folder layout
+
+| Role | Windows | macOS |
+| --- | --- | --- |
+| After Effects | `%USERPROFILE%\Videos\Encode This\from-ae` | `~/Movies/Encode This/from-ae` |
+| DaVinci Resolve | `...\from-resolve` | `~/Movies/Encode This/from-resolve` |
+| Premiere Pro | `...\from-premiere` | `~/Movies/Encode This/from-premiere` |
+| Encode output | `...\Output` | `~/Movies/Encode This/Output` |
+
+Point AE / Resolve / Premiere at the matching folder — no scripts required.
+
+**Edit → Preferences → Integrations** shows the live paths and lets you add more watches.
 
 See:
 

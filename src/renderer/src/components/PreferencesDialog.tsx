@@ -28,7 +28,8 @@ function settingsDraft(settings: SettingsView): AppSettings {
     hardwareAcceleration: settings.hardwareAcceleration,
     intakeEnabled: settings.intakeEnabled,
     intakePort: settings.intakePort,
-    watchFolders: settings.watchFolders ?? []
+    watchFolders: settings.watchFolders ?? [],
+    hostFoldersSeeded: Boolean(settings.hostFoldersSeeded)
   }
 }
 
@@ -326,11 +327,34 @@ export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
               <div className="prefs-section">
                 <h3>Watch folders (AE / Resolve)</h3>
                 <p className="prefs-help">
-                  Point After Effects or Resolve at a folder Encode This watches — no host scripts
-                  needed. Works the same on Windows and macOS. New media that lands here is queued
-                  with the chosen preset and encoding starts automatically. Files already in the
-                  folder when you add or enable a watch are ignored.
+                  Install / first launch creates shared folders under your Videos (Windows) or Movies
+                  (macOS) library. Point After Effects or Resolve at those folders — no host scripts
+                  needed. New media is queued with the chosen preset; files already present when a
+                  watch is added or enabled are ignored.
                 </p>
+                {settings.hostFolders ? (
+                  <div className="prefs-host-folders">
+                    <p className="prefs-muted">Install layout:</p>
+                    <ul className="prefs-host-folder-list">
+                      <li>
+                        <strong>After Effects</strong>
+                        <code>{settings.hostFolders.fromAe}</code>
+                      </li>
+                      <li>
+                        <strong>DaVinci Resolve</strong>
+                        <code>{settings.hostFolders.fromResolve}</code>
+                      </li>
+                      <li>
+                        <strong>Premiere Pro</strong>
+                        <code>{settings.hostFolders.fromPremiere}</code>
+                      </li>
+                      <li>
+                        <strong>Encode output</strong>
+                        <code>{settings.hostFolders.output}</code>
+                      </li>
+                    </ul>
+                  </div>
+                ) : null}
                 <label className="prefs-field">
                   <span>Preset for new watches</span>
                   <select

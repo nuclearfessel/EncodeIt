@@ -1,6 +1,6 @@
 {
   "name": "encode-this",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Open-source batch media encoder — Adobe Media Encoder / Shutter Encoder style",
   "main": "./out/main/index.js",
   "author": "nuclearfessel",
@@ -15,6 +15,8 @@
     "postinstall": "node scripts/download-ffmpeg.mjs",
     "pack": "npm run download-ffmpeg && npm run build && electron-builder --dir",
     "dist": "npm run download-ffmpeg && npm run build && electron-builder",
+    "dist:win": "npm run download-ffmpeg && npm run build && electron-builder --win",
+    "dist:mac": "npm run download-ffmpeg && npm run build && electron-builder --mac",
     "catalog:stats": "tsx scripts/catalog-stats.ts",
     "package:cep": "node scripts/package-ae-cep.mjs"
   },
@@ -62,8 +64,17 @@
       "category": "public.app-category.video",
       "target": [
         "dmg",
-        "zip"
+        "zip",
+        "pkg"
       ]
+    },
+    "pkg": {
+      "scripts": "build/pkg-scripts"
+    },
+    "nsis": {
+      "include": "build/installer.nsh",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
     },
     "win": {
       "target": [

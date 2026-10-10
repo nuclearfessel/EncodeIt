@@ -40,7 +40,7 @@ Exact bit-for-bit clones of proprietary encoders/certified wrappers (full Dolby 
 
 | Integration | Location | Mechanism |
 | --- | --- | --- |
-| **Watch folders** (primary) | Preferences → Integrations | AE / Resolve / any app renders into a watched folder (Windows & macOS) |
+| **Watch folders** (primary) | Preferences → Integrations | Detects AE / Resolve / Premiere; Standard sets up only installed apps; Custom picks among them |
 | Local intake API | Preferences → Integrations (`127.0.0.1:47821`) | Optional `POST /queue/add`, `GET /presets`, inbox |
 | After Effects | [`integrations/after-effects`](integrations/after-effects) | Watch folder; optional ExtendScript / CEP |
 | Premiere Pro | [`integrations/premiere`](integrations/premiere) | Watch folder or ExtendScript |

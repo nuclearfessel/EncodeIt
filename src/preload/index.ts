@@ -6,6 +6,7 @@ import type {
   WorkspaceState
 } from '../shared/workspaceLayout'
 import type { HardwareCapabilities } from '../shared/hardware'
+import type { InstallOptions } from '../shared/installOptions'
 import type {
   AppSettings,
   AudioSettings,
@@ -28,6 +29,8 @@ const api = {
     address: string | null
     inboxDir: string
   }> => ipcRenderer.invoke('intake:status'),
+  completeIntegrationSetup: (options: InstallOptions): Promise<SettingsView> =>
+    ipcRenderer.invoke('integrations:completeSetup', options),
   listMediaDirectory: (
     dirPath?: string
   ): Promise<{

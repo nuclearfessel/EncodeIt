@@ -1,0 +1,75 @@
+#!/bin/bash
+# macOS PKG — detect AE / Resolve / Premiere, create folders only for installed apps.
+
+set -euo pipefail
+
+VIDEOS="${HOME}/Movies"
+ROOT="${VIDEOS}/Encode This"
+SUPPORT="${HOME}/Library/Application Support/Encode This"
+APPS="/Applications"
+USER_APPS="${HOME}/Applications"
+
+mkdir -p "${ROOT}/Output" "${SUPPORT}"
+
+has_ae=false
+has_resolve=false
+has_premiere=false
+
+shopt -s nullglob
+for app in "${APPS}/Adobe After Effects"*.app "${USER_APPS}/Adobe After Effects"*.app; do
+  [[ -d "${app}" ]] && has_ae=true
+done
+for app in "${APPS}/Adobe Premiere Pro"*.app "${USER_APPS}/Adobe Premiere Pro"*.app; do
+  [[ -d "${app}" ]] && has_premiere=true
+done
+for app in \
+  "${APPS}/DaVinci Resolve.app" \
+  "${APPS}/DaVinci Resolve Studio.app" \
+  "${USER_APPS}/DaVinci Resolve.app" \
+  "${USER_APPS}/DaVinci Resolve Studio.app"
+do
+  [[ -d "${app}" ]] && has_resolve=true
+done
+shopt -u nullglob
+
+write_hint() {
+  local dir="$1"
+  local text="$2"
+  local file="${dir}/README.txt"
+  if [[ ! -f "${file}" ]]; then
+    printf '%s\n' "${text}" > "${file}"
+  fi
+}
+
+write_hint "${ROOT}/Output" "Default encode output for watched host folders."
+
+ae_json=false
+resolve_json=false
+premiere_json=false
+
+if [[ "${has_ae}" == true ]]; then
+  mkdir -p "${ROOT}/from-ae"
+  write_hint "${ROOT}/from-ae" "Render After Effects Output Module files into this folder. Encode This watches it automatically."
+  ae_json=true
+fi
+if [[ "${has_resolve}" == true ]]; then
+  mkdir -p "${ROOT}/from-resolve"
+  write_hint "${ROOT}/from-resolve" "Set DaVinci Resolve Deliver destination to this folder. Encode This watches it automatically."
+  resolve_json=true
+fi
+if [[ "${has_premiere}" == true ]]; then
+  mkdir -p "${ROOT}/from-premiere"
+  write_hint "${ROOT}/from-premiere" "Export from Premiere Pro into this folder. Encode This watches it automatically."
+  premiere_json=true
+fi
+
+cat > "${SUPPORT}/install-options.json" <<EOF
+{
+  "mode": "standard",
+  "afterEffects": ${ae_json},
+  "resolve": ${resolve_json},
+  "premiere": ${premiere_json}
+}
+EOF
+
+exit 0

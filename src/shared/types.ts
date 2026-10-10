@@ -173,12 +173,36 @@ export interface AppSettings {
   intakePort: number
   /** Hotfolders for AE / Resolve / any render destination (Win + macOS). */
   watchFolders: WatchFolderSettings[]
+  /**
+   * True after install/first-launch seeded default from-ae / from-resolve / from-premiere watches.
+   * Prevents re-adding watches if the user removes them.
+   */
+  hostFoldersSeeded: boolean
 }
 
 /** Extra fields returned by settings:get for the UI (not persisted). */
 export type SettingsView = AppSettings & {
   ffmpegSource?: 'bundled' | 'system' | 'custom'
   ffmpegBundled?: boolean
+  /** Canonical install folders (Videos/Movies/Encode This/…). */
+  hostFolders?: {
+    root: string
+    fromAe: string
+    fromResolve: string
+    fromPremiere: string
+    output: string
+  }
+  /**
+   * True when first launch needs Standard/Custom integration choices
+   * (no installer options file — typical for macOS DMG / portable).
+   */
+  needsIntegrationSetup?: boolean
+  /** Which host NLEs were detected on this machine. */
+  hostAppPresence?: {
+    afterEffects: boolean
+    resolve: boolean
+    premiere: boolean
+  }
 }
 
 export interface EncodeProgress {

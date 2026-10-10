@@ -48,7 +48,8 @@ async function main() {
     hardwareAcceleration: 'none',
     intakeEnabled: false,
     intakePort: 47821,
-    watchFolders: []
+    watchFolders: [],
+    hostFoldersSeeded: true
   }
 
   const job: QueueJob = {

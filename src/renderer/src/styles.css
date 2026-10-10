@@ -1934,6 +1934,54 @@ button.linkish:hover:not(:disabled) {
   margin-top: 1.35rem !important;
 }
 
+.integration-setup-dialog {
+  max-width: 480px;
+}
+
+.integration-setup-body {
+  display: block;
+  padding: 0.85rem 1rem 1rem;
+}
+
+.integration-setup-custom {
+  margin: 0.35rem 0 0.75rem 1.1rem;
+}
+
+.integration-setup-custom.disabled {
+  opacity: 0.45;
+}
+
+.prefs-host-folders {
+  margin: 0 0 0.85rem;
+  padding: 0.55rem 0.6rem;
+  border: 1px solid #2e2e2e;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.prefs-host-folder-list {
+  list-style: none;
+  margin: 0.35rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.prefs-host-folder-list li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.12rem;
+  font-size: 0.78rem;
+}
+
+.prefs-host-folder-list code {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  word-break: break-all;
+}
+
 .prefs-watch-actions {
   margin-bottom: 0.85rem;
 }

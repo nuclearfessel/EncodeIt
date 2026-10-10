@@ -20,6 +20,7 @@ import type {
 } from '../../shared/types'
 import { DockDropOverlay } from './components/DockDropOverlay'
 import { EncodingPanel } from './components/EncodingPanel'
+import { IntegrationSetupDialog } from './components/IntegrationSetupDialog'
 import { PreferencesDialog } from './components/PreferencesDialog'
 import { ButtonContent } from './components/ButtonContent'
 import {
@@ -384,6 +385,14 @@ export default function App() {
           return saved
         }}
       />
+
+      {!floatingPanel ? (
+        <IntegrationSetupDialog
+          open={Boolean(settings.needsIntegrationSetup)}
+          presence={settings.hostAppPresence}
+          onComplete={(saved) => setSettings(saved)}
+        />
+      ) : null}
 
       <div className="ame-workspace">
         {workspace.root ? (

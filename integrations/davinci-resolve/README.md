@@ -4,18 +4,16 @@ Resolve does not expose a public “replace Deliver codecs” plugin API. The su
 
 ## Watch folder (primary)
 
-1. Create a shared Deliver folder, e.g.:
-   - Windows: `D:\EncodeThis\from-resolve`
-   - macOS: `~/Movies/EncodeThis/from-resolve`
-2. In Encode This: **Edit → Preferences → Integrations → Watch folders**
-   - Choose a preset and encode output folder
-   - **Add watch folder…** and select the shared folder
-3. In Resolve **Deliver**, set the render destination to that same folder.
-4. Deliver as usual (prefer a high-quality intermediate / master). Encode This queues new files and starts encoding.
+Install / first launch creates and watches:
 
-Existing files already in the folder when you add or enable a watch are ignored — only **new** arrivals are queued.
+- Windows: `%USERPROFILE%\Videos\Encode This\from-resolve`
+- macOS: `~/Movies/Encode This/from-resolve`
 
-Encode This must be running while Resolve writes into the watched folder.
+1. Install Encode This (or run once) so the folder exists.
+2. In Resolve **Deliver**, set the destination to that folder (also listed under **Preferences → Integrations**).
+3. Keep Encode This running and Deliver as usual (prefer a high-quality intermediate / master).
+
+Existing files already in the folder when a watch is added or enabled are ignored — only **new** arrivals are queued.
 
 ## Optional — Python CLI / Utility scripts
 

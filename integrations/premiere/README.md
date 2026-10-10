@@ -2,12 +2,14 @@
 
 ## Watch folder (recommended, Windows & macOS)
 
-Same pattern as After Effects / Resolve:
+Install / first launch creates and watches:
 
-1. Create a shared export folder.
-2. Encode This → **Preferences → Integrations → Watch folders** → add that folder + preset.
-3. Export from Premiere into that folder.
-4. New files are queued automatically (no script).
+- Windows: `%USERPROFILE%\Videos\Encode This\from-premiere`
+- macOS: `~/Movies/Encode This/from-premiere`
+
+1. Install Encode This (or run once).
+2. Export from Premiere into that folder (path under **Preferences → Integrations**).
+3. New files are queued automatically (no script).
 
 ## Optional — ExtendScript
 

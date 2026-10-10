@@ -6,16 +6,16 @@ Encode This must be running. Host intake is optional for this workflow.
 
 ## Watch folder (primary)
 
-1. Create a shared render folder, e.g.:
-   - Windows: `D:\EncodeThis\from-ae`
-   - macOS: `~/Movies/EncodeThis/from-ae`
-2. In Encode This: **Edit → Preferences → Integrations → Watch folders**
-   - Choose a preset and encode output folder
-   - **Add watch folder…** and select the shared folder
-3. In After Effects, set your **Output Module** / render destination to that same folder.
-4. Render as usual. When the file finishes writing, Encode This queues it and starts encoding.
+Install / first launch creates and watches:
 
-Existing files already in the folder when you add or enable a watch are ignored — only **new** arrivals are queued.
+- Windows: `%USERPROFILE%\Videos\Encode This\from-ae`
+- macOS: `~/Movies/Encode This/from-ae`
+
+1. Install Encode This (or run once) so the folder exists.
+2. In After Effects, set **Output Module** / render destination to that folder (path also listed under **Preferences → Integrations**).
+3. Keep Encode This running and render as usual. New files are queued automatically.
+
+Existing files already in the folder when a watch is added or enabled are ignored — only **new** arrivals are queued.
 
 ## Optional — ExtendScript
 

@@ -5,9 +5,19 @@ import { CODEC_VARIANTS } from '../shared/codecs'
 import { FORMATS } from '../shared/formats'
 import type { PanelId } from '../shared/panels'
 import { DEFAULT_PRESET_ID, PRESETS, getPreset, presetsGrouped } from '../shared/presets'
+import type { InstallOptions } from '../shared/installOptions'
 import type { AppSettings } from '../shared/types'
 import { resolveBundledFfmpeg } from './bundledFfmpeg'
 import { clearHardwareCache, detectHardwareCapabilities } from './hardwareDetect'
+import { detectHostApps } from './hostAppDetect'
+import {
+  clearInstallOptionsFile,
+  ensureHostFolders,
+  flagsFromInstallOptions,
+  readInstallOptionsFile,
+  resolveHostFolderLayout,
+  watchFolderSeedsForFlags
+} from './hostFolders'
 import { InboxWatcher, inboxDirectory } from './inbox'
 import { IntakeServer } from './intakeServer'
 import {
@@ -32,9 +42,31 @@ let watchers: WatchFolderManager
 let intake: IntakeServer | null = null
 let inbox: InboxWatcher
 let panels: PanelWindowManager
+/** Pending first-launch setup when installer did not write install-options.json (e.g. DMG). */
+let needsIntegrationSetup = false
 let uiState = {
   activePresetId: DEFAULT_PRESET_ID,
   selectedJobIds: [] as string[]
+}
+
+function applyIntegrationChoices(options: InstallOptions): void {
+  const flags = flagsFromInstallOptions(options)
+  const layout = ensureHostFolders(flags)
+  if (watchers.list().length === 0) {
+    for (const seed of watchFolderSeedsForFlags(layout, flags)) {
+      watchers.add(seed.path, seed.presetId, seed.outputDir)
+    }
+  }
+  settings = normalizeAppSettings({
+    ...settings,
+    watchFolders: watchers.toSettings(),
+    hostFoldersSeeded: true,
+    outputDirectory: settings.outputDirectory || layout.output
+  })
+  saveSettings(settings)
+  clearInstallOptionsFile()
+  needsIntegrationSetup = false
+  queue.updateSettings(settings)
 }
 
 function createWindow(): void {
@@ -97,17 +129,25 @@ function registerIpc(): void {
     defaultPresetId: DEFAULT_PRESET_ID
   }))
 
-  ipcMain.handle('settings:get', () => ({
-    ...settings,
-    ffmpegSource: ffmpegSourceLabel(settings),
-    ffmpegBundled: Boolean(resolveBundledFfmpeg())
-  }))
+  function settingsPayload() {
+    return {
+      ...settings,
+      ffmpegSource: ffmpegSourceLabel(settings),
+      ffmpegBundled: Boolean(resolveBundledFfmpeg()),
+      hostFolders: resolveHostFolderLayout(),
+      needsIntegrationSetup,
+      hostAppPresence: detectHostApps()
+    }
+  }
+
+  ipcMain.handle('settings:get', () => settingsPayload())
   ipcMain.handle('settings:set', async (_e, next: AppSettings) => {
     const prev = settings
     // Watch folders are managed via watch:* IPC — never wipe them from Preferences OK.
     settings = normalizeAppSettings({
       ...next,
-      watchFolders: watchers.toSettings()
+      watchFolders: watchers.toSettings(),
+      hostFoldersSeeded: settings.hostFoldersSeeded || Boolean(next.hostFoldersSeeded)
     })
     saveSettings(settings)
     queue.updateSettings(settings)
@@ -120,16 +160,9 @@ function registerIpc(): void {
     ) {
       await restartIntake()
     }
-    broadcast('settings:changed', {
-      ...settings,
-      ffmpegSource: ffmpegSourceLabel(settings),
-      ffmpegBundled: Boolean(resolveBundledFfmpeg())
-    })
-    return {
-      ...settings,
-      ffmpegSource: ffmpegSourceLabel(settings),
-      ffmpegBundled: Boolean(resolveBundledFfmpeg())
-    }
+    const payload = settingsPayload()
+    broadcast('settings:changed', payload)
+    return payload
   })
 
   ipcMain.handle('hardware:detect', async (_e, force?: boolean) => {
@@ -142,6 +175,13 @@ function registerIpc(): void {
     address: intake ? `http://127.0.0.1:${settings.intakePort}` : null,
     inboxDir: inboxDirectory()
   }))
+
+  ipcMain.handle('integrations:completeSetup', (_e, options: InstallOptions) => {
+    applyIntegrationChoices(options)
+    const payload = settingsPayload()
+    broadcast('settings:changed', payload)
+    return payload
+  })
 
   ipcMain.handle('panels:getWorkspace', () => panels.getWorkspace())
   ipcMain.handle('panels:setRoot', (_e, root: unknown) => {
@@ -275,11 +315,7 @@ function registerIpc(): void {
       watchFolders: watchers.toSettings()
     })
     saveSettings(settings)
-    broadcast('settings:changed', {
-      ...settings,
-      ffmpegSource: ffmpegSourceLabel(settings),
-      ffmpegBundled: Boolean(resolveBundledFfmpeg())
-    })
+    broadcast('settings:changed', settingsPayload())
   }
 
   ipcMain.handle('watch:list', () => watchers.list())
@@ -339,15 +375,63 @@ async function restartIntake(): Promise<void> {
 
 app.whenReady().then(async () => {
   settings = await loadSettings()
+
+  // Always ensure Output root exists; host app folders follow install choices.
+  const baseLayout = ensureHostFolders({
+    afterEffects: false,
+    resolve: false,
+    premiere: false
+  })
+  if (!settings.outputDirectory) {
+    settings = normalizeAppSettings({
+      ...settings,
+      outputDirectory: baseLayout.output
+    })
+  } else {
+    const legacyDefault = path.join(app.getPath('videos'), 'Encode This')
+    if (path.normalize(settings.outputDirectory) === path.normalize(legacyDefault)) {
+      settings = normalizeAppSettings({
+        ...settings,
+        outputDirectory: baseLayout.output
+      })
+    }
+  }
+
   queue = new EncodeQueue(settings)
   watchers = new WatchFolderManager(queue)
   watchers.restore(settings.watchFolders)
-  // Keep settings in sync with restored ids / normalized entries.
-  settings = normalizeAppSettings({
-    ...settings,
-    watchFolders: watchers.toSettings()
-  })
-  saveSettings(settings)
+
+  const installOptions = readInstallOptionsFile()
+  if (!settings.hostFoldersSeeded && watchers.list().length === 0) {
+    if (installOptions) {
+      // Windows NSIS / macOS PKG already recorded Standard or Custom choices.
+      applyIntegrationChoices(installOptions)
+    } else {
+      // DMG / portable / zip — ask in-app (same Standard vs Custom UX).
+      needsIntegrationSetup = true
+      settings = normalizeAppSettings({
+        ...settings,
+        watchFolders: watchers.toSettings(),
+        hostFoldersSeeded: false
+      })
+      saveSettings(settings)
+    }
+  } else {
+    // Re-ensure folders for already-seeded watches on every launch.
+    const existing = watchers.list()
+    ensureHostFolders({
+      afterEffects: existing.some((w) => w.path === baseLayout.fromAe),
+      resolve: existing.some((w) => w.path === baseLayout.fromResolve),
+      premiere: existing.some((w) => w.path === baseLayout.fromPremiere)
+    })
+    settings = normalizeAppSettings({
+      ...settings,
+      watchFolders: watchers.toSettings(),
+      hostFoldersSeeded: true
+    })
+    saveSettings(settings)
+    clearInstallOptionsFile()
+  }
   inbox = new InboxWatcher(queue)
   inbox.start()
   await restartIntake()
