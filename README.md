@@ -36,15 +36,18 @@ npm run build
 
 Exact bit-for-bit clones of proprietary encoders/certified wrappers (full Dolby Vision, Wraptor DCP packages, DPP AS-11 metadata, TMPGEnc disc authoring) are **not** claimed. Broadcast formats use best-effort FFmpeg recipes labeled in the catalog.
 
-## Phase 2 — host integrations
+## Phase 2 — host integrations (in progress)
 
 On branch `phase-2-integrations`:
 
 | Integration | Location | Mechanism |
 | --- | --- | --- |
-| Local intake API | app Settings → Host intake (`127.0.0.1:47821`) | `POST /queue/add`, `GET /presets`, inbox folder |
-| After Effects | [`integrations/after-effects`](integrations/after-effects) | ExtendScript + CEP panel skeleton |
+| Local intake API | Preferences → Integrations (`127.0.0.1:47821`) | `POST /queue/add`, `GET /presets`, `GET /health`, inbox folder |
+| After Effects | [`integrations/after-effects`](integrations/after-effects) | ExtendScript + CEP panel (loads presets from intake) |
 | DaVinci Resolve | [`integrations/davinci-resolve`](integrations/davinci-resolve) | Python Utility / CLI handoff |
+
+**Now:** live intake status in Preferences, AE CEP preset list from `GET /presets`.  
+**Next:** Premiere exporter path, richer Resolve Deliver handoff, signed CEP packaging.
 
 ```bash
 # Example: queue a file while Encode This is running

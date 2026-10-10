@@ -24,6 +24,13 @@ export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
   const [probing, setProbing] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [intakeStatus, setIntakeStatus] = useState<{
+    enabled: boolean
+    port: number
+    address: string | null
+    inboxDir: string
+  } | null>(null)
+  const [copied, setCopied] = useState(false)
   const pathPicker = usePathPicker()
 
   useEffect(() => {
@@ -40,12 +47,17 @@ export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
     })
     setTab('general')
     setError(null)
+    setCopied(false)
     setProbing(true)
     void window.encodeThis
       .detectHardware()
       .then(setCaps)
       .catch((err) => setError(err instanceof Error ? err.message : String(err)))
       .finally(() => setProbing(false))
+    void window.encodeThis
+      .getIntakeStatus()
+      .then(setIntakeStatus)
+      .catch(() => setIntakeStatus(null))
   }, [open, settings])
 
   useEffect(() => {
@@ -276,6 +288,10 @@ export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
             {tab === 'integrations' ? (
               <div className="prefs-section">
                 <h3>Host intake (AE / Resolve)</h3>
+                <p className="prefs-help">
+                  Phase 2 bridge — After Effects, DaVinci Resolve, and CLI tools POST jobs here while
+                  Encode This is running.
+                </p>
                 <label className="prefs-check">
                   <input
                     type="checkbox"
@@ -302,10 +318,39 @@ export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
                     }
                   />
                 </label>
-                <p className="prefs-help">
-                  Phase 2 bridge for After Effects / Resolve scripts. Leave on only if you use those
-                  integrations.
-                </p>
+                <div className="prefs-intake-status">
+                  <div className="prefs-row">
+                    <span className={intakeStatus?.address ? 'prefs-muted' : 'prefs-error'}>
+                      {draft.intakeEnabled
+                        ? intakeStatus?.address
+                          ? `Listening: ${intakeStatus.address}`
+                          : 'Enabled in draft — save Preferences to apply / restart intake'
+                        : 'Intake is off'}
+                    </span>
+                    {intakeStatus?.address ? (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          void navigator.clipboard.writeText(intakeStatus.address!).then(() => {
+                            setCopied(true)
+                            window.setTimeout(() => setCopied(false), 1500)
+                          })
+                        }}
+                      >
+                        {copied ? 'Copied' : 'Copy URL'}
+                      </button>
+                    ) : null}
+                  </div>
+                  {intakeStatus?.inboxDir ? (
+                    <p className="prefs-muted">Inbox: {intakeStatus.inboxDir}</p>
+                  ) : null}
+                  <p className="prefs-help">
+                    Endpoints: <code>GET /health</code>, <code>GET /presets</code>,{' '}
+                    <code>POST /queue/add</code>. Scripts live in{' '}
+                    <code>integrations/after-effects</code> and{' '}
+                    <code>integrations/davinci-resolve</code>.
+                  </p>
+                </div>
               </div>
             ) : null}
 

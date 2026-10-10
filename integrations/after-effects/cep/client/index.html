@@ -6,13 +6,13 @@
     <style>
       :root {
         color-scheme: dark;
-        font-family: "Segoe UI", sans-serif;
+        font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
       }
       body {
         margin: 0;
         padding: 12px;
-        background: #1c1c1c;
-        color: #eee;
+        background: #1a1a1a;
+        color: #e6e6e6;
       }
       h1 {
         font-size: 14px;
@@ -31,9 +31,10 @@
         box-sizing: border-box;
         padding: 8px;
         border-radius: 4px;
-        border: 1px solid #444;
-        background: #111;
-        color: #eee;
+        border: 1px solid #3a3a3a;
+        background: #141414;
+        color: #e6e6e6;
+        font: inherit;
       }
       button {
         margin-top: 12px;
@@ -43,23 +44,38 @@
         font-weight: 600;
         cursor: pointer;
       }
+      button.secondary {
+        background: #222;
+        border-color: #3a3a3a;
+        color: #e6e6e6;
+        margin-top: 6px;
+      }
       #status {
         margin-top: 10px;
         font-size: 11px;
         opacity: 0.85;
         white-space: pre-wrap;
       }
+      .ok {
+        color: #3ecf8e;
+      }
+      .err {
+        color: #e26666;
+      }
     </style>
   </head>
   <body>
     <h1>Encode This</h1>
     <p style="font-size: 12px; opacity: 0.75; margin-top: 0">
-      Send a rendered file into the Encode This queue (app must be running).
+      Send a rendered file into the Encode This queue (app must be running with host intake on).
     </p>
     <label for="port">Intake port</label>
     <input id="port" value="47821" />
-    <label for="preset">Preset id</label>
-    <input id="preset" value="h264-match-source-high-bitrate" />
+    <label for="preset">Preset</label>
+    <select id="preset">
+      <option value="h264-match-source-high-bitrate">Loading presets…</option>
+    </select>
+    <button id="refresh" class="secondary" type="button">Refresh presets</button>
     <label for="path">Media path</label>
     <input id="path" placeholder="D:\renders\comp.mp4" />
     <button id="send" type="button">Send to queue + start</button>
