@@ -1,6 +1,6 @@
 {
   "name": "encode-this",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Open-source batch media encoder — Adobe Media Encoder / Shutter Encoder style",
   "main": "./out/main/index.js",
   "author": "nuclearfessel",

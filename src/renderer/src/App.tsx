@@ -20,8 +20,11 @@ import type {
 } from '../../shared/types'
 import { DockDropOverlay } from './components/DockDropOverlay'
 import { EncodingPanel } from './components/EncodingPanel'
+import { AboutDialog } from './components/AboutDialog'
+import { HelpDocumentationWindow } from './components/HelpDocumentationWindow'
 import { IntegrationSetupDialog } from './components/IntegrationSetupDialog'
 import { PreferencesDialog } from './components/PreferencesDialog'
+import { version as APP_VERSION } from '../../../package.json'
 import { ButtonContent } from './components/ButtonContent'
 import {
   Bin,
@@ -53,7 +56,18 @@ function undockedFromUrl(): PanelId | null {
   return isPanelId(value) ? value : null
 }
 
+function isDocsWindow(): boolean {
+  return new URLSearchParams(window.location.search).get('docs') === '1'
+}
+
 export default function App() {
+  if (isDocsWindow()) {
+    return <HelpDocumentationWindow />
+  }
+  return <MainApp />
+}
+
+function MainApp() {
   const floatingPanel = undockedFromUrl()
   const [catalog, setCatalog] = useState<CatalogPayload | null>(null)
   const [settings, setSettings] = useState<SettingsView | null>(null)
@@ -69,6 +83,7 @@ export default function App() {
   } | null>(null)
   const [dropTarget, setDropTarget] = useState<AnyDropTarget | null>(null)
   const [prefsOpen, setPrefsOpen] = useState(false)
+  const [aboutOpen, setAboutOpen] = useState(false)
   const pathPicker = usePathPicker()
 
   useEffect(() => {
@@ -124,6 +139,11 @@ export default function App() {
       if (typing) return
 
       const mod = e.ctrlKey || e.metaKey
+      if (e.key === 'F1') {
+        e.preventDefault()
+        void window.encodeThis.openDocumentation()
+        return
+      }
       if (mod && e.key === ',') {
         e.preventDefault()
         setPrefsOpen(true)
@@ -288,6 +308,8 @@ export default function App() {
             onPreferences: () => setPrefsOpen(true),
             onDockAll: () => void window.encodeThis.dockAllPanels(),
             onShowAllPanels: () => void window.encodeThis.showAllPanels(),
+            onDocumentation: () => void window.encodeThis.openDocumentation(),
+            onAbout: () => setAboutOpen(true),
             canStart,
             canStop: running
           }}
@@ -385,6 +407,8 @@ export default function App() {
           return saved
         }}
       />
+
+      <AboutDialog open={aboutOpen} onClose={() => setAboutOpen(false)} version={APP_VERSION} />
 
       {!floatingPanel ? (
         <IntegrationSetupDialog

@@ -184,6 +184,7 @@ const api = {
     ipcRenderer.on('settings:changed', listener)
     return () => ipcRenderer.removeListener('settings:changed', listener)
   },
+  openDocumentation: (): Promise<void> => ipcRenderer.invoke('docs:open'),
   windowMinimize: (): Promise<void> => ipcRenderer.invoke('window:minimize'),
   windowMaximizeToggle: (): Promise<boolean> => ipcRenderer.invoke('window:maximizeToggle'),
   windowClose: (): Promise<void> => ipcRenderer.invoke('window:close'),

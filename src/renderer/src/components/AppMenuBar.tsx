@@ -8,6 +8,8 @@ export interface AppMenuActions {
   onPreferences: () => void
   onDockAll: () => void
   onShowAllPanels: () => void
+  onDocumentation: () => void
+  onAbout: () => void
   canStart: boolean
   canStop: boolean
 }
@@ -117,6 +119,13 @@ export function AppMenuBar({ actions }: Props) {
       id: 'help',
       label: 'Help',
       items: [
+        {
+          label: 'Documentation',
+          shortcut: 'F1',
+          action: actions.onDocumentation
+        },
+        { label: 'About Encode This', action: actions.onAbout },
+        { separator: true, label: '' },
         {
           label: 'Encode This on GitHub',
           action: () => {

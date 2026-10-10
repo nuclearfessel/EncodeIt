@@ -25,6 +25,7 @@ import {
   listBrowserDirectory,
   type BrowserListMode
 } from './mediaBrowser'
+import { DocsWindowManager } from './docsWindow'
 import { PanelWindowManager } from './panelWindows'
 import { EncodeQueue } from './queue'
 import {
@@ -42,6 +43,7 @@ let watchers: WatchFolderManager
 let intake: IntakeServer | null = null
 let inbox: InboxWatcher
 let panels: PanelWindowManager
+let docsWindow: DocsWindowManager
 /** Pending first-launch setup when installer did not write install-options.json (e.g. DMG). */
 let needsIntegrationSetup = false
 let uiState = {
@@ -254,6 +256,10 @@ function registerIpc(): void {
     return Boolean(windowFromEvent(e)?.isMaximized())
   })
 
+  ipcMain.handle('docs:open', () => {
+    docsWindow.open()
+  })
+
   ipcMain.handle('queue:list', () => queue.list())
   ipcMain.handle('queue:add', async (_e, paths: string[], presetId?: string) => {
     return queue.addFiles(paths, presetId ?? DEFAULT_PRESET_ID)
@@ -436,11 +442,16 @@ app.whenReady().then(async () => {
   inbox.start()
   await restartIntake()
 
+  const preloadPath = path.join(__dirname, '../preload/index.js')
   panels = new PanelWindowManager({
-    preloadPath: path.join(__dirname, '../preload/index.js'),
+    preloadPath,
     getMainWindow: () => mainWindow,
     onChange: (state) => broadcast('panels:changed', state),
     onDrag: (session, target) => broadcast('panels:drag', { session, target })
+  })
+  docsWindow = new DocsWindowManager({
+    preloadPath,
+    getMainWindow: () => mainWindow
   })
 
   queue.on('change', (jobs) => broadcast('queue:changed', jobs))
@@ -465,5 +476,6 @@ app.on('window-all-closed', () => {
   inbox.stop()
   void intake?.stop()
   panels.dispose()
+  docsWindow.dispose()
   app.quit()
 })
