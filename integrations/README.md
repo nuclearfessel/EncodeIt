@@ -11,5 +11,6 @@ Encode This exposes a **localhost intake** so other apps can add jobs without em
 
 See:
 
-- [after-effects/](after-effects/)
-- [davinci-resolve/](davinci-resolve/)
+- [after-effects/](after-effects/) — ExtendScript, CEP panel (`npm run package:cep` for release zip)
+- [premiere/](premiere/) — ExtendScript handoff (native exporter later)
+- [davinci-resolve/](davinci-resolve/) — CLI + Deliver queue handoff

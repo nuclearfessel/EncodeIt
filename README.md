@@ -44,10 +44,11 @@ On branch `phase-2-integrations`:
 | --- | --- | --- |
 | Local intake API | Preferences → Integrations (`127.0.0.1:47821`) | `POST /queue/add`, `GET /presets`, `GET /health`, inbox folder |
 | After Effects | [`integrations/after-effects`](integrations/after-effects) | ExtendScript + CEP panel (loads presets from intake) |
-| DaVinci Resolve | [`integrations/davinci-resolve`](integrations/davinci-resolve) | Python Utility / CLI handoff |
+| Premiere Pro | [`integrations/premiere`](integrations/premiere) | ExtendScript handoff (native exporter plugin later) |
+| DaVinci Resolve | [`integrations/davinci-resolve`](integrations/davinci-resolve) | Python CLI + Deliver render-queue handoff |
 
-**Now:** live intake status in Preferences, AE CEP preset list from `GET /presets`.  
-**Next:** Premiere exporter path, richer Resolve Deliver handoff, signed CEP packaging.
+**Shipped:** live intake in Preferences, AE CEP presets, Premiere/Resolve scripts, CEP zip via `npm run package:cep` (signing docs in `integrations/after-effects/cep/PACKAGING.md`).  
+**Later:** Premiere native exporter module, automated ZXP signing in CI.
 
 ```bash
 # Example: queue a file while Encode This is running

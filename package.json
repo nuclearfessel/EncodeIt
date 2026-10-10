@@ -15,7 +15,8 @@
     "postinstall": "node scripts/download-ffmpeg.mjs",
     "pack": "npm run download-ffmpeg && npm run build && electron-builder --dir",
     "dist": "npm run download-ffmpeg && npm run build && electron-builder",
-    "catalog:stats": "tsx scripts/catalog-stats.ts"
+    "catalog:stats": "tsx scripts/catalog-stats.ts",
+    "package:cep": "node scripts/package-ae-cep.mjs"
   },
   "dependencies": {
     "@fontsource-variable/source-sans-3": "^5.3.0",

@@ -26,7 +26,12 @@ python send_to_encode_this.py --list-presets
    - macOS: `~/Library/Application Support/Blackmagic Design/DaVinci Resolve/Fusion/Scripts/Utility/`
    - Linux: `~/.local/share/DaVinciResolve/Fusion/Scripts/Utility/`
 
-2. Optional: use `resolve_deliver_handoff.py` from inside Resolve to read the current project’s most recent render target settings and prompt for the output file.
+2. **Deliver handoff:** run `resolve_deliver_handoff.py` from Resolve’s Utility scripts (or CLI). It lists the render queue, picks a job, and sends the output file when it exists on disk:
+
+   ```bash
+   python resolve_deliver_handoff.py --list-jobs
+   python resolve_deliver_handoff.py --job-id <JobId> --preset h264-match-source-high-bitrate
+   ```
 
 ## Workflow tips
 

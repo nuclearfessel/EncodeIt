@@ -287,10 +287,10 @@ export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
 
             {tab === 'integrations' ? (
               <div className="prefs-section">
-                <h3>Host intake (AE / Resolve)</h3>
+                <h3>Host intake (AE / Premiere / Resolve)</h3>
                 <p className="prefs-help">
-                  Phase 2 bridge — After Effects, DaVinci Resolve, and CLI tools POST jobs here while
-                  Encode This is running.
+                  Phase 2 bridge — After Effects, Premiere Pro, DaVinci Resolve, and CLI tools POST
+                  jobs here while Encode This is running.
                 </p>
                 <label className="prefs-check">
                   <input
@@ -347,7 +347,8 @@ export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
                   <p className="prefs-help">
                     Endpoints: <code>GET /health</code>, <code>GET /presets</code>,{' '}
                     <code>POST /queue/add</code>. Scripts live in{' '}
-                    <code>integrations/after-effects</code> and{' '}
+                    <code>integrations/after-effects</code>,{' '}
+                    <code>integrations/premiere</code>, and{' '}
                     <code>integrations/davinci-resolve</code>.
                   </p>
                 </div>
