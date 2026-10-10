@@ -11,6 +11,12 @@ const api = {
   getSettings: (): Promise<AppSettings> => ipcRenderer.invoke('settings:get'),
   setSettings: (settings: AppSettings): Promise<AppSettings> =>
     ipcRenderer.invoke('settings:set', settings),
+  getIntakeStatus: (): Promise<{
+    enabled: boolean
+    port: number
+    address: string | null
+    inboxDir: string
+  }> => ipcRenderer.invoke('intake:status'),
   openFiles: (): Promise<string[]> => ipcRenderer.invoke('dialog:openFiles'),
   openDirectory: (): Promise<string | null> => ipcRenderer.invoke('dialog:openDirectory'),
   listQueue: (): Promise<QueueJob[]> => ipcRenderer.invoke('queue:list'),

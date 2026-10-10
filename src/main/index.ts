@@ -5,6 +5,8 @@ import { CODEC_VARIANTS } from '../shared/codecs'
 import { FORMATS } from '../shared/formats'
 import { DEFAULT_PRESET_ID, PRESETS, getPreset, presetsGrouped } from '../shared/presets'
 import type { AppSettings } from '../shared/types'
+import { InboxWatcher, inboxDirectory } from './inbox'
+import { IntakeServer } from './intakeServer'
 import { EncodeQueue } from './queue'
 import { loadSettings, saveSettings } from './settings'
 import { WatchFolderManager } from './watchFolder'
@@ -13,6 +15,8 @@ let mainWindow: BrowserWindow | null = null
 let settings: AppSettings
 let queue: EncodeQueue
 let watchers: WatchFolderManager
+let intake: IntakeServer | null = null
+let inbox: InboxWatcher
 
 function createWindow(): void {
   mainWindow = new BrowserWindow({
@@ -61,12 +65,26 @@ function registerIpc(): void {
   }))
 
   ipcMain.handle('settings:get', () => settings)
-  ipcMain.handle('settings:set', (_e, next: AppSettings) => {
+  ipcMain.handle('settings:set', async (_e, next: AppSettings) => {
+    const prev = settings
     settings = next
     saveSettings(settings)
     queue.updateSettings(settings)
+    if (
+      prev.intakeEnabled !== next.intakeEnabled ||
+      prev.intakePort !== next.intakePort
+    ) {
+      await restartIntake()
+    }
     return settings
   })
+
+  ipcMain.handle('intake:status', () => ({
+    enabled: settings.intakeEnabled,
+    port: settings.intakePort,
+    address: intake ? `http://127.0.0.1:${settings.intakePort}` : null,
+    inboxDir: inboxDirectory()
+  }))
 
   ipcMain.handle('dialog:openFiles', async () => {
     const result = await dialog.showOpenDialog(mainWindow!, {
@@ -171,10 +189,28 @@ function registerIpc(): void {
   ipcMain.handle('preset:get', (_e, id: string) => getPreset(id))
 }
 
+async function restartIntake(): Promise<void> {
+  if (intake) {
+    await intake.stop()
+    intake = null
+  }
+  if (!settings.intakeEnabled) return
+  intake = new IntakeServer(queue, { port: settings.intakePort })
+  try {
+    await intake.start()
+  } catch (err) {
+    console.error('Intake server failed to start', err)
+    intake = null
+  }
+}
+
 app.whenReady().then(async () => {
   settings = await loadSettings()
   queue = new EncodeQueue(settings)
   watchers = new WatchFolderManager(queue)
+  inbox = new InboxWatcher(queue)
+  inbox.start()
+  await restartIntake()
 
   queue.on('change', (jobs) => broadcast('queue:changed', jobs))
   queue.on('progress', (p) => broadcast('queue:progress', p))
@@ -190,5 +226,7 @@ app.whenReady().then(async () => {
 
 app.on('window-all-closed', () => {
   watchers.dispose()
+  inbox.stop()
+  void intake?.stop()
   if (process.platform !== 'darwin') app.quit()
 })

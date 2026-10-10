@@ -149,6 +149,9 @@ export interface AppSettings {
   maxConcurrent: number
   overwriteOutput: boolean
   hardwareAcceleration: 'auto' | 'none' | 'nvenc' | 'qsv' | 'amf' | 'videotoolbox'
+  /** Localhost intake for AE / Resolve / CLI (Phase 2). */
+  intakeEnabled: boolean
+  intakePort: number
 }
 
 export interface EncodeProgress {

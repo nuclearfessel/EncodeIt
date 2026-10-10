@@ -10,7 +10,9 @@ const DEFAULTS: AppSettings = {
   outputDirectory: '',
   maxConcurrent: 1,
   overwriteOutput: true,
-  hardwareAcceleration: 'auto'
+  hardwareAcceleration: 'auto',
+  intakeEnabled: true,
+  intakePort: 47821
 }
 
 function settingsPath(): string {

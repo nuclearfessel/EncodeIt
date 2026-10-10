@@ -45,7 +45,9 @@ async function main() {
     outputDirectory: dir,
     maxConcurrent: 1,
     overwriteOutput: true,
-    hardwareAcceleration: 'none'
+    hardwareAcceleration: 'none',
+    intakeEnabled: false,
+    intakePort: 47821
   }
 
   const job: QueueJob = {

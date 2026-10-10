@@ -4,7 +4,7 @@ Open-source batch media encoder with an **Adobe Media Encoder / Shutter Encoder�
 
 Cross-platform (**Windows, macOS, Linux**) via Electron + FFmpeg.
 
-## Phase 1 (this release)
+## Phase 1
 
 - Encoding queue with progress, start/stop, multi-select
 - Preset browser grouped like AME System Presets
@@ -32,15 +32,25 @@ npm run catalog:stats
 npm run build
 ```
 
-## Catalog notes
+### Catalog notes
 
 Exact bit-for-bit clones of proprietary encoders/certified wrappers (full Dolby Vision, Wraptor DCP packages, DPP AS-11 metadata, TMPGEnc disc authoring) are **not** claimed. Broadcast formats use best-effort FFmpeg recipes labeled in the catalog.
 
-## Phase 2 (separate branch)
+## Phase 2 — host integrations
 
-Host integrations:
+On branch `phase-2-integrations`:
 
-- After Effects send-to-queue panel / script
-- DaVinci Resolve scripting handoff to Encode This
+| Integration | Location | Mechanism |
+| --- | --- | --- |
+| Local intake API | app Settings → Host intake (`127.0.0.1:47821`) | `POST /queue/add`, `GET /presets`, inbox folder |
+| After Effects | [`integrations/after-effects`](integrations/after-effects) | ExtendScript + CEP panel skeleton |
+| DaVinci Resolve | [`integrations/davinci-resolve`](integrations/davinci-resolve) | Python Utility / CLI handoff |
 
-See `integrations/` on the `phase-2-integrations` branch.
+```bash
+# Example: queue a file while Encode This is running
+curl -X POST http://127.0.0.1:47821/queue/add ^
+  -H "Content-Type: application/json" ^
+  -d "{\"paths\":[\"D:/media/clip.mp4\"],\"presetId\":\"h264-match-source-high-bitrate\",\"start\":true}"
+```
+
+Resolve cannot replace Deliver codecs via plugin SDK; AE integration sends rendered media into this queue (Premiere exporter plugin can come later).

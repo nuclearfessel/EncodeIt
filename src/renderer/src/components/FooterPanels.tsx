@@ -166,6 +166,18 @@ export function FooterPanels({
             <option value="amf">AMD AMF</option>
             <option value="videotoolbox">Apple VideoToolbox</option>
           </select>
+          <label htmlFor="intake">Host intake</label>
+          <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+            <input
+              id="intake"
+              type="checkbox"
+              checked={settings.intakeEnabled}
+              onChange={(e) =>
+                void onSettings({ ...settings, intakeEnabled: e.target.checked })
+              }
+            />
+            <span style={{ color: '#9aa6b5' }}>localhost:{settings.intakePort}</span>
+          </div>
         </div>
       </div>
     </footer>
