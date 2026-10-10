@@ -91,6 +91,10 @@ const api = {
     ipcRenderer.invoke('watch:remove', id),
   setWatchEnabled: (id: string, enabled: boolean): Promise<WatchFolder[]> =>
     ipcRenderer.invoke('watch:setEnabled', id, enabled),
+  updateWatchFolder: (
+    id: string,
+    patch: { presetId?: string; outputDir?: string; path?: string }
+  ): Promise<WatchFolder[]> => ipcRenderer.invoke('watch:update', id, patch),
   showItem: (filePath: string) => ipcRenderer.invoke('shell:showItem', filePath),
   openPath: (filePath: string) => ipcRenderer.invoke('shell:openPath', filePath),
   getPreset: (id: string) => ipcRenderer.invoke('preset:get', id),

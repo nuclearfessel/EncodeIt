@@ -1,8 +1,15 @@
 # Premiere Pro → Encode This
 
-Phase 2 uses the same **localhost intake** and **inbox** as After Effects and Resolve. A native Premiere **Exporter** plugin (the path Adobe Media Encoder uses) is not included yet; this folder is the supported handoff until that lands.
+## Watch folder (recommended, Windows & macOS)
 
-## ExtendScript (supported today)
+Same pattern as After Effects / Resolve:
+
+1. Create a shared export folder.
+2. Encode This → **Preferences → Integrations → Watch folders** → add that folder + preset.
+3. Export from Premiere into that folder.
+4. New files are queued automatically (no script).
+
+## Optional — ExtendScript
 
 1. Open Premiere Pro.
 2. **File → Scripts → Run Script File…**
@@ -19,12 +26,11 @@ Copy `SendToEncodeThis.jsx` into the Premiere `Scripts` folder:
 
 Enable **Preferences → Scripting & Expressions → Allow Scripts to Write Files and Access Network**.
 
-## Workflow
+Inbox paths (Electron `userData`):
 
-1. Export from Premiere (same as you would for Media Encoder handoff).
-2. Run the script and pick the exported file.
-3. Optionally paste a preset id from Encode This (**Edit → Preferences → Integrations** or `GET /presets`).
+- Windows: `%APPDATA%\Encode This\inbox`
+- macOS: `~/Library/Application Support/Encode This/inbox`
 
 ## Future: native exporter
 
-A Premiere exporter module would register in **File → Export → Media** and stream jobs to the same intake API without a file picker. Track progress in the main repo README Phase 2 section.
+A Premiere exporter module would register in **File → Export → Media** and stream jobs to the same intake API without a file picker.

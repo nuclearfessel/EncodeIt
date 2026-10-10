@@ -5,7 +5,8 @@ import {
   resolveHardwareAcceleration,
   type HardwareCapabilities
 } from '../../../shared/hardware'
-import type { AppSettings, SettingsView } from '../../../shared/types'
+import { DEFAULT_PRESET_ID, PRESETS } from '../../../shared/presets'
+import type { AppSettings, SettingsView, WatchFolder } from '../../../shared/types'
 import { usePathPicker } from '../pathPicker/PathPickerContext'
 
 interface Props {
@@ -17,9 +18,23 @@ interface Props {
 
 type PrefsTab = 'general' | 'media' | 'hardware' | 'integrations'
 
+function settingsDraft(settings: SettingsView): AppSettings {
+  return {
+    ffmpegPath: settings.ffmpegPath,
+    ffprobePath: settings.ffprobePath,
+    outputDirectory: settings.outputDirectory,
+    maxConcurrent: settings.maxConcurrent,
+    overwriteOutput: settings.overwriteOutput,
+    hardwareAcceleration: settings.hardwareAcceleration,
+    intakeEnabled: settings.intakeEnabled,
+    intakePort: settings.intakePort,
+    watchFolders: settings.watchFolders ?? []
+  }
+}
+
 export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
   const [tab, setTab] = useState<PrefsTab>('general')
-  const [draft, setDraft] = useState<AppSettings>(settings)
+  const [draft, setDraft] = useState<AppSettings>(() => settingsDraft(settings))
   const [caps, setCaps] = useState<HardwareCapabilities | null>(null)
   const [probing, setProbing] = useState(false)
   const [saving, setSaving] = useState(false)
@@ -31,23 +46,19 @@ export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
     inboxDir: string
   } | null>(null)
   const [copied, setCopied] = useState(false)
+  const [watchFolders, setWatchFolders] = useState<WatchFolder[]>([])
+  const [newWatchPreset, setNewWatchPreset] = useState(DEFAULT_PRESET_ID)
+  const [newWatchOutput, setNewWatchOutput] = useState('')
   const pathPicker = usePathPicker()
 
   useEffect(() => {
     if (!open) return
-    setDraft({
-      ffmpegPath: settings.ffmpegPath,
-      ffprobePath: settings.ffprobePath,
-      outputDirectory: settings.outputDirectory,
-      maxConcurrent: settings.maxConcurrent,
-      overwriteOutput: settings.overwriteOutput,
-      hardwareAcceleration: settings.hardwareAcceleration,
-      intakeEnabled: settings.intakeEnabled,
-      intakePort: settings.intakePort
-    })
+    setDraft(settingsDraft(settings))
     setTab('general')
     setError(null)
     setCopied(false)
+    setNewWatchPreset(DEFAULT_PRESET_ID)
+    setNewWatchOutput(settings.outputDirectory || '')
     setProbing(true)
     void window.encodeThis
       .detectHardware()
@@ -58,6 +69,10 @@ export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
       .getIntakeStatus()
       .then(setIntakeStatus)
       .catch(() => setIntakeStatus(null))
+    void window.encodeThis
+      .listWatchFolders()
+      .then(setWatchFolders)
+      .catch(() => setWatchFolders([]))
   }, [open, settings])
 
   useEffect(() => {
@@ -120,6 +135,28 @@ export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
     } finally {
       setProbing(false)
     }
+  }
+
+  async function addWatchFolder() {
+    setError(null)
+    const folder = await pathPicker.openDirectory()
+    if (!folder) return
+    try {
+      const created = await window.encodeThis.addWatchFolder(
+        folder,
+        newWatchPreset || DEFAULT_PRESET_ID,
+        newWatchOutput || draft.outputDirectory
+      )
+      setWatchFolders(await window.encodeThis.listWatchFolders())
+      void created
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err))
+    }
+  }
+
+  async function pickWatchEncodeOutput() {
+    const dir = await pathPicker.openDirectory(newWatchOutput || draft.outputDirectory)
+    if (dir) setNewWatchOutput(dir)
   }
 
   return (
@@ -287,10 +324,120 @@ export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
 
             {tab === 'integrations' ? (
               <div className="prefs-section">
-                <h3>Host intake (AE / Premiere / Resolve)</h3>
+                <h3>Watch folders (AE / Resolve)</h3>
                 <p className="prefs-help">
-                  Phase 2 bridge — After Effects, Premiere Pro, DaVinci Resolve, and CLI tools POST
-                  jobs here while Encode This is running.
+                  Point After Effects or Resolve at a folder Encode This watches — no host scripts
+                  needed. Works the same on Windows and macOS. New media that lands here is queued
+                  with the chosen preset and encoding starts automatically. Files already in the
+                  folder when you add or enable a watch are ignored.
+                </p>
+                <label className="prefs-field">
+                  <span>Preset for new watches</span>
+                  <select
+                    value={newWatchPreset}
+                    onChange={(e) => setNewWatchPreset(e.target.value)}
+                  >
+                    {PRESETS.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.group} / {p.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="prefs-field">
+                  <span>Encode output folder (for new watches)</span>
+                  <div className="prefs-row">
+                    <input
+                      value={newWatchOutput}
+                      readOnly
+                      placeholder={draft.outputDirectory || 'Default output'}
+                    />
+                    <button type="button" onClick={() => void pickWatchEncodeOutput()}>
+                      Browse…
+                    </button>
+                  </div>
+                </label>
+                <div className="prefs-row prefs-watch-actions">
+                  <button type="button" className="primary" onClick={() => void addWatchFolder()}>
+                    Add watch folder…
+                  </button>
+                </div>
+                {watchFolders.length === 0 ? (
+                  <p className="prefs-muted">No watch folders yet.</p>
+                ) : (
+                  <ul className="prefs-watch-list">
+                    {watchFolders.map((wf) => (
+                      <li key={wf.id}>
+                        <label className="prefs-check prefs-watch-enable">
+                          <input
+                            type="checkbox"
+                            checked={wf.enabled}
+                            onChange={(e) => {
+                              void window.encodeThis
+                                .setWatchEnabled(wf.id, e.target.checked)
+                                .then(setWatchFolders)
+                            }}
+                          />
+                          Enabled
+                        </label>
+                        <div className="prefs-watch-path" title={wf.path}>
+                          {wf.path}
+                        </div>
+                        <label className="prefs-field">
+                          <span>Preset</span>
+                          <select
+                            value={wf.presetId}
+                            onChange={(e) => {
+                              void window.encodeThis
+                                .updateWatchFolder(wf.id, { presetId: e.target.value })
+                                .then(setWatchFolders)
+                            }}
+                          >
+                            {PRESETS.map((p) => (
+                              <option key={p.id} value={p.id}>
+                                {p.group} / {p.name}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                        <label className="prefs-field">
+                          <span>Encode output</span>
+                          <div className="prefs-row">
+                            <input value={wf.outputDir || '—'} readOnly />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                void pathPicker
+                                  .openDirectory(wf.outputDir || draft.outputDirectory)
+                                  .then((dir) => {
+                                    if (!dir) return
+                                    return window.encodeThis
+                                      .updateWatchFolder(wf.id, { outputDir: dir })
+                                      .then(setWatchFolders)
+                                  })
+                              }}
+                            >
+                              Browse…
+                            </button>
+                          </div>
+                        </label>
+                        <button
+                          type="button"
+                          className="prefs-watch-remove"
+                          onClick={() => {
+                            void window.encodeThis.removeWatchFolder(wf.id).then(setWatchFolders)
+                          }}
+                        >
+                          Remove
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                <h3 className="prefs-section-spacer">Host intake (optional)</h3>
+                <p className="prefs-help">
+                  Advanced bridge for scripts/CEP/CLI. Prefer watch folders above for AE and Resolve.
                 </p>
                 <label className="prefs-check">
                   <input
@@ -342,14 +489,12 @@ export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
                     ) : null}
                   </div>
                   {intakeStatus?.inboxDir ? (
-                    <p className="prefs-muted">Inbox: {intakeStatus.inboxDir}</p>
+                    <p className="prefs-muted">JSON inbox: {intakeStatus.inboxDir}</p>
                   ) : null}
                   <p className="prefs-help">
                     Endpoints: <code>GET /health</code>, <code>GET /presets</code>,{' '}
-                    <code>POST /queue/add</code>. Scripts live in{' '}
-                    <code>integrations/after-effects</code>,{' '}
-                    <code>integrations/premiere</code>, and{' '}
-                    <code>integrations/davinci-resolve</code>.
+                    <code>POST /queue/add</code>. Optional scripts in{' '}
+                    <code>integrations/</code>.
                   </p>
                 </div>
               </div>

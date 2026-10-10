@@ -47,7 +47,8 @@ async function main() {
     overwriteOutput: true,
     hardwareAcceleration: 'none',
     intakeEnabled: false,
-    intakePort: 47821
+    intakePort: 47821,
+    watchFolders: []
   }
 
   const job: QueueJob = {

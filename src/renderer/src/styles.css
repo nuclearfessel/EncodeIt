@@ -1930,6 +1930,46 @@ button.linkish:hover:not(:disabled) {
   color: var(--text-mute);
 }
 
+.prefs-section-spacer {
+  margin-top: 1.35rem !important;
+}
+
+.prefs-watch-actions {
+  margin-bottom: 0.85rem;
+}
+
+.prefs-watch-list {
+  list-style: none;
+  margin: 0 0 0.5rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.prefs-watch-list > li {
+  padding: 0.55rem 0.6rem;
+  border: 1px solid #2e2e2e;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.prefs-watch-enable {
+  margin-bottom: 0.35rem;
+}
+
+.prefs-watch-path {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  word-break: break-all;
+  margin-bottom: 0.45rem;
+}
+
+.prefs-watch-remove {
+  margin-top: 0.15rem;
+}
+
 .prefs-intake-status {
   margin-top: 0.75rem;
   padding-top: 0.65rem;

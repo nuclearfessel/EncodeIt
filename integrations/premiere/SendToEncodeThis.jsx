@@ -29,13 +29,21 @@
   }
 
   function writeInbox(mediaPath, presetId) {
+    // Electron userData uses productName "Encode This" (spaces) on Win + macOS.
     var candidates = [];
     if ($.os.indexOf('Windows') !== -1) {
       var appData = $.getenv('APPDATA');
       var local = $.getenv('LOCALAPPDATA');
-      if (appData) candidates.push(appData + '\\encode-this\\inbox');
-      if (local) candidates.push(local + '\\encode-this\\inbox');
+      if (appData) {
+        candidates.push(appData + '\\Encode This\\inbox');
+        candidates.push(appData + '\\encode-this\\inbox');
+      }
+      if (local) {
+        candidates.push(local + '\\Encode This\\inbox');
+        candidates.push(local + '\\encode-this\\inbox');
+      }
     } else {
+      candidates.push(Folder('~/Library/Application Support/Encode This/inbox').fsName);
       candidates.push(Folder('~/Library/Application Support/encode-this/inbox').fsName);
     }
 

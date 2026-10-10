@@ -2,7 +2,7 @@ import { app } from 'electron'
 import fs from 'fs'
 import path from 'path'
 import type { HardwareAcceleration } from '../shared/hardware'
-import type { AppSettings } from '../shared/types'
+import type { AppSettings, WatchFolderSettings } from '../shared/types'
 import { pickBinaryPath, resolveBundledFfmpeg } from './bundledFfmpeg'
 import { whichBinary } from './ffmpeg'
 
@@ -14,7 +14,29 @@ const DEFAULTS: AppSettings = {
   overwriteOutput: true,
   hardwareAcceleration: 'auto',
   intakeEnabled: true,
-  intakePort: 47821
+  intakePort: 47821,
+  watchFolders: []
+}
+
+function normalizeWatchFolders(value: unknown): WatchFolderSettings[] {
+  if (!Array.isArray(value)) return []
+  const out: WatchFolderSettings[] = []
+  for (const raw of value) {
+    if (!raw || typeof raw !== 'object') continue
+    const r = raw as Partial<WatchFolderSettings>
+    if (typeof r.path !== 'string' || !r.path.trim()) continue
+    out.push({
+      id: typeof r.id === 'string' && r.id ? r.id : `wf-${out.length}`,
+      path: r.path.trim(),
+      presetId:
+        typeof r.presetId === 'string' && r.presetId
+          ? r.presetId
+          : 'h264-match-source-high-bitrate',
+      outputDir: typeof r.outputDir === 'string' ? r.outputDir : '',
+      enabled: r.enabled !== false
+    })
+  }
+  return out
 }
 
 const HW_VALUES: HardwareAcceleration[] = [
@@ -90,7 +112,8 @@ export function normalizeAppSettings(input: AppSettings): AppSettings {
     overwriteOutput: Boolean(input.overwriteOutput),
     hardwareAcceleration: normalizeHardware(input.hardwareAcceleration),
     intakeEnabled: Boolean(input.intakeEnabled),
-    intakePort: Math.max(1024, Math.min(65535, Number(input.intakePort) || 47821))
+    intakePort: Math.max(1024, Math.min(65535, Number(input.intakePort) || 47821)),
+    watchFolders: normalizeWatchFolders(input.watchFolders)
   }
 }
 

@@ -152,6 +152,15 @@ export interface WatchFolder {
   enabled: boolean
 }
 
+/** Persisted watch-folder entry (id assigned at runtime / on create). */
+export interface WatchFolderSettings {
+  id: string
+  path: string
+  presetId: string
+  outputDir: string
+  enabled: boolean
+}
+
 export interface AppSettings {
   ffmpegPath: string
   ffprobePath: string
@@ -162,6 +171,8 @@ export interface AppSettings {
   /** Localhost intake for AE / Resolve / CLI (Phase 2). */
   intakeEnabled: boolean
   intakePort: number
+  /** Hotfolders for AE / Resolve / any render destination (Win + macOS). */
+  watchFolders: WatchFolderSettings[]
 }
 
 /** Extra fields returned by settings:get for the UI (not persisted). */

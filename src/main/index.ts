@@ -104,7 +104,11 @@ function registerIpc(): void {
   }))
   ipcMain.handle('settings:set', async (_e, next: AppSettings) => {
     const prev = settings
-    settings = normalizeAppSettings(next)
+    // Watch folders are managed via watch:* IPC — never wipe them from Preferences OK.
+    settings = normalizeAppSettings({
+      ...next,
+      watchFolders: watchers.toSettings()
+    })
     saveSettings(settings)
     queue.updateSettings(settings)
     if (prev.ffmpegPath !== settings.ffmpegPath) {
@@ -265,21 +269,50 @@ function registerIpc(): void {
     return { ok: true }
   })
 
+  function persistWatchFolders(): void {
+    settings = normalizeAppSettings({
+      ...settings,
+      watchFolders: watchers.toSettings()
+    })
+    saveSettings(settings)
+    broadcast('settings:changed', {
+      ...settings,
+      ffmpegSource: ffmpegSourceLabel(settings),
+      ffmpegBundled: Boolean(resolveBundledFfmpeg())
+    })
+  }
+
   ipcMain.handle('watch:list', () => watchers.list())
   ipcMain.handle(
     'watch:add',
     (_e, folderPath: string, presetId: string, outputDir: string) => {
-      return watchers.add(folderPath, presetId, outputDir)
+      const folder = watchers.add(folderPath, presetId, outputDir)
+      persistWatchFolders()
+      return folder
     }
   )
   ipcMain.handle('watch:remove', (_e, id: string) => {
     watchers.remove(id)
+    persistWatchFolders()
     return watchers.list()
   })
   ipcMain.handle('watch:setEnabled', (_e, id: string, enabled: boolean) => {
     watchers.setEnabled(id, enabled)
+    persistWatchFolders()
     return watchers.list()
   })
+  ipcMain.handle(
+    'watch:update',
+    (
+      _e,
+      id: string,
+      patch: { presetId?: string; outputDir?: string; path?: string }
+    ) => {
+      watchers.update(id, patch)
+      persistWatchFolders()
+      return watchers.list()
+    }
+  )
 
   ipcMain.handle('shell:showItem', (_e, filePath: string) => {
     shell.showItemInFolder(filePath)
@@ -308,6 +341,13 @@ app.whenReady().then(async () => {
   settings = await loadSettings()
   queue = new EncodeQueue(settings)
   watchers = new WatchFolderManager(queue)
+  watchers.restore(settings.watchFolders)
+  // Keep settings in sync with restored ids / normalized entries.
+  settings = normalizeAppSettings({
+    ...settings,
+    watchFolders: watchers.toSettings()
+  })
+  saveSettings(settings)
   inbox = new InboxWatcher(queue)
   inbox.start()
   await restartIntake()
