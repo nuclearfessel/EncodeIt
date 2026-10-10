@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import type { PresetDefinition } from '../../../shared/types'
+import { ChevronRight, Search, iconSize } from './icons'
 
 interface Props {
   grouped: Record<string, Record<string, PresetDefinition[]>>
@@ -34,19 +35,32 @@ export function PresetBrowser({ grouped, activePresetId, onSelect }: Props) {
 
   return (
     <>
-      <input
-        className="preset-search"
-        placeholder="Search presets, AME, Shutter…"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-      />
+      <label className="preset-search-wrap">
+        <Search size={iconSize.sm} strokeWidth={2} aria-hidden="true" />
+        <input
+          className="preset-search"
+          placeholder="Search presets, AME, Shutter…"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+      </label>
       <div className="preset-tree">
         {Object.entries(filtered).map(([group, subgroups]) => (
           <details key={group} className="preset-group" open>
-            <summary>{group}</summary>
+            <summary>
+              <ChevronRight className="preset-chevron" size={iconSize.sm} strokeWidth={2} />
+              <span>{group}</span>
+            </summary>
             {Object.entries(subgroups).map(([subgroup, presets]) => (
-              <details key={`${group}-${subgroup}`} className="preset-subgroup" open={Boolean(query)}>
-                <summary>{subgroup}</summary>
+              <details
+                key={`${group}-${subgroup}`}
+                className="preset-subgroup"
+                open={Boolean(query)}
+              >
+                <summary>
+                  <ChevronRight className="preset-chevron" size={iconSize.sm} strokeWidth={2} />
+                  <span>{subgroup}</span>
+                </summary>
                 {presets.map((preset) => (
                   <button
                     key={preset.id}

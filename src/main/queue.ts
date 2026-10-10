@@ -3,10 +3,54 @@ import fs from 'fs'
 import path from 'path'
 import { v4 as uuid } from 'uuid'
 import { resolveOutputPath } from '../shared/buildCommand'
+import { getFormat } from '../shared/formats'
 import { DEFAULT_PRESET_ID, getPreset } from '../shared/presets'
-import type { AppSettings, EncodeProgress, QueueJob } from '../shared/types'
+import type {
+  AppSettings,
+  AudioSettings,
+  EncodeProgress,
+  PresetDefinition,
+  QueueJob
+} from '../shared/types'
+
+function exportFlagsForPreset(preset: PresetDefinition): {
+  exportVideo: boolean
+  exportAudio: boolean
+} {
+  const format = getFormat(preset.formatId)
+  if (format?.category === 'audio') {
+    return { exportVideo: false, exportAudio: true }
+  }
+  if (format?.category === 'still' || format?.category === 'sequence' || format?.id === 'gif') {
+    return { exportVideo: true, exportAudio: false }
+  }
+  return {
+    exportVideo: preset.video.codec !== 'none',
+    exportAudio: preset.audio.enabled && preset.audio.codec !== 'none'
+  }
+}
 import { FfmpegRunner } from './ffmpeg'
 import { probeMedia } from './probe'
+
+function withPresetExtension(outputPath: string, preset: PresetDefinition): string {
+  const format = getFormat(preset.formatId)
+  const ext =
+    format?.extension ?? (path.extname(outputPath).replace(/^\./, '') || 'mp4')
+  const dir = path.dirname(outputPath)
+  const base = path.basename(outputPath)
+  const sequence = Boolean(preset.sequence || format?.category === 'sequence')
+
+  const stem = base
+    .replace(/%0\d+d/gi, '')
+    .replace(/\.[^.]+$/, '')
+    .replace(/_+$/g, '')
+
+  if (sequence) {
+    return path.join(dir, `${stem}_%06d.${ext}`)
+  }
+
+  return path.join(dir, `${stem}.${ext}`)
+}
 
 export class EncodeQueue extends EventEmitter {
   jobs: QueueJob[] = []
@@ -41,6 +85,7 @@ export class EncodeQueue extends EventEmitter {
         media = undefined
       }
       const outputPath = resolveOutputPath(sourcePath, preset, this.settings.outputDirectory)
+      const flags = exportFlagsForPreset(preset)
       const job: QueueJob = {
         id: uuid(),
         sourcePath,
@@ -50,7 +95,9 @@ export class EncodeQueue extends EventEmitter {
         status: 'waiting',
         progress: 0,
         createdAt: Date.now(),
-        media
+        media,
+        exportVideo: flags.exportVideo,
+        exportAudio: flags.exportAudio
       }
       this.jobs.push(job)
       created.push(job)
@@ -83,10 +130,96 @@ export class EncodeQueue extends EventEmitter {
       if (job.status === 'encoding') continue
       job.presetId = preset.id
       job.formatId = preset.formatId
-      job.outputPath = resolveOutputPath(job.sourcePath, preset, this.settings.outputDirectory)
+      job.outputPath = job.customOutputPath
+        ? withPresetExtension(job.outputPath, preset)
+        : resolveOutputPath(job.sourcePath, preset, this.settings.outputDirectory)
+      const flags = exportFlagsForPreset(preset)
+      job.exportVideo = flags.exportVideo
+      job.exportAudio = flags.exportAudio
+      job.audioOverrides = undefined
+      job.videoOverrides = undefined
       job.status = 'waiting'
       job.progress = 0
       job.error = undefined
+    }
+    this.emit('change', this.jobs)
+  }
+
+  setExportTracks(
+    ids: string[],
+    tracks: { exportVideo?: boolean; exportAudio?: boolean }
+  ): void {
+    for (const job of this.jobs) {
+      if (!ids.includes(job.id) || job.status === 'encoding') continue
+      if (tracks.exportVideo !== undefined) job.exportVideo = tracks.exportVideo
+      if (tracks.exportAudio !== undefined) job.exportAudio = tracks.exportAudio
+      if (!job.exportVideo && !job.exportAudio) {
+        // Match AME: at least one stream must remain enabled.
+        if (tracks.exportAudio === false) job.exportVideo = true
+        else job.exportAudio = true
+      }
+      if (job.status === 'done' || job.status === 'error' || job.status === 'stopped') {
+        job.status = 'waiting'
+        job.progress = 0
+        job.error = undefined
+      }
+    }
+    this.emit('change', this.jobs)
+  }
+
+  setAudioOverrides(ids: string[], overrides: Partial<AudioSettings>): void {
+    for (const job of this.jobs) {
+      if (!ids.includes(job.id) || job.status === 'encoding') continue
+      const next: Partial<AudioSettings> = { ...job.audioOverrides, ...overrides }
+      // Explicit undefined clears a previous bitrate (e.g. switching to FLAC/PCM).
+      if ('bitrateKbps' in overrides && overrides.bitrateKbps === undefined) {
+        delete next.bitrateKbps
+      }
+      job.audioOverrides = next
+      if (overrides.codec && overrides.codec !== 'none') {
+        job.exportAudio = true
+      }
+      if (job.status === 'done' || job.status === 'error' || job.status === 'stopped') {
+        job.status = 'waiting'
+        job.progress = 0
+        job.error = undefined
+      }
+    }
+    this.emit('change', this.jobs)
+  }
+
+  setOutputPath(ids: string[], outputPath: string): void {
+    const trimmed = outputPath.trim()
+    if (!trimmed) return
+    for (const job of this.jobs) {
+      if (!ids.includes(job.id) || job.status === 'encoding') continue
+      const preset = getPreset(job.presetId)
+      job.outputPath = preset ? withPresetExtension(trimmed, preset) : trimmed
+      job.customOutputPath = true
+      if (job.status === 'done' || job.status === 'error' || job.status === 'stopped') {
+        job.status = 'waiting'
+        job.progress = 0
+        job.error = undefined
+      }
+    }
+    this.emit('change', this.jobs)
+  }
+
+  setOutputFileName(ids: string[], fileName: string): void {
+    const name = fileName.trim()
+    if (!name) return
+    for (const job of this.jobs) {
+      if (!ids.includes(job.id) || job.status === 'encoding') continue
+      const dir = path.dirname(job.outputPath)
+      const preset = getPreset(job.presetId)
+      const next = path.join(dir, name)
+      job.outputPath = preset ? withPresetExtension(next, preset) : next
+      job.customOutputPath = true
+      if (job.status === 'done' || job.status === 'error' || job.status === 'stopped') {
+        job.status = 'waiting'
+        job.progress = 0
+        job.error = undefined
+      }
     }
     this.emit('change', this.jobs)
   }
@@ -98,7 +231,8 @@ export class EncodeQueue extends EventEmitter {
       const preset = getPreset(job.presetId)
       if (!preset) continue
       const fileName = path.basename(job.outputPath)
-      job.outputPath = path.join(directory, fileName.includes('%') ? fileName : path.basename(resolveOutputPath(job.sourcePath, preset, directory)))
+      job.outputPath = path.join(directory, fileName)
+      job.customOutputPath = true
     }
     this.emit('change', this.jobs)
   }

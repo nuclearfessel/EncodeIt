@@ -1,7 +1,9 @@
 import { app } from 'electron'
 import fs from 'fs'
 import path from 'path'
+import type { HardwareAcceleration } from '../shared/hardware'
 import type { AppSettings } from '../shared/types'
+import { pickBinaryPath, resolveBundledFfmpeg } from './bundledFfmpeg'
 import { whichBinary } from './ffmpeg'
 
 const DEFAULTS: AppSettings = {
@@ -13,6 +15,21 @@ const DEFAULTS: AppSettings = {
   hardwareAcceleration: 'auto',
   intakeEnabled: true,
   intakePort: 47821
+}
+
+const HW_VALUES: HardwareAcceleration[] = [
+  'auto',
+  'none',
+  'nvenc',
+  'qsv',
+  'amf',
+  'videotoolbox'
+]
+
+function normalizeHardware(value: unknown): HardwareAcceleration {
+  return HW_VALUES.includes(value as HardwareAcceleration)
+    ? (value as HardwareAcceleration)
+    : 'auto'
 }
 
 function settingsPath(): string {
@@ -30,8 +47,15 @@ export async function loadSettings(): Promise<AppSettings> {
     }
   }
 
-  const ffmpeg = stored.ffmpegPath || (await whichBinary('ffmpeg')) || 'ffmpeg'
-  const ffprobe = stored.ffprobePath || (await whichBinary('ffprobe')) || 'ffprobe'
+  const bundled = resolveBundledFfmpeg()
+  let ffmpeg = pickBinaryPath(stored.ffmpegPath, bundled?.ffmpeg ?? null, 'ffmpeg')
+  let ffprobe = pickBinaryPath(stored.ffprobePath, bundled?.ffprobe ?? null, 'ffprobe')
+  if (!path.isAbsolute(ffmpeg) || !fs.existsSync(ffmpeg)) {
+    ffmpeg = (await whichBinary('ffmpeg')) || bundled?.ffmpeg || ffmpeg
+  }
+  if (!path.isAbsolute(ffprobe) || !fs.existsSync(ffprobe)) {
+    ffprobe = (await whichBinary('ffprobe')) || bundled?.ffprobe || ffprobe
+  }
   const outputDirectory =
     stored.outputDirectory || path.join(app.getPath('videos'), 'Encode This')
 
@@ -44,11 +68,43 @@ export async function loadSettings(): Promise<AppSettings> {
   }
 
   fs.mkdirSync(settings.outputDirectory, { recursive: true })
-  saveSettings(settings)
+  // Do not persist resolved absolute bundled paths as "custom" overrides.
+  const toStore: AppSettings = {
+    ...settings,
+    ffmpegPath:
+      bundled && settings.ffmpegPath === bundled.ffmpeg ? 'ffmpeg' : settings.ffmpegPath,
+    ffprobePath:
+      bundled && settings.ffprobePath === bundled.ffprobe ? 'ffprobe' : settings.ffprobePath
+  }
+  saveSettings(toStore)
   return settings
 }
 
+/** Strip UI-only fields (e.g. ffmpegSource) before persist / queue use. */
+export function normalizeAppSettings(input: AppSettings): AppSettings {
+  return {
+    ffmpegPath: input.ffmpegPath || DEFAULTS.ffmpegPath,
+    ffprobePath: input.ffprobePath || DEFAULTS.ffprobePath,
+    outputDirectory: input.outputDirectory || DEFAULTS.outputDirectory,
+    maxConcurrent: Math.max(1, Math.min(8, Number(input.maxConcurrent) || 1)),
+    overwriteOutput: Boolean(input.overwriteOutput),
+    hardwareAcceleration: normalizeHardware(input.hardwareAcceleration),
+    intakeEnabled: Boolean(input.intakeEnabled),
+    intakePort: Math.max(1024, Math.min(65535, Number(input.intakePort) || 47821))
+  }
+}
+
 export function saveSettings(settings: AppSettings): void {
+  const clean = normalizeAppSettings(settings)
   fs.mkdirSync(path.dirname(settingsPath()), { recursive: true })
-  fs.writeFileSync(settingsPath(), JSON.stringify(settings, null, 2), 'utf8')
+  fs.writeFileSync(settingsPath(), JSON.stringify(clean, null, 2), 'utf8')
+}
+
+export function ffmpegSourceLabel(settings: AppSettings): 'bundled' | 'system' | 'custom' {
+  const bundled = resolveBundledFfmpeg()
+  if (bundled && settings.ffmpegPath === bundled.ffmpeg) return 'bundled'
+  if (path.isAbsolute(settings.ffmpegPath) && settings.ffmpegPath !== bundled?.ffmpeg) {
+    return 'custom'
+  }
+  return 'system'
 }

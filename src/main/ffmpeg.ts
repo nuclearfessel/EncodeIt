@@ -2,6 +2,7 @@ import { spawn, type ChildProcess } from 'child_process'
 import { EventEmitter } from 'events'
 import { buildFfmpegArgs, estimateDurationSeconds } from '../shared/buildCommand'
 import type { AppSettings, EncodeProgress, QueueJob } from '../shared/types'
+import { detectHardwareCapabilities } from './hardwareDetect'
 
 function parseTimeToSeconds(value: string): number {
   const parts = value.split(':').map(Number)
@@ -15,7 +16,8 @@ export class FfmpegRunner extends EventEmitter {
 
   async run(job: QueueJob, settings: AppSettings): Promise<void> {
     this.stopped = false
-    const built = buildFfmpegArgs(job, settings, job.media)
+    const hardware = await detectHardwareCapabilities(settings.ffmpegPath)
+    const built = buildFfmpegArgs(job, settings, job.media, hardware)
     const duration = estimateDurationSeconds(job.media)
 
     this.emit('progress', {

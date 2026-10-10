@@ -1,3 +1,7 @@
+import type { HardwareAcceleration } from './hardware'
+
+export type { HardwareAcceleration }
+
 export type Platform = 'win32' | 'darwin' | 'linux'
 
 export type BitrateMode = 'cbr' | 'vbr1' | 'vbr2' | 'crf' | 'cq'
@@ -118,6 +122,8 @@ export interface QueueJob {
   id: string
   sourcePath: string
   outputPath: string
+  /** When true, preset changes keep the chosen folder/name and only refresh the extension. */
+  customOutputPath?: boolean
   formatId: string
   presetId: string
   status: JobStatus
@@ -130,6 +136,10 @@ export interface QueueJob {
   startedAt?: number
   finishedAt?: number
   media?: MediaInfo
+  /** Adobe Media Encoder–style Export Video checkbox (default true). */
+  exportVideo: boolean
+  /** Adobe Media Encoder–style Export Audio checkbox (default follows preset). */
+  exportAudio: boolean
   videoOverrides?: Partial<VideoSettings>
   audioOverrides?: Partial<AudioSettings>
 }
@@ -148,10 +158,16 @@ export interface AppSettings {
   outputDirectory: string
   maxConcurrent: number
   overwriteOutput: boolean
-  hardwareAcceleration: 'auto' | 'none' | 'nvenc' | 'qsv' | 'amf' | 'videotoolbox'
+  hardwareAcceleration: HardwareAcceleration
   /** Localhost intake for AE / Resolve / CLI (Phase 2). */
   intakeEnabled: boolean
   intakePort: number
+}
+
+/** Extra fields returned by settings:get for the UI (not persisted). */
+export type SettingsView = AppSettings & {
+  ffmpegSource?: 'bundled' | 'system' | 'custom'
+  ffmpegBundled?: boolean
 }
 
 export interface EncodeProgress {

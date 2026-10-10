@@ -59,7 +59,9 @@ async function main() {
     status: 'waiting',
     progress: 0,
     createdAt: Date.now(),
-    media: { path: src, duration: 0.5, streams: [] }
+    media: { path: src, duration: 0.5, streams: [] },
+    exportVideo: true,
+    exportAudio: true
   }
 
   const built = buildFfmpegArgs(job, settings, job.media)

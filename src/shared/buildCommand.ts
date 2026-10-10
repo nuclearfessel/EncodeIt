@@ -1,5 +1,10 @@
 import path from 'path'
 import { getFormat } from './formats'
+import {
+  resolveHardwareAcceleration,
+  type HardwareCapabilities,
+  type HardwareAcceleration
+} from './hardware'
 import { getPreset } from './presets'
 import type {
   AppSettings,
@@ -57,14 +62,14 @@ function bitrateArgs(video: VideoSettings): string[] {
   return args
 }
 
-function videoCodecArgs(video: VideoSettings, hw: AppSettings['hardwareAcceleration']): string[] {
+function videoCodecArgs(
+  video: VideoSettings,
+  hw: Exclude<HardwareAcceleration, 'auto'>
+): string[] {
   const args: string[] = []
   let codec = video.encoder ?? video.codec
 
   if (hw !== 'none' && (codec === 'libx264' || codec === 'libx265')) {
-    if (hw === 'nvenc' || (hw === 'auto' && process.platform === 'win32')) {
-      // Prefer software unless user picks a specific HW — auto stays software for reliability.
-    }
     if (hw === 'nvenc') codec = codec === 'libx265' ? 'hevc_nvenc' : 'h264_nvenc'
     if (hw === 'qsv') codec = codec === 'libx265' ? 'hevc_qsv' : 'h264_qsv'
     if (hw === 'amf') codec = codec === 'libx265' ? 'hevc_amf' : 'h264_amf'
@@ -103,8 +108,16 @@ function audioArgs(audio: AudioSettings, category: string): string[] {
   if (!audio.enabled || audio.codec === 'none' || category === 'still' || category === 'sequence') {
     return ['-an']
   }
+  if (audio.codec === 'copy') {
+    return ['-c:a', 'copy']
+  }
   const args = ['-c:a', audio.codec]
-  if (audio.bitrateKbps) args.push('-b:a', `${audio.bitrateKbps}k`)
+  const skipBitrate =
+    audio.codec.startsWith('pcm_') ||
+    audio.codec === 'flac' ||
+    audio.codec === 'alac' ||
+    audio.codec === 'copy'
+  if (!skipBitrate && audio.bitrateKbps) args.push('-b:a', `${audio.bitrateKbps}k`)
   if (audio.sampleRate && audio.sampleRate !== 'match') args.push('-ar', String(audio.sampleRate))
   if (audio.channels && audio.channels !== 'match') args.push('-ac', String(audio.channels))
   if (audio.extraArgs?.length) args.push(...audio.extraArgs)
@@ -139,15 +152,31 @@ export function resolveOutputPath(
 export function buildFfmpegArgs(
   job: QueueJob,
   settings: AppSettings,
-  media?: MediaInfo
+  media?: MediaInfo,
+  hardware?: HardwareCapabilities
 ): BuiltCommand {
   const preset = getPreset(job.presetId)
   if (!preset) throw new Error(`Unknown preset: ${job.presetId}`)
   const format = getFormat(preset.formatId)
   if (!format) throw new Error(`Unknown format: ${preset.formatId}`)
 
+  const exportVideo = job.exportVideo !== false
+  const exportAudio = job.exportAudio !== false
+  if (!exportVideo && !exportAudio) {
+    throw new Error('Enable Export Video and/or Export Audio (same as Adobe Media Encoder).')
+  }
+
+  const hw = hardware
+    ? resolveHardwareAcceleration(settings.hardwareAcceleration, hardware)
+    : settings.hardwareAcceleration === 'auto'
+      ? 'none'
+      : settings.hardwareAcceleration
+
   const video = mergeVideo(preset.video, job.videoOverrides)
-  const audio = mergeAudio(preset.audio, job.audioOverrides)
+  const audio = mergeAudio(preset.audio, {
+    ...job.audioOverrides,
+    ...(exportAudio ? {} : { enabled: false, codec: 'none' })
+  })
   const outputPath = job.outputPath || resolveOutputPath(job.sourcePath, preset, settings.outputDirectory)
 
   const args: string[] = ['-hide_banner', '-y']
@@ -157,25 +186,25 @@ export function buildFfmpegArgs(
 
   args.push('-i', job.sourcePath)
 
-  const filters = filterArgs(video)
+  const filters = exportVideo ? filterArgs(video) : []
   args.push(...filters)
 
   // When filters already scale/fps, skip redundant -s/-r for picky codecs
   const hasGeometryFilter = Boolean(video.videoFilters?.some((f) => f.includes('scale=') || f.includes('fps=')))
-  if (!hasGeometryFilter) {
+  if (exportVideo && !hasGeometryFilter) {
     args.push(...sizeArgs(video))
     args.push(...rateArgs(video))
   }
 
-  if (format.category === 'audio' || video.codec === 'none') {
+  if (!exportVideo || format.category === 'audio' || video.codec === 'none') {
     args.push('-vn')
-    args.push(...audioArgs({ ...audio, enabled: true }, 'audio'))
+    args.push(...audioArgs({ ...audio, enabled: exportAudio }, 'audio'))
   } else if (format.id === 'gif') {
     args.push('-an')
     // GIF filter_complex already set; avoid double -c:v gif conflicting with palette graph
     if (!filters.length) args.push('-c:v', 'gif')
   } else {
-    args.push(...videoCodecArgs(video, settings.hardwareAcceleration))
+    args.push(...videoCodecArgs(video, hw))
     args.push(...audioArgs(audio, format.category))
   }
 

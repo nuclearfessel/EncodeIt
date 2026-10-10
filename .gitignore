@@ -14,3 +14,8 @@ coverage/
 tmp/
 encode-output/
 *.tsbuildinfo
+resources/ffmpeg/
+resources/.ffmpeg-cache/
+.tmp-*.png
+tmp-*.png
+tmp-ame-*.png

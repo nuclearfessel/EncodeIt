@@ -15,7 +15,7 @@ Cross-platform (**Windows, macOS, Linux**) via Electron + FFmpeg.
 ### Requirements
 
 - Node.js 20+
-- FFmpeg and FFprobe on `PATH` (or set paths in Settings)
+- FFmpeg/FFprobe are **bundled** (downloaded on `npm install` / `npm run download-ffmpeg` and shipped inside installers via `extraResources`)
 
 ### Develop
 
