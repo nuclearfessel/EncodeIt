@@ -1,6 +1,6 @@
 {
   "name": "encode-this",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Open-source batch media encoder — Adobe Media Encoder / Shutter Encoder style",
   "main": "./out/main/index.js",
   "author": "nuclearfessel",
@@ -11,12 +11,15 @@
     "build": "electron-vite build",
     "preview": "electron-vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
+    "test": "tsx --test src/shared/fileSettle.test.ts src/shared/buildCommand.overwrite.test.ts src/shared/intakePayload.test.ts",
+    "smoke": "tsx scripts/smoke-encode.ts",
     "download-ffmpeg": "node scripts/download-ffmpeg.mjs",
     "postinstall": "node scripts/download-ffmpeg.mjs",
     "pack": "npm run download-ffmpeg && npm run build && electron-builder --dir",
     "dist": "npm run download-ffmpeg && npm run build && electron-builder",
     "dist:win": "npm run download-ffmpeg && npm run build && electron-builder --win",
     "dist:mac": "npm run download-ffmpeg && npm run build && electron-builder --mac",
+    "dist:linux": "npm run download-ffmpeg && npm run build && electron-builder --linux",
     "catalog:stats": "tsx scripts/catalog-stats.ts",
     "package:cep": "node scripts/package-ae-cep.mjs"
   },

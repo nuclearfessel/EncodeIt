@@ -28,9 +28,15 @@ const api = {
     port: number
     address: string | null
     inboxDir: string
+    error: string | null
   }> => ipcRenderer.invoke('intake:status'),
   completeIntegrationSetup: (options: InstallOptions): Promise<SettingsView> =>
     ipcRenderer.invoke('integrations:completeSetup', options),
+  dismissIntegrationCoach: (): Promise<SettingsView> =>
+    ipcRenderer.invoke('integrations:dismissCoach'),
+  openLogFile: (): Promise<string> => ipcRenderer.invoke('logs:open'),
+  showLogInFolder: (): Promise<void> => ipcRenderer.invoke('logs:showInFolder'),
+  getLogPath: (): Promise<string> => ipcRenderer.invoke('logs:getPath'),
   listMediaDirectory: (
     dirPath?: string
   ): Promise<{
@@ -96,7 +102,13 @@ const api = {
     ipcRenderer.invoke('watch:setEnabled', id, enabled),
   updateWatchFolder: (
     id: string,
-    patch: { presetId?: string; outputDir?: string; path?: string }
+    patch: {
+      presetId?: string
+      outputDir?: string
+      path?: string
+      autoStart?: boolean
+      recursive?: boolean
+    }
   ): Promise<WatchFolder[]> => ipcRenderer.invoke('watch:update', id, patch),
   showItem: (filePath: string) => ipcRenderer.invoke('shell:showItem', filePath),
   openPath: (filePath: string) => ipcRenderer.invoke('shell:openPath', filePath),

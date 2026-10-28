@@ -150,6 +150,10 @@ export interface WatchFolder {
   presetId: string
   outputDir: string
   enabled: boolean
+  /** When true (default), new arrivals call Start Queue automatically. */
+  autoStart: boolean
+  /** When true, watch media in subfolders too. */
+  recursive: boolean
 }
 
 /** Persisted watch-folder entry (id assigned at runtime / on create). */
@@ -159,6 +163,8 @@ export interface WatchFolderSettings {
   presetId: string
   outputDir: string
   enabled: boolean
+  autoStart?: boolean
+  recursive?: boolean
 }
 
 export interface AppSettings {
@@ -197,6 +203,8 @@ export type SettingsView = AppSettings & {
    * (no installer options file — typical for macOS DMG / portable).
    */
   needsIntegrationSetup?: boolean
+  /** Show one-shot tip after host folders were created. */
+  showIntegrationCoach?: boolean
   /** Which host NLEs were detected on this machine. */
   hostAppPresence?: {
     afterEffects: boolean

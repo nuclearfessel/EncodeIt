@@ -1,6 +1,7 @@
 import { audioCodecLabel } from '../../../shared/audioCodecs'
 import { getPreset } from '../../../shared/presets'
 import type { QueueJob } from '../../../shared/types'
+import { useState } from 'react'
 import { usePathPicker } from '../pathPicker/PathPickerContext'
 import { ButtonContent } from './ButtonContent'
 import {
@@ -25,6 +26,8 @@ function basename(filePath: string): string {
 
 export function QueueTable({ jobs, selectedIds, onSelect, presetName, onAdd }: Props) {
   const pathPicker = usePathPicker()
+  const [detailId, setDetailId] = useState<string | null>(null)
+  const [copiedId, setCopiedId] = useState<string | null>(null)
 
   function toggle(id: string, additive: boolean) {
     if (!additive) {
@@ -109,8 +112,36 @@ export function QueueTable({ jobs, selectedIds, onSelect, presetName, onAdd }: P
                   {job.status}
                 </span>
                 {job.error ? (
-                  <div className="error-text" title={job.error}>
-                    {job.error}
+                  <div className="error-text-wrap">
+                    <div className="error-text" title={job.error}>
+                      {detailId === job.id ? job.error : job.error.slice(0, 120)}
+                      {detailId !== job.id && job.error.length > 120 ? '…' : ''}
+                    </div>
+                    <div className="error-actions">
+                      <button
+                        type="button"
+                        className="linkish"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setDetailId((id) => (id === job.id ? null : job.id))
+                        }}
+                      >
+                        {detailId === job.id ? 'Hide details' : 'Show details'}
+                      </button>
+                      <button
+                        type="button"
+                        className="linkish"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          void navigator.clipboard.writeText(job.error || '').then(() => {
+                            setCopiedId(job.id)
+                            window.setTimeout(() => setCopiedId(null), 1200)
+                          })
+                        }}
+                      >
+                        {copiedId === job.id ? 'Copied' : 'Copy'}
+                      </button>
+                    </div>
                   </div>
                 ) : null}
               </td>

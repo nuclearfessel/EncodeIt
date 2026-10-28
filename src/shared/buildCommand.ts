@@ -179,10 +179,8 @@ export function buildFfmpegArgs(
   })
   const outputPath = job.outputPath || resolveOutputPath(job.sourcePath, preset, settings.outputDirectory)
 
-  const args: string[] = ['-hide_banner', '-y']
-  if (!settings.overwriteOutput) {
-    // still use -y for queue clarity; UI warns before start
-  }
+  // -y overwrite; -n fail if output exists (honors Preferences → Overwrite).
+  const args: string[] = ['-hide_banner', settings.overwriteOutput ? '-y' : '-n']
 
   args.push('-i', job.sourcePath)
 

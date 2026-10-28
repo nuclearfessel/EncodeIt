@@ -1,4 +1,4 @@
-# Build Windows + macOS installers and attach them to a GitHub Release when a version tag is pushed.
+# Build installers (+ Linux AppImage) and attach them to a GitHub Release when a version tag is pushed.
 name: Release
 
 on:
@@ -19,6 +19,8 @@ jobs:
             platform: win
           - os: macos-latest
             platform: mac
+          - os: ubuntu-latest
+            platform: linux
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
@@ -33,9 +35,19 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Unit tests
+        run: npm test
+
       # No GH_TOKEN here — publish is disabled; we only attach installers below (no auto-update).
       - name: Download FFmpeg + build + package
         run: npm run dist -- --${{ matrix.platform }}
+
+      - name: Package AE CEP zip
+        if: matrix.platform == 'win'
+        run: npm run package:cep
 
       - name: Upload release artifacts
         uses: softprops/action-gh-release@v2
@@ -47,6 +59,7 @@ jobs:
             release/*-mac.zip
             release/*.AppImage
             release/*.deb
+            release/encode-this-ae-cep.zip
           fail_on_unmatched_files: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

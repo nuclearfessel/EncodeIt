@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import { app } from 'electron'
+import { logger } from './logger'
 import type { EncodeQueue } from './queue'
 
 export interface InboxJob {
@@ -9,10 +10,47 @@ export interface InboxJob {
   start?: boolean
 }
 
+const DONE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000
+const ERROR_MAX_AGE_MS = 14 * 24 * 60 * 60 * 1000
+
 export function inboxDirectory(): string {
   const dir = path.join(app.getPath('userData'), 'inbox')
   fs.mkdirSync(dir, { recursive: true })
   return dir
+}
+
+function cleanupOld(dir: string): void {
+  let files: string[] = []
+  try {
+    files = fs.readdirSync(dir)
+  } catch {
+    return
+  }
+  const now = Date.now()
+  for (const name of files) {
+    const full = path.join(dir, name)
+    let age = 0
+    try {
+      age = now - fs.statSync(full).mtimeMs
+    } catch {
+      continue
+    }
+    const isDone = name.endsWith('.json.done') || name.endsWith('.done')
+    const isError = name.endsWith('.json.error') || name.endsWith('.error')
+    if (isDone && age > DONE_MAX_AGE_MS) {
+      try {
+        fs.unlinkSync(full)
+      } catch {
+        /* ignore */
+      }
+    } else if (isError && age > ERROR_MAX_AGE_MS) {
+      try {
+        fs.unlinkSync(full)
+      } catch {
+        /* ignore */
+      }
+    }
+  }
 }
 
 /**
@@ -23,6 +61,7 @@ export class InboxWatcher {
   private timer: NodeJS.Timeout | null = null
   private queue: EncodeQueue
   private dir: string
+  private ticks = 0
 
   constructor(queue: EncodeQueue, dir = inboxDirectory()) {
     this.queue = queue
@@ -42,6 +81,9 @@ export class InboxWatcher {
   }
 
   private async tick(): Promise<void> {
+    this.ticks += 1
+    if (this.ticks % 40 === 1) cleanupOld(this.dir)
+
     let files: string[] = []
     try {
       files = fs.readdirSync(this.dir).filter((f) => f.endsWith('.json'))
@@ -62,7 +104,8 @@ export class InboxWatcher {
         await this.queue.addFiles(job.paths, job.presetId)
         if (job.start) void this.queue.start()
         fs.renameSync(full, processed)
-      } catch {
+      } catch (err) {
+        logger.warn(`Inbox job failed: ${name}`, err)
         try {
           fs.renameSync(full, full + '.error')
         } catch {

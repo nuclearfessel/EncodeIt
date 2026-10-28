@@ -22,6 +22,7 @@ import { DockDropOverlay } from './components/DockDropOverlay'
 import { EncodingPanel } from './components/EncodingPanel'
 import { AboutDialog } from './components/AboutDialog'
 import { HelpDocumentationWindow } from './components/HelpDocumentationWindow'
+import { IntegrationCoachBanner } from './components/IntegrationCoachBanner'
 import { IntegrationSetupDialog } from './components/IntegrationSetupDialog'
 import { PreferencesDialog } from './components/PreferencesDialog'
 import { version as APP_VERSION } from '../../../package.json'
@@ -310,6 +311,7 @@ function MainApp() {
             onShowAllPanels: () => void window.encodeThis.showAllPanels(),
             onDocumentation: () => void window.encodeThis.openDocumentation(),
             onAbout: () => setAboutOpen(true),
+            onOpenLog: () => void window.encodeThis.openLogFile(),
             canStart,
             canStop: running
           }}
@@ -408,13 +410,29 @@ function MainApp() {
         }}
       />
 
-      <AboutDialog open={aboutOpen} onClose={() => setAboutOpen(false)} version={APP_VERSION} />
+      <AboutDialog
+        open={aboutOpen}
+        onClose={() => setAboutOpen(false)}
+        version={APP_VERSION}
+        ffmpegPath={settings.ffmpegPath}
+        ffmpegSource={settings.ffmpegSource}
+      />
 
       {!floatingPanel ? (
         <IntegrationSetupDialog
           open={Boolean(settings.needsIntegrationSetup)}
           presence={settings.hostAppPresence}
           onComplete={(saved) => setSettings(saved)}
+        />
+      ) : null}
+
+      {!floatingPanel ? (
+        <IntegrationCoachBanner
+          open={Boolean(settings.showIntegrationCoach) && !settings.needsIntegrationSetup}
+          hostFolders={settings.hostFolders}
+          onDismiss={() => {
+            void window.encodeThis.dismissIntegrationCoach().then(setSettings)
+          }}
         />
       ) : null}
 

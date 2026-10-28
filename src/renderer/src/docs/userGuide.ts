@@ -95,7 +95,9 @@ export const USER_GUIDE_SECTIONS: DocSection[] = [
           'Encoding panel — export video/audio, audio codec overrides, hardware acceleration for the selected job(s).',
           'Hardware — NVENC, QSV, AMF, or VideoToolbox when bundled FFmpeg and your GPU support them.',
           'Preferences → Hardware — see what was detected on this machine.',
-          'Preferences → General — default output folder, concurrency, and overwrite behavior.'
+          'Preferences → General — default output folder, max concurrent encodes (1–8), and overwrite behavior.',
+          'If overwrite is off, jobs fail when the output file already exists.',
+          'Hardware encodes that fail may automatically retry with software encoding.'
         ]
       }
     ]
@@ -133,12 +135,13 @@ export const USER_GUIDE_SECTIONS: DocSection[] = [
               'Open Edit → Preferences → Integrations to see install paths and active watches.',
               'Each watch has a folder path, a preset used for new files, and an encode output folder.',
               'Keep Encode This running while the host app finishes writing the file.',
-              'When a new media file appears (and is done writing), it is added to the queue with that watch’s preset.'
+              'When a new media file appears and its size stays stable across polls, it is added to the queue with that watch’s preset.',
+              'Per watch: enable/disable, auto-start queue, and optional subfolder watching.'
             ]
           },
           {
             type: 'note',
-            text: 'Files already in the folder when you add or enable a watch are ignored — only new arrivals are queued. You can add extra watches for any folder, not just the install layout.'
+            text: 'Files already in the folder when you add or enable a watch are ignored — only new arrivals are queued. Incomplete writes are held until size settles. Help → Open Log File shows the app log.'
           }
         ]
       }

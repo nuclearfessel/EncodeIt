@@ -45,8 +45,10 @@ export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
     port: number
     address: string | null
     inboxDir: string
+    error: string | null
   } | null>(null)
   const [copied, setCopied] = useState(false)
+  const [copiedPath, setCopiedPath] = useState<string | null>(null)
   const [watchFolders, setWatchFolders] = useState<WatchFolder[]>([])
   const [newWatchPreset, setNewWatchPreset] = useState(DEFAULT_PRESET_ID)
   const [newWatchOutput, setNewWatchOutput] = useState('')
@@ -325,33 +327,52 @@ export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
 
             {tab === 'integrations' ? (
               <div className="prefs-section">
-                <h3>Watch folders (AE / Resolve)</h3>
+                <h3>Watch folders (AE / Premiere / Resolve)</h3>
                 <p className="prefs-help">
                   Install / first launch creates shared folders under your Videos (Windows) or Movies
-                  (macOS) library. Point After Effects or Resolve at those folders — no host scripts
-                  needed. New media is queued with the chosen preset; files already present when a
-                  watch is added or enabled are ignored.
+                  (macOS) library. Point After Effects, Premiere Pro, or DaVinci Resolve at those
+                  folders — no host scripts needed. New media is queued with the chosen preset; files
+                  already present when a watch is added or enabled are ignored until the file size
+                  settles.
                 </p>
                 {settings.hostFolders ? (
                   <div className="prefs-host-folders">
                     <p className="prefs-muted">Install layout:</p>
                     <ul className="prefs-host-folder-list">
-                      <li>
-                        <strong>After Effects</strong>
-                        <code>{settings.hostFolders.fromAe}</code>
-                      </li>
-                      <li>
-                        <strong>DaVinci Resolve</strong>
-                        <code>{settings.hostFolders.fromResolve}</code>
-                      </li>
-                      <li>
-                        <strong>Premiere Pro</strong>
-                        <code>{settings.hostFolders.fromPremiere}</code>
-                      </li>
-                      <li>
-                        <strong>Encode output</strong>
-                        <code>{settings.hostFolders.output}</code>
-                      </li>
+                      {(
+                        [
+                          ['After Effects', settings.hostFolders.fromAe],
+                          ['DaVinci Resolve', settings.hostFolders.fromResolve],
+                          ['Premiere Pro', settings.hostFolders.fromPremiere],
+                          ['Encode output', settings.hostFolders.output]
+                        ] as const
+                      ).map(([label, folderPath]) => (
+                        <li key={label}>
+                          <strong>{label}</strong>
+                          <code>{folderPath}</code>
+                          <span className="prefs-host-folder-actions">
+                            <button
+                              type="button"
+                              className="linkish"
+                              onClick={() => void window.encodeThis.openPath(folderPath)}
+                            >
+                              Open
+                            </button>
+                            <button
+                              type="button"
+                              className="linkish"
+                              onClick={() => {
+                                void navigator.clipboard.writeText(folderPath).then(() => {
+                                  setCopiedPath(folderPath)
+                                  window.setTimeout(() => setCopiedPath(null), 1200)
+                                })
+                              }}
+                            >
+                              {copiedPath === folderPath ? 'Copied' : 'Copy'}
+                            </button>
+                          </span>
+                        </li>
+                      ))}
                     </ul>
                   </div>
                 ) : null}
@@ -403,6 +424,30 @@ export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
                             }}
                           />
                           Enabled
+                        </label>
+                        <label className="prefs-check prefs-watch-enable">
+                          <input
+                            type="checkbox"
+                            checked={wf.autoStart !== false}
+                            onChange={(e) => {
+                              void window.encodeThis
+                                .updateWatchFolder(wf.id, { autoStart: e.target.checked })
+                                .then(setWatchFolders)
+                            }}
+                          />
+                          Auto-start queue
+                        </label>
+                        <label className="prefs-check prefs-watch-enable">
+                          <input
+                            type="checkbox"
+                            checked={Boolean(wf.recursive)}
+                            onChange={(e) => {
+                              void window.encodeThis
+                                .updateWatchFolder(wf.id, { recursive: e.target.checked })
+                                .then(setWatchFolders)
+                            }}
+                          />
+                          Include subfolders
                         </label>
                         <div className="prefs-watch-path" title={wf.path}>
                           {wf.path}
@@ -461,7 +506,8 @@ export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
 
                 <h3 className="prefs-section-spacer">Host intake (optional)</h3>
                 <p className="prefs-help">
-                  Advanced bridge for scripts/CEP/CLI. Prefer watch folders above for AE and Resolve.
+                  Advanced bridge for scripts/CEP/CLI. Prefer watch folders above for AE, Premiere,
+                  and Resolve.
                 </p>
                 <label className="prefs-check">
                   <input
@@ -490,12 +536,28 @@ export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
                   />
                 </label>
                 <div className="prefs-intake-status">
+                  {intakeStatus?.error ? (
+                    <p className="prefs-error">
+                      Intake failed to start: {intakeStatus.error}. Check the port is free, then
+                      save Preferences again.
+                    </p>
+                  ) : null}
                   <div className="prefs-row">
-                    <span className={intakeStatus?.address ? 'prefs-muted' : 'prefs-error'}>
+                    <span
+                      className={
+                        intakeStatus?.error
+                          ? 'prefs-error'
+                          : intakeStatus?.address
+                            ? 'prefs-muted'
+                            : 'prefs-error'
+                      }
+                    >
                       {draft.intakeEnabled
                         ? intakeStatus?.address
                           ? `Listening: ${intakeStatus.address}`
-                          : 'Enabled in draft — save Preferences to apply / restart intake'
+                          : intakeStatus?.error
+                            ? 'Enabled but not listening'
+                            : 'Enabled in draft — save Preferences to apply / restart intake'
                         : 'Intake is off'}
                     </span>
                     {intakeStatus?.address ? (

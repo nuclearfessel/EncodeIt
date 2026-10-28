@@ -26,6 +26,7 @@ import {
   type BrowserListMode
 } from './mediaBrowser'
 import { DocsWindowManager } from './docsWindow'
+import { getLogPath, logger } from './logger'
 import { PanelWindowManager } from './panelWindows'
 import { EncodeQueue } from './queue'
 import {
@@ -41,11 +42,14 @@ let settings: AppSettings
 let queue: EncodeQueue
 let watchers: WatchFolderManager
 let intake: IntakeServer | null = null
+let intakeError: string | null = null
 let inbox: InboxWatcher
 let panels: PanelWindowManager
 let docsWindow: DocsWindowManager
 /** Pending first-launch setup when installer did not write install-options.json (e.g. DMG). */
 let needsIntegrationSetup = false
+/** One-shot coach after integration setup until dismissed. */
+let showIntegrationCoach = false
 let uiState = {
   activePresetId: DEFAULT_PRESET_ID,
   selectedJobIds: [] as string[]
@@ -68,6 +72,7 @@ function applyIntegrationChoices(options: InstallOptions): void {
   saveSettings(settings)
   clearInstallOptionsFile()
   needsIntegrationSetup = false
+  showIntegrationCoach = true
   queue.updateSettings(settings)
 }
 
@@ -138,6 +143,7 @@ function registerIpc(): void {
       ffmpegBundled: Boolean(resolveBundledFfmpeg()),
       hostFolders: resolveHostFolderLayout(),
       needsIntegrationSetup,
+      showIntegrationCoach,
       hostAppPresence: detectHostApps()
     }
   }
@@ -175,7 +181,8 @@ function registerIpc(): void {
     enabled: settings.intakeEnabled,
     port: settings.intakePort,
     address: intake ? `http://127.0.0.1:${settings.intakePort}` : null,
-    inboxDir: inboxDirectory()
+    inboxDir: inboxDirectory(),
+    error: intakeError
   }))
 
   ipcMain.handle('integrations:completeSetup', (_e, options: InstallOptions) => {
@@ -183,6 +190,23 @@ function registerIpc(): void {
     const payload = settingsPayload()
     broadcast('settings:changed', payload)
     return payload
+  })
+
+  ipcMain.handle('integrations:dismissCoach', () => {
+    showIntegrationCoach = false
+    const payload = settingsPayload()
+    broadcast('settings:changed', payload)
+    return payload
+  })
+
+  ipcMain.handle('logs:getPath', () => getLogPath())
+  ipcMain.handle('logs:open', async () => {
+    const file = getLogPath()
+    logger.info('Opening log file from UI')
+    return shell.openPath(file)
+  })
+  ipcMain.handle('logs:showInFolder', () => {
+    shell.showItemInFolder(getLogPath())
   })
 
   ipcMain.handle('panels:getWorkspace', () => panels.getWorkspace())
@@ -348,7 +372,13 @@ function registerIpc(): void {
     (
       _e,
       id: string,
-      patch: { presetId?: string; outputDir?: string; path?: string }
+      patch: {
+        presetId?: string
+        outputDir?: string
+        path?: string
+        autoStart?: boolean
+        recursive?: boolean
+      }
     ) => {
       watchers.update(id, patch)
       persistWatchFolders()
@@ -369,12 +399,16 @@ async function restartIntake(): Promise<void> {
     await intake.stop()
     intake = null
   }
+  intakeError = null
   if (!settings.intakeEnabled) return
   intake = new IntakeServer(queue, { port: settings.intakePort })
   try {
     await intake.start()
+    intakeError = null
+    logger.info(`Intake listening on 127.0.0.1:${settings.intakePort}`)
   } catch (err) {
-    console.error('Intake server failed to start', err)
+    intakeError = err instanceof Error ? err.message : String(err)
+    logger.error('Intake server failed to start', intakeError)
     intake = null
   }
 }
@@ -403,7 +437,9 @@ app.whenReady().then(async () => {
     }
   }
 
+  logger.info('Encode This starting', { version: app.getVersion() })
   queue = new EncodeQueue(settings)
+  queue.restorePersisted()
   watchers = new WatchFolderManager(queue)
   watchers.restore(settings.watchFolders)
 

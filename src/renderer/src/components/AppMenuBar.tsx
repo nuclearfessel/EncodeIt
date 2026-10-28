@@ -10,6 +10,7 @@ export interface AppMenuActions {
   onShowAllPanels: () => void
   onDocumentation: () => void
   onAbout: () => void
+  onOpenLog: () => void
   canStart: boolean
   canStop: boolean
 }
@@ -124,6 +125,7 @@ export function AppMenuBar({ actions }: Props) {
           shortcut: 'F1',
           action: actions.onDocumentation
         },
+        { label: 'Open Log File', action: actions.onOpenLog },
         { label: 'About Encode This', action: actions.onAbout },
         { separator: true, label: '' },
         {

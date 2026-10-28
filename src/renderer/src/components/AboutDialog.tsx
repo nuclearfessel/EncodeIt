@@ -1,10 +1,24 @@
+import { useEffect, useState } from 'react'
+
 interface Props {
   open: boolean
   onClose: () => void
   version: string
+  ffmpegPath?: string
+  ffmpegSource?: string
 }
 
-export function AboutDialog({ open, onClose, version }: Props) {
+export function AboutDialog({ open, onClose, version, ffmpegPath, ffmpegSource }: Props) {
+  const [logPath, setLogPath] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!open) return
+    void window.encodeThis
+      .getLogPath()
+      .then(setLogPath)
+      .catch(() => setLogPath(null))
+  }, [open])
+
   if (!open) return null
 
   return (
@@ -29,6 +43,16 @@ export function AboutDialog({ open, onClose, version }: Props) {
             Open-source batch media encoder with an Adobe Media Encoder / Shutter Encoder–style
             queue. Encoding is powered by bundled FFmpeg.
           </p>
+          {ffmpegPath ? (
+            <p className="about-meta">
+              FFmpeg ({ffmpegSource || 'unknown'}): <code className="about-code">{ffmpegPath}</code>
+            </p>
+          ) : null}
+          {logPath ? (
+            <p className="about-meta">
+              Log: <code className="about-code">{logPath}</code>
+            </p>
+          ) : null}
           <p className="about-meta">MIT License · github.com/nuclearfessel/encode-this</p>
         </div>
         <footer className="about-footer">

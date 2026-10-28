@@ -48,7 +48,9 @@ Presets map to open FFmpeg recipes inspired by Adobe Media Encoder, Shutter Enco
 - **Encoding panel** — export video/audio, audio codec overrides, hardware acceleration for the selected job(s).
 - **Hardware** — NVENC, QSV, AMF, or VideoToolbox when bundled FFmpeg and your GPU support them.
 - **Preferences → Hardware** — see what was detected on this machine.
-- **Preferences → General** — default output folder, concurrency, and overwrite behavior.
+- **Preferences → General** — default output folder, max concurrent encodes (1–8), and overwrite behavior.
+- If overwrite is off, jobs fail when the output file already exists.
+- Hardware encodes that fail may automatically retry with software encoding.
 
 ---
 
@@ -70,9 +72,10 @@ Watch folders automatically queue new media that appears in a directory. This is
 1. Open **Edit → Preferences → Integrations** to see install paths and active watches.
 2. Each watch has a folder path, a preset used for new files, and an encode output folder.
 3. Keep Encode This running while the host app finishes writing the file.
-4. When a new media file appears (and is done writing), it is added to the queue with that watch’s preset.
+4. When a new media file appears and its size stays stable across polls, it is added to the queue with that watch’s preset.
+5. Per watch: enable/disable, auto-start queue, and optional subfolder watching.
 
-> **Note:** Files already in the folder when you add or enable a watch are ignored — only new arrivals are queued. You can add extra watches for any folder, not just the install layout.
+> **Note:** Files already in the folder when you add or enable a watch are ignored — only new arrivals are queued. Incomplete writes are held until size settles. **Help → Open Log File** shows the app log. The queue is restored after restart.
 
 ---
 

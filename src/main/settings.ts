@@ -34,7 +34,9 @@ function normalizeWatchFolders(value: unknown): WatchFolderSettings[] {
           ? r.presetId
           : 'h264-match-source-high-bitrate',
       outputDir: typeof r.outputDir === 'string' ? r.outputDir : '',
-      enabled: r.enabled !== false
+      enabled: r.enabled !== false,
+      autoStart: r.autoStart !== false,
+      recursive: Boolean(r.recursive)
     })
   }
   return out
