@@ -2,9 +2,18 @@
  * Downloads a static FFmpeg + FFprobe build into resources/ffmpeg for bundling.
  * Run on each target OS before packaging.
  */
-import { createWriteStream, existsSync, mkdirSync, rmSync, chmodSync, copyFileSync, readdirSync, statSync } from 'fs'
-import { dirname, join } from 'path'
-import { fileURLToPath } from 'url'
+import {
+  createWriteStream,
+  existsSync,
+  mkdirSync,
+  rmSync,
+  chmodSync,
+  copyFileSync,
+  readdirSync,
+  statSync
+} from 'fs'
+import { dirname, join, resolve as resolvePath } from 'path'
+import { fileURLToPath, pathToFileURL } from 'url'
 import { pipeline } from 'stream/promises'
 import { spawnSync } from 'child_process'
 import https from 'https'
@@ -15,12 +24,16 @@ const root = join(__dirname, '..')
 const outDir = join(root, 'resources', 'ffmpeg')
 const cacheDir = join(root, 'resources', '.ffmpeg-cache')
 
+const CONNECT_TIMEOUT_MS = 30_000
+const IDLE_TIMEOUT_MS = 60_000
+const MAX_DOWNLOAD_MS = 10 * 60_000
+
 function log(...args) {
   console.log('[download-ffmpeg]', ...args)
 }
 
 /** Resolve absolute or relative redirect Location against the current request URL. */
-function resolveRedirect(currentUrl, location) {
+export function resolveRedirect(currentUrl, location) {
   return new URL(location, currentUrl).toString()
 }
 
@@ -28,11 +41,148 @@ function requestLib(url) {
   return url.startsWith('https') ? https : http
 }
 
+function hasCurl() {
+  const r = spawnSync('curl', ['--version'], { encoding: 'utf8' })
+  return r.status === 0
+}
+
+/**
+ * Prefer curl on macOS/Linux — handles redirects and timeouts reliably on GH runners.
+ * Falls back to Node https with connect + idle timeouts.
+ */
+async function downloadFile(url, dest) {
+  mkdirSync(dirname(dest), { recursive: true })
+  if (existsSync(dest)) rmSync(dest, { force: true })
+
+  if (hasCurl()) {
+    log('curl download', url)
+    const r = spawnSync(
+      'curl',
+      [
+        '-fL',
+        '--retry',
+        '3',
+        '--retry-delay',
+        '2',
+        '--connect-timeout',
+        '30',
+        '--max-time',
+        '600',
+        '-A',
+        'encode-this-ffmpeg-fetch',
+        '-o',
+        dest,
+        url
+      ],
+      { stdio: 'inherit' }
+    )
+    if (r.status === 0 && existsSync(dest) && statSync(dest).size > 0) return
+    log('curl failed; falling back to Node download')
+  }
+
+  await downloadFileNode(url, dest)
+}
+
+function downloadFileNode(url, dest) {
+  return new Promise((resolve, reject) => {
+    const started = Date.now()
+    let settled = false
+    const fail = (err) => {
+      if (settled) return
+      settled = true
+      reject(err instanceof Error ? err : new Error(String(err)))
+    }
+    const ok = () => {
+      if (settled) return
+      settled = true
+      resolve()
+    }
+
+    const overall = setTimeout(() => {
+      fail(new Error(`Download timed out after ${MAX_DOWNLOAD_MS}ms: ${url}`))
+    }, MAX_DOWNLOAD_MS)
+
+    const follow = (current, redirects = 0) => {
+      if (Date.now() - started > MAX_DOWNLOAD_MS) {
+        fail(new Error(`Download timed out after ${MAX_DOWNLOAD_MS}ms: ${url}`))
+        return
+      }
+      log('GET', current)
+      const req = requestLib(current).get(
+        current,
+        {
+          headers: { 'User-Agent': 'encode-this-ffmpeg-fetch' },
+          timeout: CONNECT_TIMEOUT_MS
+        },
+        (res) => {
+          if (res.statusCode && res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+            res.resume()
+            if (redirects > 10) {
+              fail(new Error('Too many redirects'))
+              return
+            }
+            follow(resolveRedirect(current, res.headers.location), redirects + 1)
+            return
+          }
+          if (res.statusCode !== 200) {
+            res.resume()
+            fail(new Error(`HTTP ${res.statusCode} for ${current}`))
+            return
+          }
+
+          let idle = setTimeout(() => {
+            req.destroy()
+            fail(new Error(`Idle timeout (${IDLE_TIMEOUT_MS}ms) downloading ${current}`))
+          }, IDLE_TIMEOUT_MS)
+
+          const bumpIdle = () => {
+            clearTimeout(idle)
+            idle = setTimeout(() => {
+              req.destroy()
+              fail(new Error(`Idle timeout (${IDLE_TIMEOUT_MS}ms) downloading ${current}`))
+            }, IDLE_TIMEOUT_MS)
+          }
+
+          res.on('data', bumpIdle)
+          const file = createWriteStream(dest)
+          pipeline(res, file)
+            .then(() => {
+              clearTimeout(idle)
+              clearTimeout(overall)
+              ok()
+            })
+            .catch((err) => {
+              clearTimeout(idle)
+              clearTimeout(overall)
+              fail(err)
+            })
+        }
+      )
+      req.on('timeout', () => {
+        req.destroy()
+        fail(new Error(`Connect timeout (${CONNECT_TIMEOUT_MS}ms) for ${current}`))
+      })
+      req.on('error', (err) => {
+        clearTimeout(overall)
+        fail(err)
+      })
+    }
+
+    follow(url)
+  })
+}
+
 function requestBuffer(url, redirects = 0) {
   return new Promise((resolve, reject) => {
-    requestLib(url)
-      .get(url, { headers: { 'User-Agent': 'encode-this-ffmpeg-fetch' } }, (res) => {
+    const req = requestLib(url).get(
+      url,
+      {
+        headers: { 'User-Agent': 'encode-this-ffmpeg-fetch' },
+        timeout: CONNECT_TIMEOUT_MS
+      },
+      (res) => {
         if (res.statusCode && res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+          res.resume()
           if (redirects > 10) {
             reject(new Error('Too many redirects'))
             return
@@ -41,6 +191,7 @@ function requestBuffer(url, redirects = 0) {
           return
         }
         if (res.statusCode !== 200) {
+          res.resume()
           reject(new Error(`HTTP ${res.statusCode} for ${url}`))
           return
         }
@@ -48,35 +199,13 @@ function requestBuffer(url, redirects = 0) {
         res.on('data', (c) => chunks.push(c))
         res.on('end', () => resolve(Buffer.concat(chunks)))
         res.on('error', reject)
-      })
-      .on('error', reject)
-  })
-}
-
-async function downloadFile(url, dest) {
-  mkdirSync(dirname(dest), { recursive: true })
-  await new Promise((resolve, reject) => {
-    const follow = (current, redirects = 0) => {
-      requestLib(current)
-        .get(current, { headers: { 'User-Agent': 'encode-this-ffmpeg-fetch' } }, (res) => {
-          if (res.statusCode && res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-            if (redirects > 10) {
-              reject(new Error('Too many redirects'))
-              return
-            }
-            follow(resolveRedirect(current, res.headers.location), redirects + 1)
-            return
-          }
-          if (res.statusCode !== 200) {
-            reject(new Error(`HTTP ${res.statusCode} for ${current}`))
-            return
-          }
-          const file = createWriteStream(dest)
-          pipeline(res, file).then(resolve).catch(reject)
-        })
-        .on('error', reject)
-    }
-    follow(url)
+      }
+    )
+    req.on('timeout', () => {
+      req.destroy()
+      reject(new Error(`Connect timeout for ${url}`))
+    })
+    req.on('error', reject)
   })
 }
 
@@ -182,6 +311,12 @@ async function fetchMac() {
 }
 
 async function main() {
+  // Avoid hanging `npm ci` on CI when the Release `dist` step fetches FFmpeg next.
+  if (process.env.npm_lifecycle_event === 'postinstall' && process.env.CI === 'true') {
+    log('CI postinstall: skipping FFmpeg fetch (dist/pack will download)')
+    return
+  }
+
   mkdirSync(cacheDir, { recursive: true })
   mkdirSync(outDir, { recursive: true })
 
@@ -212,7 +347,10 @@ async function main() {
   log('Installed to', outDir)
 }
 
-main().catch((err) => {
-  console.error(err)
-  process.exit(1)
-})
+const entryHref = process.argv[1] ? pathToFileURL(resolvePath(process.argv[1])).href : ''
+if (import.meta.url === entryHref) {
+  main().catch((err) => {
+    console.error(err)
+    process.exit(1)
+  })
+}
