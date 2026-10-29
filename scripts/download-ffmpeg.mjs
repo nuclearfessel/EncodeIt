@@ -19,17 +19,25 @@ function log(...args) {
   console.log('[download-ffmpeg]', ...args)
 }
 
+/** Resolve absolute or relative redirect Location against the current request URL. */
+function resolveRedirect(currentUrl, location) {
+  return new URL(location, currentUrl).toString()
+}
+
+function requestLib(url) {
+  return url.startsWith('https') ? https : http
+}
+
 function requestBuffer(url, redirects = 0) {
   return new Promise((resolve, reject) => {
-    const lib = url.startsWith('https') ? https : http
-    lib
+    requestLib(url)
       .get(url, { headers: { 'User-Agent': 'encode-this-ffmpeg-fetch' } }, (res) => {
         if (res.statusCode && res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
           if (redirects > 10) {
             reject(new Error('Too many redirects'))
             return
           }
-          resolve(requestBuffer(res.headers.location, redirects + 1))
+          resolve(requestBuffer(resolveRedirect(url, res.headers.location), redirects + 1))
           return
         }
         if (res.statusCode !== 200) {
@@ -47,17 +55,16 @@ function requestBuffer(url, redirects = 0) {
 
 async function downloadFile(url, dest) {
   mkdirSync(dirname(dest), { recursive: true })
-  const lib = url.startsWith('https') ? https : http
   await new Promise((resolve, reject) => {
     const follow = (current, redirects = 0) => {
-      lib
+      requestLib(current)
         .get(current, { headers: { 'User-Agent': 'encode-this-ffmpeg-fetch' } }, (res) => {
           if (res.statusCode && res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
             if (redirects > 10) {
               reject(new Error('Too many redirects'))
               return
             }
-            follow(res.headers.location, redirects + 1)
+            follow(resolveRedirect(current, res.headers.location), redirects + 1)
             return
           }
           if (res.statusCode !== 200) {
