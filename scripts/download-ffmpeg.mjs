@@ -154,14 +154,16 @@ async function fetchLinux() {
 }
 
 async function fetchMac() {
-  // evermeet provides current static macOS builds
-  const ffmpegZip = join(cacheDir, 'ffmpeg-mac.zip')
-  const ffprobeZip = join(cacheDir, 'ffprobe-mac.zip')
-  log('Downloading evermeet ffmpeg/ffprobe')
-  await downloadFile('https://evermeet.cx/ffmpeg/getrelease/ffmpeg/zip', ffmpegZip)
-  await downloadFile('https://evermeet.cx/ffmpeg/getrelease/ffprobe/zip', ffprobeZip)
-  const extractFfmpeg = join(cacheDir, 'mac-ffmpeg')
-  const extractFfprobe = join(cacheDir, 'mac-ffprobe')
+  // evermeet getrelease endpoints return HTTP 410; use martin-riedl static builds.
+  const arch = process.arch === 'arm64' ? 'arm64' : 'amd64'
+  const base = `https://ffmpeg.martin-riedl.de/redirect/latest/macos/${arch}/release`
+  const ffmpegZip = join(cacheDir, `ffmpeg-mac-${arch}.zip`)
+  const ffprobeZip = join(cacheDir, `ffprobe-mac-${arch}.zip`)
+  log(`Downloading martin-riedl macOS ${arch} ffmpeg/ffprobe`)
+  await downloadFile(`${base}/ffmpeg.zip`, ffmpegZip)
+  await downloadFile(`${base}/ffprobe.zip`, ffprobeZip)
+  const extractFfmpeg = join(cacheDir, `mac-ffmpeg-${arch}`)
+  const extractFfprobe = join(cacheDir, `mac-ffprobe-${arch}`)
   rmSync(extractFfmpeg, { recursive: true, force: true })
   rmSync(extractFfprobe, { recursive: true, force: true })
   extractArchive(ffmpegZip, extractFfmpeg)
