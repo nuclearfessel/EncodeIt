@@ -52,6 +52,9 @@ jobs:
       - name: Upload release artifacts
         uses: softprops/action-gh-release@v3
         with:
+          # Prepended to GitHub’s auto-generated changelog (commits since last tag).
+          body_path: docs/RELEASE_DOWNLOADS.md
+          generate_release_notes: true
           files: |
             release/*.exe
             release/*.dmg
