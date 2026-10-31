@@ -29,7 +29,7 @@
       })
       if (previous) presetEl.value = previous
       if (!presetEl.value && presets[0]) presetEl.value = presets[0].id
-      setStatus('Loaded ' + presets.length + ' presets from Encode This.', 'ok')
+      setStatus('Loaded ' + presets.length + ' presets from EncodeIt.', 'ok')
     } catch (err) {
       presetEl.innerHTML = ''
       var fallback = document.createElement('option')
@@ -39,7 +39,7 @@
       setStatus(
         'Could not load presets: ' +
           (err && err.message ? err.message : String(err)) +
-          '\nIs Encode This running with host intake enabled?',
+          '\nIs EncodeIt running with host intake enabled?',
         'err'
       )
     }
@@ -72,7 +72,7 @@
       setStatus(
         'Failed: ' +
           (err && err.message ? err.message : String(err)) +
-          '\nIs Encode This running with host intake enabled?',
+          '\nIs EncodeIt running with host intake enabled?',
         'err'
       )
     }
@@ -93,11 +93,11 @@
       return r.json()
     })
     .then(function (j) {
-      setStatus('Encode This online: ' + j.address, 'ok')
+      setStatus('EncodeIt online: ' + j.address, 'ok')
       return loadPresets()
     })
     .catch(function () {
-      setStatus('Encode This intake not detected on :' + (portEl.value || '47821'), 'err')
+      setStatus('EncodeIt intake not detected on :' + (portEl.value || '47821'), 'err')
       void loadPresets()
     })
 })()

@@ -1,4 +1,4 @@
-# Encode This
+# EncodeIt
 
 Open-source batch media encoder with an **Adobe Media Encoder / Shutter Encoder–style** queue and preset browser.
 
@@ -50,7 +50,7 @@ Exact bit-for-bit clones of proprietary encoders/certified wrappers (full Dolby 
 **Later:** Premiere native exporter, automated ZXP signing in CI.
 
 ```bash
-# Optional: queue a file via intake while Encode This is running
+# Optional: queue a file via intake while EncodeIt is running
 curl -X POST http://127.0.0.1:47821/queue/add \
   -H "Content-Type: application/json" \
   -d '{"paths":["/path/to/clip.mp4"],"presetId":"h264-match-source-high-bitrate","start":true}'

@@ -1,17 +1,17 @@
-# DaVinci Resolve → Encode This
+# DaVinci Resolve → EncodeIt
 
-Resolve does not expose a public “replace Deliver codecs” plugin API. The supported workaround on **Windows and macOS** is to Deliver into a folder Encode This watches.
+Resolve does not expose a public “replace Deliver codecs” plugin API. The supported workaround on **Windows and macOS** is to Deliver into a folder EncodeIt watches.
 
 ## Watch folder (primary)
 
 Install / first launch creates and watches:
 
-- Windows: `%USERPROFILE%\Videos\Encode This\from-resolve`
-- macOS: `~/Movies/Encode This/from-resolve`
+- Windows: `%USERPROFILE%\Videos\EncodeIt\from-resolve`
+- macOS: `~/Movies/EncodeIt/from-resolve`
 
-1. Install Encode This (or run once) so the folder exists.
+1. Install EncodeIt (or run once) so the folder exists.
 2. In Resolve **Deliver**, set the destination to that folder (also listed under **Preferences → Integrations**).
-3. Keep Encode This running and Deliver as usual (prefer a high-quality intermediate / master).
+3. Keep EncodeIt running and Deliver as usual (prefer a high-quality intermediate / master).
 
 Existing files already in the folder when a watch is added or enabled are ignored — only **new** arrivals are queued.
 
@@ -19,13 +19,13 @@ Existing files already in the folder when a watch is added or enabled are ignore
 
 Use only if you need a one-off send or Deliver-queue handoff without a watch folder.
 
-Requirements: Encode This running with **Host intake** enabled (`http://127.0.0.1:47821`), Python 3.9+. Resolve Studio is recommended for in-app scripting.
+Requirements: EncodeIt running with **Host intake** enabled (`http://127.0.0.1:47821`), Python 3.9+. Resolve Studio is recommended for in-app scripting.
 
 ```bash
 # After a file exists on disk:
-python send_to_encode_this.py --path "/path/to/timeline.mov" --preset h264-match-source-high-bitrate --start
+python send_to_encodeit.py --path "/path/to/timeline.mov" --preset h264-match-source-high-bitrate --start
 
-python send_to_encode_this.py --list-presets
+python send_to_encodeit.py --list-presets
 ```
 
 Install Utility scripts (optional):

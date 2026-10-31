@@ -19,10 +19,10 @@ The installer (and first-launch setup) **detects** After Effects, DaVinci Resolv
 
 | Role | Windows | macOS |
 | --- | --- | --- |
-| After Effects | `%USERPROFILE%\Videos\Encode This\from-ae` | `~/Movies/Encode This/from-ae` |
-| DaVinci Resolve | `...\from-resolve` | `~/Movies/Encode This/from-resolve` |
-| Premiere Pro | `...\from-premiere` | `~/Movies/Encode This/from-premiere` |
-| Encode output | `...\Output` | `~/Movies/Encode This/Output` |
+| After Effects | `%USERPROFILE%\Videos\EncodeIt\from-ae` | `~/Movies/EncodeIt/from-ae` |
+| DaVinci Resolve | `...\from-resolve` | `~/Movies/EncodeIt/from-resolve` |
+| Premiere Pro | `...\from-premiere` | `~/Movies/EncodeIt/from-premiere` |
+| Encode output | `...\Output` | `~/Movies/EncodeIt/Output` |
 
 Point AE / Resolve / Premiere at the matching folder — no scripts required.
 
@@ -47,5 +47,5 @@ For scripts, CEP, and CLI tools:
 
   Typical locations:
 
-  - Windows: `%APPDATA%\Encode This\inbox`
-  - macOS: `~/Library/Application Support/Encode This/inbox`
+  - Windows: `%APPDATA%\EncodeIt\inbox`
+  - macOS: `~/Library/Application Support/EncodeIt/inbox`

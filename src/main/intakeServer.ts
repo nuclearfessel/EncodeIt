@@ -78,7 +78,7 @@ export class IntakeServer {
 
     try {
       if (req.method === 'GET' && url.pathname === '/health') {
-        sendJson(res, 200, { ok: true, service: 'encode-this', address: this.address })
+        sendJson(res, 200, { ok: true, service: 'encodeit', address: this.address })
         return
       }
 

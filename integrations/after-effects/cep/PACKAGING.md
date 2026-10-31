@@ -5,10 +5,10 @@
 1. Enable CEP debug mode for your AE major version (Adobe CEP HTML Extension Cookbook).
 2. Copy or symlink the `cep/` folder to:
 
-   - Windows: `%APPDATA%\Adobe\CEP\extensions\encode-this-ae`
-   - macOS: `~/Library/Application Support/Adobe/CEP/extensions/encode-this-ae`
+   - Windows: `%APPDATA%\Adobe\CEP\extensions\encodeit-ae`
+   - macOS: `~/Library/Application Support/Adobe/CEP/extensions/encodeit-ae`
 
-3. Restart After Effects → **Window → Encode This**.
+3. Restart After Effects → **Window → EncodeIt**.
 
 ## Release zip
 
@@ -18,7 +18,7 @@ From the repo root:
 npm run package:cep
 ```
 
-Creates `release/encode-this-ae-cep.zip` with top-level folder `encode-this-ae/` (required by CEP).
+Creates `release/encodeit-ae-cep.zip` with top-level folder `encodeit-ae/` (required by CEP).
 
 ## Signing for production
 
@@ -30,7 +30,7 @@ Typical workflow:
 2. Sign with **ZXPSignCmd** (Creative Cloud SDK) or your org’s code-signing cert:
 
    ```text
-   ZXPSignCmd -sign release/encode-this-ae-cep.zip release/encode-this-ae.zxp your.p12 password
+   ZXPSignCmd -sign release/encodeit-ae-cep.zip release/encodeit-ae.zxp your.p12 password
    ```
 
 3. Install via **ExManCmd**, Anastasiy’s Extension Manager, or enterprise deployment tools.

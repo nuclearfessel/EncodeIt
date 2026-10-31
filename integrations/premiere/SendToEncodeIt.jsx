@@ -1,10 +1,10 @@
 /**
- * Send To Encode This — After Effects ExtendScript
+ * Send To EncodeIt — Premiere Pro ExtendScript
  *
  * Enable: Preferences → Scripting & Expressions →
  * Allow Scripts to Write Files and Access Network
  */
-(function sendToEncodeThis() {
+(function SendToEncodeItPremiere() {
   var INTAKE_PORT = 47821;
   var PRESET_ID = 'h264-match-source-high-bitrate';
 
@@ -12,12 +12,12 @@
     return String(s).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
   }
 
-  function jobJson(mediaPath) {
+  function jobJson(mediaPath, presetId) {
     return (
       '{"paths":["' +
       esc(mediaPath) +
       '"],"presetId":"' +
-      PRESET_ID +
+      esc(presetId || PRESET_ID) +
       '","start":true}'
     );
   }
@@ -28,31 +28,31 @@
     return f;
   }
 
-  function writeInbox(mediaPath) {
-    // Electron userData uses productName "Encode This" (spaces) on Win + macOS.
+  function writeInbox(mediaPath, presetId) {
+    // Electron userData uses productName "EncodeIt" (spaces) on Win + macOS.
     var candidates = [];
     if ($.os.indexOf('Windows') !== -1) {
       var appData = $.getenv('APPDATA');
       var local = $.getenv('LOCALAPPDATA');
       if (appData) {
-        candidates.push(appData + '\\Encode This\\inbox');
-        candidates.push(appData + '\\encode-this\\inbox');
+        candidates.push(appData + '\\EncodeIt\\inbox');
+        candidates.push(appData + '\\encodeit\\inbox');
       }
       if (local) {
-        candidates.push(local + '\\Encode This\\inbox');
-        candidates.push(local + '\\encode-this\\inbox');
+        candidates.push(local + '\\EncodeIt\\inbox');
+        candidates.push(local + '\\encodeit\\inbox');
       }
     } else {
-      candidates.push(Folder('~/Library/Application Support/Encode This/inbox').fsName);
-      candidates.push(Folder('~/Library/Application Support/encode-this/inbox').fsName);
+      candidates.push(Folder('~/Library/Application Support/EncodeIt/inbox').fsName);
+      candidates.push(Folder('~/Library/Application Support/encodeit/inbox').fsName);
     }
 
-    var payload = jobJson(mediaPath);
+    var payload = jobJson(mediaPath, presetId);
     var written = false;
     for (var i = 0; i < candidates.length; i++) {
       try {
         ensureFolder(candidates[i]);
-        var out = new File(candidates[i] + '/ae-job-' + new Date().getTime() + '.json');
+        var out = new File(candidates[i] + '/pr-job-' + new Date().getTime() + '.json');
         out.encoding = 'UTF-8';
         if (out.open('w')) {
           out.write(payload);
@@ -64,11 +64,11 @@
     return written;
   }
 
-  function postHttp(mediaPath) {
-    var body = jobJson(mediaPath);
+  function postHttp(mediaPath, presetId) {
+    var body = jobJson(mediaPath, presetId);
     var cmd;
     if ($.os.indexOf('Windows') !== -1) {
-      var tmp = Folder.temp.fsName + '\\encode-this-ae.json';
+      var tmp = Folder.temp.fsName + '\\encodeit-pr.json';
       var tf = new File(tmp);
       tf.encoding = 'UTF-8';
       tf.open('w');
@@ -96,29 +96,49 @@
     }
   }
 
+  var seqHint = '';
+  try {
+    if (app.project && app.project.activeSequence) {
+      seqHint = app.project.activeSequence.name;
+    }
+  } catch (e) {}
+
   var media = File.openDialog(
-    'Select rendered media to send to Encode This',
+    seqHint
+      ? 'Select exported media for sequence “' + seqHint + '”'
+      : 'Select exported media to send to EncodeIt',
     '*.mp4;*.mov;*.mxf;*.mkv;*.avi;*.wav;*.mp3'
   );
   if (!media) return;
 
+  var preset = PRESET_ID;
+  var presetInput = prompt(
+    'EncodeIt preset id (leave default or paste from Preferences → Integrations):',
+    PRESET_ID
+  );
+  if (presetInput !== null && String(presetInput).replace(/^\s+|\s+$/g, '')) {
+    preset = String(presetInput).replace(/^\s+|\s+$/g, '');
+  }
+
   var mediaPath = media.fsName;
-  var httpOk = postHttp(mediaPath);
-  var inboxOk = writeInbox(mediaPath);
+  var httpOk = postHttp(mediaPath, preset);
+  var inboxOk = writeInbox(mediaPath, preset);
 
   if (httpOk || inboxOk) {
     alert(
-      'Sent to Encode This:\n' +
+      'Sent to EncodeIt:\n' +
         mediaPath +
+        '\nPreset: ' +
+        preset +
         '\n\nHTTP: ' +
         (httpOk ? 'ok' : 'skipped/failed') +
         '\nInbox: ' +
         (inboxOk ? 'ok' : 'skipped/failed') +
-        '\n\nKeep Encode This running with Host intake enabled.'
+        '\n\nKeep EncodeIt running with Host intake enabled.'
     );
   } else {
     alert(
-      'Could not reach Encode This.\nIs the app running with intake on port ' +
+      'Could not reach EncodeIt.\nIs the app running with intake on port ' +
         INTAKE_PORT +
         '?'
     );

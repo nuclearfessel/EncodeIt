@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ExtensionManifest Version="11.0" ExtensionBundleId="com.encode-this.ae" ExtensionBundleVersion="0.1.0"
-  ExtensionBundleName="Encode This" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ExtensionManifest Version="11.0" ExtensionBundleId="com.encodeit.ae" ExtensionBundleVersion="0.1.0"
+  ExtensionBundleName="EncodeIt" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <ExtensionList>
-    <Extension Id="com.encode-this.ae.panel" Version="0.1.0" />
+    <Extension Id="com.encodeit.ae.panel" Version="0.1.0" />
   </ExtensionList>
   <ExecutionEnvironment>
     <HostList>
@@ -16,7 +16,7 @@
     </RequiredRuntimeList>
   </ExecutionEnvironment>
   <DispatchInfoList>
-    <Extension Id="com.encode-this.ae.panel">
+    <Extension Id="com.encodeit.ae.panel">
       <DispatchInfo>
         <Resources>
           <MainPath>./client/index.html</MainPath>
@@ -30,7 +30,7 @@
         </Lifecycle>
         <UI>
           <Type>Panel</Type>
-          <Menu>Encode This</Menu>
+          <Menu>EncodeIt</Menu>
           <Geometry>
             <Size>
               <Height>420</Height>

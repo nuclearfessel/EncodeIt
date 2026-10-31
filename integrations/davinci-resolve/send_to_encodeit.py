@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Send media paths to a running Encode This intake server."""
+"""Send media paths to a running EncodeIt intake server."""
 
 from __future__ import annotations
 
@@ -25,7 +25,7 @@ def request(method: str, url: str, payload: dict | None = None) -> dict:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Send files to Encode This")
+    parser = argparse.ArgumentParser(description="Send files to EncodeIt")
     parser.add_argument("--base", default=DEFAULT_BASE, help="Intake base URL")
     parser.add_argument("--path", action="append", dest="paths", default=[], help="Media path (repeatable)")
     parser.add_argument("--preset", default="h264-match-source-high-bitrate", help="Preset id")
@@ -65,7 +65,7 @@ def main() -> int:
         return 0
     except urllib.error.URLError as exc:
         print(
-            f"Could not reach Encode This at {args.base}\n{exc}\n"
+            f"Could not reach EncodeIt at {args.base}\n{exc}\n"
             "Start the app and enable Host intake.",
             file=sys.stderr,
         )

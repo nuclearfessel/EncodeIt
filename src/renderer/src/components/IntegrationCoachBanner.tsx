@@ -19,7 +19,7 @@ export function IntegrationCoachBanner({ open, hostFolders, onDismiss }: Props) 
         <strong>Host folders ready</strong>
         <p>
           Point After Effects, Premiere Pro, or DaVinci Resolve render/export destinations at the
-          matching <code>from-*</code> folders (Preferences → Integrations). Keep Encode This
+          matching <code>from-*</code> folders (Preferences → Integrations). Keep EncodeIt
           running to auto-queue new files.
         </p>
         {hostFolders ? (

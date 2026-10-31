@@ -69,7 +69,7 @@ async function downloadFile(url, dest) {
         '--max-time',
         '600',
         '-A',
-        'encode-this-ffmpeg-fetch',
+        'encodeit-ffmpeg-fetch',
         '-o',
         dest,
         url
@@ -111,7 +111,7 @@ function downloadFileNode(url, dest) {
       const req = requestLib(current).get(
         current,
         {
-          headers: { 'User-Agent': 'encode-this-ffmpeg-fetch' },
+          headers: { 'User-Agent': 'encodeit-ffmpeg-fetch' },
           timeout: CONNECT_TIMEOUT_MS
         },
         (res) => {
@@ -177,7 +177,7 @@ function requestBuffer(url, redirects = 0) {
     const req = requestLib(url).get(
       url,
       {
-        headers: { 'User-Agent': 'encode-this-ffmpeg-fetch' },
+        headers: { 'User-Agent': 'encodeit-ffmpeg-fetch' },
         timeout: CONNECT_TIMEOUT_MS
       },
       (res) => {

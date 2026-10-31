@@ -40,7 +40,7 @@ export function EncodingPanel({
   const pathPicker = usePathPicker()
 
   useEffect(() => {
-    void window.encodeThis.detectHardware().then(setHwCaps).catch(() => setHwCaps(null))
+    void window.EncodeIt.detectHardware().then(setHwCaps).catch(() => setHwCaps(null))
   }, [settings.ffmpegPath, settings.hardwareAcceleration])
 
   const effectiveCodec =
@@ -62,7 +62,7 @@ export function EncodingPanel({
   async function setAudioCodec(codec: string) {
     if (!selectedIds.length) return
     const opt = getAudioCodecOption(codec)
-    await window.encodeThis.setAudioOverrides(selectedIds, {
+    await window.EncodeIt.setAudioOverrides(selectedIds, {
       enabled: true,
       codec,
       ...(opt?.lossless
@@ -73,7 +73,7 @@ export function EncodingPanel({
 
   async function setAudioBitrate(bitrateKbps: number) {
     if (!selectedIds.length) return
-    await window.encodeThis.setAudioOverrides(selectedIds, { bitrateKbps })
+    await window.EncodeIt.setAudioOverrides(selectedIds, { bitrateKbps })
   }
 
   return (
@@ -126,7 +126,7 @@ export function EncodingPanel({
                   checked={focus.exportVideo}
                   disabled={!canEdit}
                   onChange={(e) =>
-                    void window.encodeThis.setExportTracks(selectedIds, {
+                    void window.EncodeIt.setExportTracks(selectedIds, {
                       exportVideo: e.target.checked
                     })
                   }
@@ -139,7 +139,7 @@ export function EncodingPanel({
                   checked={focus.exportAudio}
                   disabled={!canEdit}
                   onChange={(e) =>
-                    void window.encodeThis.setExportTracks(selectedIds, {
+                    void window.EncodeIt.setExportTracks(selectedIds, {
                       exportAudio: e.target.checked
                     })
                   }
@@ -203,7 +203,7 @@ export function EncodingPanel({
                     void (async () => {
                       const chosen = await pathPicker.saveFile(focus.outputPath)
                       if (!chosen) return
-                      await window.encodeThis.setOutputPath(selectedIds, chosen)
+                      await window.EncodeIt.setOutputPath(selectedIds, chosen)
                     })()
                   }
                 >

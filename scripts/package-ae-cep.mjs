@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Pack the After Effects CEP panel into a zip for manual install or signing.
- * Output: release/encode-this-ae-cep.zip (extension root = encode-this-ae/)
+ * Output: release/encodeit-ae-cep.zip (extension root = encodeit-ae/)
  */
 import fs from 'fs'
 import path from 'path'
@@ -13,8 +13,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const root = path.join(__dirname, '..')
 const cepSrc = path.join(root, 'integrations', 'after-effects', 'cep')
 const outDir = path.join(root, 'release')
-const outZip = path.join(outDir, 'encode-this-ae-cep.zip')
-const bundleName = 'encode-this-ae'
+const outZip = path.join(outDir, 'encodeit-ae-cep.zip')
+const bundleName = 'encodeit-ae'
 
 function assertCepLayout() {
   const manifest = path.join(cepSrc, 'CSXS', 'manifest.xml')
@@ -51,9 +51,9 @@ function zipCep() {
   console.log(`Wrote ${outZip} (${stat.size} bytes)`)
   console.log('')
   console.log('Install (unsigned / debug):')
-  console.log('  Windows: %APPDATA%\\Adobe\\CEP\\extensions\\encode-this-ae')
-  console.log('  macOS: ~/Library/Application Support/Adobe/CEP/extensions/encode-this-ae')
-  console.log('  Unzip so manifest lives at .../encode-this-ae/CSXS/manifest.xml')
+  console.log('  Windows: %APPDATA%\\Adobe\\CEP\\extensions\\encodeit-ae')
+  console.log('  macOS: ~/Library/Application Support/Adobe/CEP/extensions/encodeit-ae')
+  console.log('  Unzip so manifest lives at .../encodeit-ae/CSXS/manifest.xml')
   console.log('')
   console.log('Signing: see integrations/after-effects/cep/PACKAGING.md')
 }

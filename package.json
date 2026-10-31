@@ -1,5 +1,5 @@
 {
-  "name": "encode-this",
+  "name": "encodeit",
   "version": "0.1.5",
   "description": "Open-source batch media encoder — Adobe Media Encoder / Shutter Encoder style",
   "main": "./out/main/index.js",
@@ -45,8 +45,8 @@
     "vite": "^6.2.2"
   },
   "build": {
-    "appId": "com.encode-this.app",
-    "productName": "Encode This",
+    "appId": "com.encodeit.app",
+    "productName": "EncodeIt",
     "directories": {
       "output": "release"
     },

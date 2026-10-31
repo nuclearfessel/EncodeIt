@@ -82,7 +82,7 @@ function createWindow(): void {
     height: 900,
     minWidth: 900,
     minHeight: 600,
-    title: 'Encode This',
+    title: 'EncodeIt',
     backgroundColor: '#1a1a1a',
     frame: false,
     show: false,
@@ -428,7 +428,7 @@ app.whenReady().then(async () => {
       outputDirectory: baseLayout.output
     })
   } else {
-    const legacyDefault = path.join(app.getPath('videos'), 'Encode This')
+    const legacyDefault = path.join(app.getPath('videos'), 'EncodeIt')
     if (path.normalize(settings.outputDirectory) === path.normalize(legacyDefault)) {
       settings = normalizeAppSettings({
         ...settings,
@@ -437,7 +437,7 @@ app.whenReady().then(async () => {
     }
   }
 
-  logger.info('Encode This starting', { version: app.getVersion() })
+  logger.info('EncodeIt starting', { version: app.getVersion() })
   queue = new EncodeQueue(settings)
   queue.restorePersisted()
   watchers = new WatchFolderManager(queue)

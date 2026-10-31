@@ -1,4 +1,4 @@
-# Encode This — User guide
+# EncodeIt — User guide
 
 In-app: **Help → Documentation** (or press **F1**).
 
@@ -6,7 +6,7 @@ In-app: **Help → Documentation** (or press **F1**).
 
 ## Overview
 
-Encode This is a batch media encoder with an Adobe Media Encoder / Shutter Encoder–style queue and preset browser.
+EncodeIt is a batch media encoder with an Adobe Media Encoder / Shutter Encoder–style queue and preset browser.
 
 Add media, choose a preset, start the queue, and FFmpeg encodes each job. Watch folders let After Effects, Premiere Pro, and DaVinci Resolve hand off renders without scripts.
 
@@ -29,7 +29,7 @@ Add media, choose a preset, start the queue, and FFmpeg encodes each job. Watch 
 - **Clear Done** removes finished jobs from the list.
 - Output files go to each job’s output path.
 
-> **Note:** Default output folder is Videos (Windows) or Movies (macOS) → `Encode This` → `Output`.
+> **Note:** Default output folder is Videos (Windows) or Movies (macOS) → `EncodeIt` → `Output`.
 
 ---
 
@@ -65,13 +65,13 @@ Presets map to open FFmpeg recipes inspired by Adobe Media Encoder, Shutter Enco
 
 ## Watch folders
 
-Watch folders automatically queue new media that appears in a directory. This is the primary way After Effects, Premiere Pro, and DaVinci Resolve hand work to Encode This — no scripts required.
+Watch folders automatically queue new media that appears in a directory. This is the primary way After Effects, Premiere Pro, and DaVinci Resolve hand work to EncodeIt — no scripts required.
 
 ### How to set one up
 
 1. Open **Edit → Preferences → Integrations** to see install paths and active watches.
 2. Each watch has a folder path, a preset used for new files, and an encode output folder.
-3. Keep Encode This running while the host app finishes writing the file.
+3. Keep EncodeIt running while the host app finishes writing the file.
 4. When a new media file appears and its size stays stable across polls, it is added to the queue with that watch’s preset.
 5. Per watch: enable/disable, auto-start queue, and optional subfolder watching.
 
@@ -81,11 +81,11 @@ Watch folders automatically queue new media that appears in a directory. This is
 
 ## Host integrations overview
 
-Encode This integrates with After Effects, Premiere Pro, and DaVinci Resolve by watching shared folders. Point each host’s render/export destination at the matching folder; Encode This picks up finished files and encodes them with FFmpeg presets.
+EncodeIt integrates with After Effects, Premiere Pro, and DaVinci Resolve by watching shared folders. Point each host’s render/export destination at the matching folder; EncodeIt picks up finished files and encodes them with FFmpeg presets.
 
 ### Install modes
 
-On install (or first launch), Encode This detects which host apps are installed on disk. They do **not** need to be running for detection.
+On install (or first launch), EncodeIt detects which host apps are installed on disk. They do **not** need to be running for detection.
 
 - **Standard** — creates folders and watches only for detected apps.
 - **Custom** — choose After Effects, DaVinci Resolve, and/or Premiere Pro yourself (even if not installed yet).
@@ -97,60 +97,60 @@ On install (or first launch), Encode This detects which host apps are installed 
 | `from-ae` | After Effects Output Module / render output |
 | `from-resolve` | DaVinci Resolve Deliver destination |
 | `from-premiere` | Premiere Pro export / Media Export location |
-| `Output` | Default Encode This encode output |
+| `Output` | Default EncodeIt encode output |
 
 | Platform | Root path |
 | --- | --- |
-| Windows | `%USERPROFILE%\Videos\Encode This\` |
-| macOS | `~/Movies/Encode This/` |
+| Windows | `%USERPROFILE%\Videos\EncodeIt\` |
+| macOS | `~/Movies/EncodeIt/` |
 
 ### Shared setup steps
 
-1. Install Encode This (or complete first-launch integration setup) so the folders exist.
+1. Install EncodeIt (or complete first-launch integration setup) so the folders exist.
 2. Confirm paths under **Edit → Preferences → Integrations**.
 3. In the host app, set render/export output to the matching `from-*` folder.
-4. Leave Encode This running, then render/export as usual.
-5. New files appear in the Encode This queue; **Start Queue** if it is not already running.
+4. Leave EncodeIt running, then render/export as usual.
+5. New files appear in the EncodeIt queue; **Start Queue** if it is not already running.
 
-> **Note:** Encode This does not replace AE/Premiere/Resolve codecs or Deliver UI. It encodes **after** the host writes a file. Optional scripts/CEP for one-off sends live in the GitHub `integrations/` folder.
+> **Note:** EncodeIt does not replace AE/Premiere/Resolve codecs or Deliver UI. It encodes **after** the host writes a file. Optional scripts/CEP for one-off sends live in the GitHub `integrations/` folder.
 
 ---
 
 ## After Effects
 
-Recommended workflow: render compositions into the Encode This `from-ae` watch folder. No scripts or panels required.
+Recommended workflow: render compositions into the EncodeIt `from-ae` watch folder. No scripts or panels required.
 
 ### Watch-folder workflow
 
-1. Confirm `from-ae` exists (**Preferences → Integrations**). Typical path: Videos/Movies → `Encode This` → `from-ae`.
+1. Confirm `from-ae` exists (**Preferences → Integrations**). Typical path: Videos/Movies → `EncodeIt` → `from-ae`.
 2. In After Effects, open **Composition → Add to Render Queue** (or use the Render Queue panel).
 3. Set the Output Module’s output file into the `from-ae` folder.
-4. Use a high-quality intermediate in AE when you want Encode This to handle delivery codecs (ProRes, DNx, high-bitrate H.264, etc.).
-5. Keep Encode This running, then **Render**. When the file finishes writing, it is queued automatically.
+4. Use a high-quality intermediate in AE when you want EncodeIt to handle delivery codecs (ProRes, DNx, high-bitrate H.264, etc.).
+5. Keep EncodeIt running, then **Render**. When the file finishes writing, it is queued automatically.
 
 ### Tips
 
 - Change the preset for AE handoffs under **Preferences → Integrations** on the `from-ae` watch.
-- Finished encodes go to the watch’s output folder (default: `Encode This` → `Output`).
-- If you already rendered elsewhere, copy/move the finished file into `from-ae` while Encode This is watching — or use **Add Source…**.
+- Finished encodes go to the watch’s output folder (default: `EncodeIt` → `Output`).
+- If you already rendered elsewhere, copy/move the finished file into `from-ae` while EncodeIt is watching — or use **Add Source…**.
 
 ### Optional scripts & CEP
 
-> **Note:** GitHub `integrations/after-effects` includes `SendToEncodeThis.jsx` and a CEP panel that talk to the Host intake API for one-off sends without a watch folder. Enable AE Scripting network access if you use them.
+> **Note:** GitHub `integrations/after-effects` includes `SendToEncodeIt.jsx` and a CEP panel that talk to the Host intake API for one-off sends without a watch folder. Enable AE Scripting network access if you use them.
 
 ---
 
 ## DaVinci Resolve
 
-Resolve does not allow replacing Deliver codecs with a third-party encoder. The supported path is **Deliver** into the Encode This `from-resolve` folder, then let Encode This re-encode for delivery.
+Resolve does not allow replacing Deliver codecs with a third-party encoder. The supported path is **Deliver** into the EncodeIt `from-resolve` folder, then let EncodeIt re-encode for delivery.
 
 ### Deliver workflow
 
-1. Confirm `from-resolve` exists (**Preferences → Integrations**). Typical path: Videos/Movies → `Encode This` → `from-resolve`.
+1. Confirm `from-resolve` exists (**Preferences → Integrations**). Typical path: Videos/Movies → `EncodeIt` → `from-resolve`.
 2. In Resolve, open the **Deliver** page and set Filename / Location to that folder.
-3. Choose a high-quality master or intermediate in Deliver (e.g. ProRes, DNxHR, or a high-bitrate mezzanine) — Encode This will create the final delivery formats.
-4. **Add to Render Queue** and **Start Render** while Encode This is running.
-5. When Deliver finishes writing, Encode This queues the new file with the `from-resolve` watch preset.
+3. Choose a high-quality master or intermediate in Deliver (e.g. ProRes, DNxHR, or a high-bitrate mezzanine) — EncodeIt will create the final delivery formats.
+4. **Add to Render Queue** and **Start Render** while EncodeIt is running.
+5. When Deliver finishes writing, EncodeIt queues the new file with the `from-resolve` watch preset.
 
 ### Tips
 
@@ -160,21 +160,21 @@ Resolve does not allow replacing Deliver codecs with a third-party encoder. The 
 
 ### Optional Python helpers
 
-> **Note:** GitHub `integrations/davinci-resolve` has Python helpers (`send_to_encode_this.py`, `resolve_deliver_handoff.py`) for intake API / Utility script workflows when you do not want a watch folder. Host intake must be enabled.
+> **Note:** GitHub `integrations/davinci-resolve` has Python helpers (`send_to_encodeit.py`, `resolve_deliver_handoff.py`) for intake API / Utility script workflows when you do not want a watch folder. Host intake must be enabled.
 
 ---
 
 ## Premiere Pro
 
-Recommended workflow: export sequences into the Encode This `from-premiere` watch folder. Encode This then applies FFmpeg presets for batch delivery.
+Recommended workflow: export sequences into the EncodeIt `from-premiere` watch folder. EncodeIt then applies FFmpeg presets for batch delivery.
 
 ### Export workflow
 
-1. Confirm `from-premiere` exists (**Preferences → Integrations**). Typical path: Videos/Movies → `Encode This` → `from-premiere`.
+1. Confirm `from-premiere` exists (**Preferences → Integrations**). Typical path: Videos/Movies → `EncodeIt` → `from-premiere`.
 2. In Premiere, use **File → Export → Media** (or the Export panel).
 3. Set the Output Name / location to the `from-premiere` folder.
-4. Export a master or mezzanine you are happy to re-encode from, or export the delivery format you want Encode This to process further.
-5. Keep Encode This running, then **Export**. When the file finishes, it appears in the Encode This queue.
+4. Export a master or mezzanine you are happy to re-encode from, or export the delivery format you want EncodeIt to process further.
+5. Keep EncodeIt running, then **Export**. When the file finishes, it appears in the EncodeIt queue.
 
 ### Tips
 
@@ -184,7 +184,7 @@ Recommended workflow: export sequences into the Encode This `from-premiere` watc
 
 ### Optional ExtendScript
 
-> **Note:** GitHub `integrations/premiere` includes `SendToEncodeThis.jsx` for one-off handoff via the Host intake API / inbox. Enable Premiere scripting network access if you use it.
+> **Note:** GitHub `integrations/premiere` includes `SendToEncodeIt.jsx` for one-off handoff via the Host intake API / inbox. Enable Premiere scripting network access if you use it.
 
 ---
 
@@ -236,7 +236,7 @@ A JSON inbox folder (shown in Preferences) is also polled for dropped job files.
 | --- | --- |
 | Queue does nothing | Confirm jobs are Waiting, a preset is selected, and Start Queue is enabled. |
 | Hardware encode fails | Set acceleration to None or Auto, or refresh detection under Preferences → Hardware. |
-| Watch folder misses files | Keep Encode This running; wait until AE/Resolve/Premiere finishes writing; only new files after the watch is enabled are queued. |
+| Watch folder misses files | Keep EncodeIt running; wait until AE/Resolve/Premiere finishes writing; only new files after the watch is enabled are queued. |
 | Host app not detected | Detection looks under Program Files (Windows) or Applications (macOS). Use Custom install, or add a watch manually in Preferences → Integrations. |
 | AE/Resolve/Premiere file never queues | Confirm the host is writing into the matching `from-ae` / `from-resolve` / `from-premiere` path shown in Preferences, and that the watch is enabled. |
 | Wrong preset on host handoffs | Edit the watch’s preset under Preferences → Integrations (each host folder has its own preset and output folder). |

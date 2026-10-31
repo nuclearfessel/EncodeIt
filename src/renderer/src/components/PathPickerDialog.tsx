@@ -72,7 +72,7 @@ export function PathPickerDialog({
     async (dir?: string) => {
       setError(null)
       try {
-        const next = await window.encodeThis.listDirectory(dir, listModeFor(mode))
+        const next = await window.EncodeIt.listDirectory(dir, listModeFor(mode))
         setListing(next)
         setSelected(mode === 'openDirectory' && !next.isRoots ? [next.path] : [])
       } catch (err) {

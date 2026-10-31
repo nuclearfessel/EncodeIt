@@ -201,7 +201,7 @@ export const FORMATS: FormatDefinition[] = [
     category: 'video',
     platforms: ['all'],
     sources: ['ame', 'tmpgenc', 'shutter'],
-    description: 'AVI with DV, uncompressed, and legacy codecs. Adobe lists Windows-only; Encode This offers cross-platform FFmpeg paths.',
+    description: 'AVI with DV, uncompressed, and legacy codecs. Adobe lists Windows-only; EncodeIt offers cross-platform FFmpeg paths.',
     codecs: ['dvvideo', 'rawvideo', 'v210', 'msvideo1', 'utvideo']
   },
   {

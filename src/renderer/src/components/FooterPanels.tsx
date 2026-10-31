@@ -40,7 +40,7 @@ export function FooterPanels({
   }, [focus?.id, focus?.outputPath])
 
   useEffect(() => {
-    void window.encodeThis.detectHardware().then(setHwCaps).catch(() => setHwCaps(null))
+    void window.EncodeIt.detectHardware().then(setHwCaps).catch(() => setHwCaps(null))
   }, [settings.ffmpegPath, settings.hardwareAcceleration])
 
   async function pickOutputDir() {
@@ -51,14 +51,14 @@ export function FooterPanels({
 
   async function applyFileName() {
     if (!selectedIds.length || !fileName.trim()) return
-    await window.encodeThis.setOutputFileName(selectedIds, fileName.trim())
+    await window.EncodeIt.setOutputFileName(selectedIds, fileName.trim())
   }
 
   async function saveAs() {
     if (!focus) return
     const chosen = await pathPicker.saveFile(focus.outputPath)
     if (!chosen) return
-    await window.encodeThis.setOutputPath(selectedIds, chosen)
+    await window.EncodeIt.setOutputPath(selectedIds, chosen)
   }
 
   async function pickJobOutputFolder() {
@@ -67,7 +67,7 @@ export function FooterPanels({
       focus ? dirname(focus.outputPath) : settings.outputDirectory
     )
     if (!dir) return
-    await window.encodeThis.setJobsOutputDirectory(selectedIds, dir)
+    await window.EncodeIt.setJobsOutputDirectory(selectedIds, dir)
   }
 
   const canEditOutput = Boolean(focus) && focus?.status !== 'encoding'
@@ -136,7 +136,7 @@ export function FooterPanels({
                   checked={focus.exportVideo}
                   disabled={!canEditOutput}
                   onChange={(e) =>
-                    void window.encodeThis.setExportTracks(selectedIds, {
+                    void window.EncodeIt.setExportTracks(selectedIds, {
                       exportVideo: e.target.checked
                     })
                   }
@@ -149,7 +149,7 @@ export function FooterPanels({
                   checked={focus.exportAudio}
                   disabled={!canEditOutput}
                   onChange={(e) =>
-                    void window.encodeThis.setExportTracks(selectedIds, {
+                    void window.EncodeIt.setExportTracks(selectedIds, {
                       exportAudio: e.target.checked
                     })
                   }

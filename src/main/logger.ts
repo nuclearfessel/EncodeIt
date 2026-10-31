@@ -12,7 +12,7 @@ export function getLogPath(): string {
   if (!logFilePath) {
     const dir = path.join(app.getPath('userData'), 'logs')
     fs.mkdirSync(dir, { recursive: true })
-    logFilePath = path.join(dir, 'encode-this.log')
+    logFilePath = path.join(dir, 'encodeit.log')
   }
   return logFilePath
 }

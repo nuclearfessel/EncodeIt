@@ -83,7 +83,7 @@ export async function loadSettings(): Promise<AppSettings> {
   }
   const outputDirectory =
     stored.outputDirectory ||
-    path.join(app.getPath('videos'), 'Encode This', 'Output')
+    path.join(app.getPath('videos'), 'EncodeIt', 'Output')
 
   const settings: AppSettings = {
     ...DEFAULTS,

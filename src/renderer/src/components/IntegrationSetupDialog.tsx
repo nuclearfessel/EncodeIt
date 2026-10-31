@@ -5,7 +5,7 @@ import type { InstallOptions } from '../../../shared/installOptions'
 interface Props {
   open: boolean
   presence: HostAppPresence | null | undefined
-  onComplete: (next: Awaited<ReturnType<typeof window.encodeThis.completeIntegrationSetup>>) => void
+  onComplete: (next: Awaited<ReturnType<typeof window.EncodeIt.completeIntegrationSetup>>) => void
 }
 
 /**
@@ -48,7 +48,7 @@ export function IntegrationSetupDialog({ open, presence, onComplete }: Props) {
           }
         : { mode: 'custom', afterEffects, resolve, premiere }
     try {
-      const saved = await window.encodeThis.completeIntegrationSetup(options)
+      const saved = await window.EncodeIt.completeIntegrationSetup(options)
       onComplete(saved)
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err))

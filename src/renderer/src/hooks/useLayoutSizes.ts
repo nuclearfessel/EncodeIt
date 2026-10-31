@@ -7,7 +7,7 @@ export interface LayoutSizes {
   rightTopHeight: number
 }
 
-const STORAGE_KEY = 'encode-this.layout-sizes.v3'
+const STORAGE_KEY = 'encodeit.layout-sizes.v3'
 
 const DEFAULTS: LayoutSizes = {
   leftWidth: 360,

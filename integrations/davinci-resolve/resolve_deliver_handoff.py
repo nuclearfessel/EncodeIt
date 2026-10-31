@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Resolve Deliver handoff — read the render queue / deliver settings and send
-existing outputs to Encode This.
+existing outputs to EncodeIt.
 
 Run inside Resolve (Utility script) or standalone:
 
@@ -19,8 +19,8 @@ import sys
 import urllib.request
 from typing import Any
 
-BASE = os.environ.get("ENCODE_THIS_URL", "http://127.0.0.1:47821")
-PRESET = os.environ.get("ENCODE_THIS_PRESET", "h264-match-source-high-bitrate")
+BASE = os.environ.get("encodeit_URL", "http://127.0.0.1:47821")
+PRESET = os.environ.get("encodeit_PRESET", "h264-match-source-high-bitrate")
 
 
 def post_paths(paths: list[str], preset: str, start: bool = True) -> dict:
@@ -135,8 +135,8 @@ def try_resolve_ui_pick(project, jobs: list[dict[str, Any]]) -> str | None:
 
         win = ui.AddWindow(
             {
-                "ID": "EncodeThisDeliver",
-                "WindowTitle": "Send Deliver output to Encode This",
+                "ID": "EncodeItDeliver",
+                "WindowTitle": "Send Deliver output to EncodeIt",
                 "Geometry": [120, 120, 720, 220],
             },
             [
@@ -201,9 +201,9 @@ def resolve_path_from_job(project, job_id: str) -> str | None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Resolve Deliver → Encode This")
+    parser = argparse.ArgumentParser(description="Resolve Deliver → EncodeIt")
     parser.add_argument("--base", default=BASE, help="Intake base URL")
-    parser.add_argument("--preset", default=PRESET, help="Encode This preset id")
+    parser.add_argument("--preset", default=PRESET, help="EncodeIt preset id")
     parser.add_argument("--path", "-p", action="append", dest="paths", default=[])
     parser.add_argument("--list-jobs", action="store_true", help="Print render queue jobs")
     parser.add_argument("--job-id", help="Send output for this Resolve render JobId")
@@ -244,7 +244,7 @@ def main() -> int:
 
     if not paths:
         # Legacy single-path prompt
-        print("Enter media path to send to Encode This (or use --job-id / --list-jobs):")
+        print("Enter media path to send to EncodeIt (or use --job-id / --list-jobs):")
         line = sys.stdin.readline().strip()
         if line:
             paths.append(line)
@@ -266,7 +266,7 @@ def main() -> int:
         print(json.dumps(result, indent=2))
         return 0
     except Exception as exc:
-        print(f"Failed to send to Encode This: {exc}", file=sys.stderr)
+        print(f"Failed to send to EncodeIt: {exc}", file=sys.stderr)
         return 1
 
 

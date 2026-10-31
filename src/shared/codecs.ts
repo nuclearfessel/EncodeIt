@@ -167,7 +167,7 @@ export const CODEC_VARIANTS: CodecVariant[] = [
       pixelFormat: 'yuva444p10le',
       extraArgs: ['-vendor', 'apl0', '-alpha_bits', '16']
     },
-    notes: 'Adobe lists XQ as Windows-only in AME; Encode This offers it on all platforms via FFmpeg.'
+    notes: 'Adobe lists XQ as Windows-only in AME; EncodeIt offers it on all platforms via FFmpeg.'
   },
 
   // —— DNxHD / DNxHR ——

@@ -49,9 +49,9 @@ export function PanelHeader({ title, panelId, floating }: Props) {
 
   async function updateTargetFromPoint(clientX: number, clientY: number) {
     if (floating) {
-      const hit = await window.encodeThis.hitTestMainWindow()
+      const hit = await window.EncodeIt.hitTestMainWindow()
       if (!hit.overMain) {
-        await window.encodeThis.setPanelDragTarget(null)
+        await window.EncodeIt.setPanelDragTarget(null)
         return
       }
       // Menubar (30) + toolbar (~42) above the workspace.
@@ -59,17 +59,17 @@ export function PanelHeader({ title, panelId, floating }: Props) {
       const y = hit.relY - toolbar
       const h = Math.max(0, hit.height - toolbar)
       const target = hitTestOuterEdge(hit.relX, y, hit.width, h, 64)
-      await window.encodeThis.setPanelDragTarget(target)
+      await window.EncodeIt.setPanelDragTarget(target)
       return
     }
 
     const workspace = document.querySelector<HTMLElement>('.ame-workspace')
     if (!workspace) {
-      await window.encodeThis.setPanelDragTarget(null)
+      await window.EncodeIt.setPanelDragTarget(null)
       return
     }
     const target = resolveDropTarget(clientX, clientY, workspace, panelId)
-    await window.encodeThis.setPanelDragTarget(target)
+    await window.EncodeIt.setPanelDragTarget(target)
   }
 
   function onPointerDown(e: ReactPointerEvent) {
@@ -94,7 +94,7 @@ export function PanelHeader({ title, panelId, floating }: Props) {
     if (!drag.dragging && Math.hypot(dx, dy) > 8) {
       drag.dragging = true
       setOpen(false)
-      await window.encodeThis.beginPanelDrag(panelId, Boolean(floating))
+      await window.EncodeIt.beginPanelDrag(panelId, Boolean(floating))
     }
     if (drag.dragging) {
       await updateTargetFromPoint(e.clientX, e.clientY)
@@ -109,9 +109,9 @@ export function PanelHeader({ title, panelId, floating }: Props) {
       await updateTargetFromPoint(e.clientX, e.clientY)
 
       if (floating) {
-        const hit = await window.encodeThis.hitTestMainWindow()
+        const hit = await window.EncodeIt.hitTestMainWindow()
         if (!hit.overMain) {
-          await window.encodeThis.endPanelDrag('cancel')
+          await window.EncodeIt.endPanelDrag('cancel')
           return
         }
         const toolbar = 72
@@ -122,14 +122,14 @@ export function PanelHeader({ title, panelId, floating }: Props) {
           Math.max(0, hit.height - toolbar),
           64
         )
-        await window.encodeThis.setPanelDragTarget(target)
-        await window.encodeThis.endPanelDrag(target ? 'dock' : 'cancel')
+        await window.EncodeIt.setPanelDragTarget(target)
+        await window.EncodeIt.endPanelDrag(target ? 'dock' : 'cancel')
         return
       }
 
       const workspace = document.querySelector<HTMLElement>('.ame-workspace')
       if (!workspace) {
-        await window.encodeThis.endPanelDrag('undock')
+        await window.EncodeIt.endPanelDrag('undock')
         return
       }
       const ws = workspace.getBoundingClientRect()
@@ -139,12 +139,12 @@ export function PanelHeader({ title, panelId, floating }: Props) {
         e.clientY >= ws.top &&
         e.clientY <= ws.bottom
       const target = resolveDropTarget(e.clientX, e.clientY, workspace, panelId)
-      await window.encodeThis.setPanelDragTarget(target)
-      if (target) await window.encodeThis.endPanelDrag('dock')
-      else if (!inside) await window.encodeThis.endPanelDrag('undock')
-      else await window.encodeThis.endPanelDrag('cancel')
+      await window.EncodeIt.setPanelDragTarget(target)
+      if (target) await window.EncodeIt.endPanelDrag('dock')
+      else if (!inside) await window.EncodeIt.endPanelDrag('undock')
+      else await window.EncodeIt.endPanelDrag('cancel')
     } catch {
-      await window.encodeThis.endPanelDrag('cancel')
+      await window.EncodeIt.endPanelDrag('cancel')
     }
   }
 
@@ -186,7 +186,7 @@ export function PanelHeader({ title, panelId, floating }: Props) {
                 role="menuitem"
                 onClick={() => {
                   setOpen(false)
-                  void window.encodeThis.closePanel(panelId)
+                  void window.EncodeIt.closePanel(panelId)
                 }}
               >
                 Close Panel
@@ -211,7 +211,7 @@ export function PanelHeader({ title, panelId, floating }: Props) {
                           onClick={() => {
                             setOpen(false)
                             setDockOpen(false)
-                            void window.encodeThis.dockPanel(panelId, edge)
+                            void window.EncodeIt.dockPanel(panelId, edge)
                           }}
                         >
                           {label}
@@ -226,7 +226,7 @@ export function PanelHeader({ title, panelId, floating }: Props) {
                   role="menuitem"
                   onClick={() => {
                     setOpen(false)
-                    void window.encodeThis.undockPanel(panelId)
+                    void window.EncodeIt.undockPanel(panelId)
                   }}
                 >
                   Undock Panel

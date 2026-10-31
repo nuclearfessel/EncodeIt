@@ -63,16 +63,16 @@ export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
     setNewWatchPreset(DEFAULT_PRESET_ID)
     setNewWatchOutput(settings.outputDirectory || '')
     setProbing(true)
-    void window.encodeThis
+    void window.EncodeIt
       .detectHardware()
       .then(setCaps)
       .catch((err) => setError(err instanceof Error ? err.message : String(err)))
       .finally(() => setProbing(false))
-    void window.encodeThis
+    void window.EncodeIt
       .getIntakeStatus()
       .then(setIntakeStatus)
       .catch(() => setIntakeStatus(null))
-    void window.encodeThis
+    void window.EncodeIt
       .listWatchFolders()
       .then(setWatchFolders)
       .catch(() => setWatchFolders([]))
@@ -132,7 +132,7 @@ export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
     setProbing(true)
     setError(null)
     try {
-      setCaps(await window.encodeThis.detectHardware(true))
+      setCaps(await window.EncodeIt.detectHardware(true))
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err))
     } finally {
@@ -145,12 +145,12 @@ export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
     const folder = await pathPicker.openDirectory()
     if (!folder) return
     try {
-      const created = await window.encodeThis.addWatchFolder(
+      const created = await window.EncodeIt.addWatchFolder(
         folder,
         newWatchPreset || DEFAULT_PRESET_ID,
         newWatchOutput || draft.outputDirectory
       )
-      setWatchFolders(await window.encodeThis.listWatchFolders())
+      setWatchFolders(await window.EncodeIt.listWatchFolders())
       void created
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err))
@@ -354,7 +354,7 @@ export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
                             <button
                               type="button"
                               className="linkish"
-                              onClick={() => void window.encodeThis.openPath(folderPath)}
+                              onClick={() => void window.EncodeIt.openPath(folderPath)}
                             >
                               Open
                             </button>
@@ -418,7 +418,7 @@ export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
                             type="checkbox"
                             checked={wf.enabled}
                             onChange={(e) => {
-                              void window.encodeThis
+                              void window.EncodeIt
                                 .setWatchEnabled(wf.id, e.target.checked)
                                 .then(setWatchFolders)
                             }}
@@ -430,7 +430,7 @@ export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
                             type="checkbox"
                             checked={wf.autoStart !== false}
                             onChange={(e) => {
-                              void window.encodeThis
+                              void window.EncodeIt
                                 .updateWatchFolder(wf.id, { autoStart: e.target.checked })
                                 .then(setWatchFolders)
                             }}
@@ -442,7 +442,7 @@ export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
                             type="checkbox"
                             checked={Boolean(wf.recursive)}
                             onChange={(e) => {
-                              void window.encodeThis
+                              void window.EncodeIt
                                 .updateWatchFolder(wf.id, { recursive: e.target.checked })
                                 .then(setWatchFolders)
                             }}
@@ -457,7 +457,7 @@ export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
                           <select
                             value={wf.presetId}
                             onChange={(e) => {
-                              void window.encodeThis
+                              void window.EncodeIt
                                 .updateWatchFolder(wf.id, { presetId: e.target.value })
                                 .then(setWatchFolders)
                             }}
@@ -480,7 +480,7 @@ export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
                                   .openDirectory(wf.outputDir || draft.outputDirectory)
                                   .then((dir) => {
                                     if (!dir) return
-                                    return window.encodeThis
+                                    return window.EncodeIt
                                       .updateWatchFolder(wf.id, { outputDir: dir })
                                       .then(setWatchFolders)
                                   })
@@ -494,7 +494,7 @@ export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
                           type="button"
                           className="prefs-watch-remove"
                           onClick={() => {
-                            void window.encodeThis.removeWatchFolder(wf.id).then(setWatchFolders)
+                            void window.EncodeIt.removeWatchFolder(wf.id).then(setWatchFolders)
                           }}
                         >
                           Remove

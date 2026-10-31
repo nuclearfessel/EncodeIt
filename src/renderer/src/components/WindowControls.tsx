@@ -5,8 +5,8 @@ export function WindowControls() {
   const [maximized, setMaximized] = useState(false)
 
   useEffect(() => {
-    void window.encodeThis.windowIsMaximized().then(setMaximized)
-    const off = window.encodeThis.onWindowState((state) => setMaximized(state.maximized))
+    void window.EncodeIt.windowIsMaximized().then(setMaximized)
+    const off = window.EncodeIt.onWindowState((state) => setMaximized(state.maximized))
     return () => {
       off()
     }
@@ -19,7 +19,7 @@ export function WindowControls() {
         className="window-control"
         title="Minimize"
         aria-label="Minimize"
-        onClick={() => void window.encodeThis.windowMinimize()}
+        onClick={() => void window.EncodeIt.windowMinimize()}
       >
         <svg width="10" height="1" viewBox="0 0 10 1" aria-hidden="true">
           <rect width="10" height="1" fill="currentColor" />
@@ -30,7 +30,7 @@ export function WindowControls() {
         className="window-control"
         title={maximized ? 'Restore' : 'Maximize'}
         aria-label={maximized ? 'Restore' : 'Maximize'}
-        onClick={() => void window.encodeThis.windowMaximizeToggle()}
+        onClick={() => void window.EncodeIt.windowMaximizeToggle()}
       >
         {maximized ? (
           <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
@@ -50,7 +50,7 @@ export function WindowControls() {
         className="window-control window-control-close"
         title="Close"
         aria-label="Close"
-        onClick={() => void window.encodeThis.windowClose()}
+        onClick={() => void window.EncodeIt.windowClose()}
       >
         <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
           <path

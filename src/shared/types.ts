@@ -190,7 +190,7 @@ export interface AppSettings {
 export type SettingsView = AppSettings & {
   ffmpegSource?: 'bundled' | 'system' | 'custom'
   ffmpegBundled?: boolean
-  /** Canonical install folders (Videos/Movies/Encode This/…). */
+  /** Canonical install folders (Videos/Movies/EncodeIt/…). */
   hostFolders?: {
     root: string
     fromAe: string

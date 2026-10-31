@@ -61,7 +61,7 @@ export function MediaBrowser({ onAddMedia, floating }: Props) {
   const load = useCallback(async (dir?: string) => {
     setError(null)
     try {
-      const next = await window.encodeThis.listMediaDirectory(dir)
+      const next = await window.EncodeIt.listMediaDirectory(dir)
       setListing(next)
       setSelected([])
     } catch (err) {

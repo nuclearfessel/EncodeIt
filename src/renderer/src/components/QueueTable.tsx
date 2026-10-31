@@ -166,7 +166,7 @@ export function QueueTable({ jobs, selectedIds, onSelect, presetName, onAdd }: P
                       void (async () => {
                         const chosen = await pathPicker.saveFile(job.outputPath)
                         if (!chosen) return
-                        await window.encodeThis.setOutputPath([job.id], chosen)
+                        await window.EncodeIt.setOutputPath([job.id], chosen)
                       })()
                     }}
                   >

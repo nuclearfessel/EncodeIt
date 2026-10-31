@@ -14,7 +14,7 @@ async function run(cmd: string, args: string[]): Promise<void> {
 }
 
 async function main() {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'encode-this-smoke-'))
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'encodeit-smoke-'))
   const src = path.join(dir, 'src.mp4')
   await run('ffmpeg', [
     '-y',

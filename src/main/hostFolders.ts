@@ -13,7 +13,7 @@ import type { WatchFolderSettings } from '../shared/types'
 import { detectHostApps, filterFlagsByPresence } from './hostAppDetect'
 
 export interface HostFolderLayout {
-  /** Root: {Videos|Movies}/Encode This */
+  /** Root: {Videos|Movies}/EncodeIt */
   root: string
   fromAe: string
   fromResolve: string
@@ -28,7 +28,7 @@ export type HostFolderFlags = HostAppPresence
  * Same relative layout on both platforms.
  */
 export function resolveHostFolderLayout(videosPath = app.getPath('videos')): HostFolderLayout {
-  const root = path.join(videosPath, 'Encode This')
+  const root = path.join(videosPath, 'EncodeIt')
   return {
     root,
     fromAe: path.join(root, 'from-ae'),
@@ -83,21 +83,21 @@ export function ensureHostFolders(
     fs.mkdirSync(layout.fromAe, { recursive: true })
     writeHint(
       layout.fromAe,
-      'Render After Effects Output Module files into this folder. Encode This watches it automatically.'
+      'Render After Effects Output Module files into this folder. EncodeIt watches it automatically.'
     )
   }
   if (flags.resolve) {
     fs.mkdirSync(layout.fromResolve, { recursive: true })
     writeHint(
       layout.fromResolve,
-      'Set DaVinci Resolve Deliver destination to this folder. Encode This watches it automatically.'
+      'Set DaVinci Resolve Deliver destination to this folder. EncodeIt watches it automatically.'
     )
   }
   if (flags.premiere) {
     fs.mkdirSync(layout.fromPremiere, { recursive: true })
     writeHint(
       layout.fromPremiere,
-      'Export from Premiere Pro into this folder. Encode This watches it automatically.'
+      'Export from Premiere Pro into this folder. EncodeIt watches it automatically.'
     )
   }
   return layout

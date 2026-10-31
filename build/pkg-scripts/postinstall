@@ -5,8 +5,8 @@
 set -euo pipefail
 
 VIDEOS="${HOME}/Movies"
-ROOT="${VIDEOS}/Encode This"
-SUPPORT="${HOME}/Library/Application Support/Encode This"
+ROOT="${VIDEOS}/EncodeIt"
+SUPPORT="${HOME}/Library/Application Support/EncodeIt"
 APPS="/Applications"
 USER_APPS="${HOME}/Applications"
 
@@ -50,17 +50,17 @@ premiere_json=false
 
 if [[ "${has_ae}" == true ]]; then
   mkdir -p "${ROOT}/from-ae"
-  write_hint "${ROOT}/from-ae" "Render After Effects Output Module files into this folder. Encode This watches it automatically."
+  write_hint "${ROOT}/from-ae" "Render After Effects Output Module files into this folder. EncodeIt watches it automatically."
   ae_json=true
 fi
 if [[ "${has_resolve}" == true ]]; then
   mkdir -p "${ROOT}/from-resolve"
-  write_hint "${ROOT}/from-resolve" "Set DaVinci Resolve Deliver destination to this folder. Encode This watches it automatically."
+  write_hint "${ROOT}/from-resolve" "Set DaVinci Resolve Deliver destination to this folder. EncodeIt watches it automatically."
   resolve_json=true
 fi
 if [[ "${has_premiere}" == true ]]; then
   mkdir -p "${ROOT}/from-premiere"
-  write_hint "${ROOT}/from-premiere" "Export from Premiere Pro into this folder. Encode This watches it automatically."
+  write_hint "${ROOT}/from-premiere" "Export from Premiere Pro into this folder. EncodeIt watches it automatically."
   premiere_json=true
 fi
 

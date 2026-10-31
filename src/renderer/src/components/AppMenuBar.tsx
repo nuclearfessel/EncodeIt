@@ -74,7 +74,7 @@ export function AppMenuBar({ actions }: Props) {
         {
           label: 'Quit',
           shortcut: 'Alt+F4',
-          action: () => void window.encodeThis.windowClose()
+          action: () => void window.EncodeIt.windowClose()
         }
       ]
     },
@@ -103,16 +103,16 @@ export function AppMenuBar({ actions }: Props) {
       items: [
         {
           label: 'Minimize',
-          action: () => void window.encodeThis.windowMinimize()
+          action: () => void window.EncodeIt.windowMinimize()
         },
         {
           label: 'Maximize / Restore',
-          action: () => void window.encodeThis.windowMaximizeToggle()
+          action: () => void window.EncodeIt.windowMaximizeToggle()
         },
         { separator: true, label: '' },
         {
           label: 'Close Window',
-          action: () => void window.encodeThis.windowClose()
+          action: () => void window.EncodeIt.windowClose()
         }
       ]
     },
@@ -126,12 +126,12 @@ export function AppMenuBar({ actions }: Props) {
           action: actions.onDocumentation
         },
         { label: 'Open Log File', action: actions.onOpenLog },
-        { label: 'About Encode This', action: actions.onAbout },
+        { label: 'About EncodeIt', action: actions.onAbout },
         { separator: true, label: '' },
         {
-          label: 'Encode This on GitHub',
+          label: 'EncodeIt on GitHub',
           action: () => {
-            void window.open('https://github.com/nuclearfessel/encode-this', '_blank')
+            void window.open('https://github.com/nuclearfessel/encodeit', '_blank')
           }
         }
       ]

@@ -13,7 +13,7 @@ export function AboutDialog({ open, onClose, version, ffmpegPath, ffmpegSource }
 
   useEffect(() => {
     if (!open) return
-    void window.encodeThis
+    void window.EncodeIt
       .getLogPath()
       .then(setLogPath)
       .catch(() => setLogPath(null))
@@ -31,13 +31,13 @@ export function AboutDialog({ open, onClose, version, ffmpegPath, ffmpegSource }
         onMouseDown={(e) => e.stopPropagation()}
       >
         <header className="about-header">
-          <h2 id="about-title">About Encode This</h2>
+          <h2 id="about-title">About EncodeIt</h2>
           <button type="button" className="icon-btn" title="Close" onClick={onClose}>
             ×
           </button>
         </header>
         <div className="about-body">
-          <p className="about-brand">Encode This</p>
+          <p className="about-brand">EncodeIt</p>
           <p className="about-meta">Version {version}</p>
           <p className="about-copy">
             Open-source batch media encoder with an Adobe Media Encoder / Shutter Encoder–style
@@ -53,7 +53,7 @@ export function AboutDialog({ open, onClose, version, ffmpegPath, ffmpegSource }
               Log: <code className="about-code">{logPath}</code>
             </p>
           ) : null}
-          <p className="about-meta">MIT License · github.com/nuclearfessel/encode-this</p>
+          <p className="about-meta">MIT License · github.com/nuclearfessel/encodeit</p>
         </div>
         <footer className="about-footer">
           <button type="button" className="primary" onClick={onClose}>

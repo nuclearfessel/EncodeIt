@@ -208,6 +208,6 @@ const api = {
   }
 }
 
-contextBridge.exposeInMainWorld('encodeThis', api)
+contextBridge.exposeInMainWorld('EncodeIt', api)
 
-export type EncodeThisApi = typeof api
+export type EncodeItApi = typeof api

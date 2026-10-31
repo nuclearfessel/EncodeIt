@@ -90,11 +90,11 @@ function MainApp() {
   useEffect(() => {
     void (async () => {
       const [cat, cfg, queue, ws, ui] = await Promise.all([
-        window.encodeThis.getCatalog(),
-        window.encodeThis.getSettings(),
-        window.encodeThis.listQueue(),
-        window.encodeThis.getWorkspace(),
-        window.encodeThis.getUiState()
+        window.EncodeIt.getCatalog(),
+        window.EncodeIt.getSettings(),
+        window.EncodeIt.listQueue(),
+        window.EncodeIt.getWorkspace(),
+        window.EncodeIt.getUiState()
       ])
       setCatalog(cat)
       setSettings(cfg)
@@ -104,19 +104,19 @@ function MainApp() {
       setSelectedIds(ui.selectedJobIds)
     })()
 
-    const offChange = window.encodeThis.onQueueChanged(setJobs)
-    const offState = window.encodeThis.onQueueState((s) => setRunning(s.running))
-    const offProgress = window.encodeThis.onQueueProgress(() => undefined)
-    const offWs = window.encodeThis.onWorkspaceChanged(setWorkspace)
-    const offDrag = window.encodeThis.onPanelDrag(({ session, target }) => {
+    const offChange = window.EncodeIt.onQueueChanged(setJobs)
+    const offState = window.EncodeIt.onQueueState((s) => setRunning(s.running))
+    const offProgress = window.EncodeIt.onQueueProgress(() => undefined)
+    const offWs = window.EncodeIt.onWorkspaceChanged(setWorkspace)
+    const offDrag = window.EncodeIt.onPanelDrag(({ session, target }) => {
       setDragSession(session)
       setDropTarget(target)
     })
-    const offUi = window.encodeThis.onUiChanged((ui) => {
+    const offUi = window.EncodeIt.onUiChanged((ui) => {
       setActivePresetId(ui.activePresetId)
       setSelectedIds(ui.selectedJobIds)
     })
-    const offSettings = window.encodeThis.onSettingsChanged(setSettings)
+    const offSettings = window.EncodeIt.onSettingsChanged(setSettings)
     return () => {
       offChange()
       offState()
@@ -142,7 +142,7 @@ function MainApp() {
       const mod = e.ctrlKey || e.metaKey
       if (e.key === 'F1') {
         e.preventDefault()
-        void window.encodeThis.openDocumentation()
+        void window.EncodeIt.openDocumentation()
         return
       }
       if (mod && e.key === ',') {
@@ -157,12 +157,12 @@ function MainApp() {
       }
       if (mod && e.key === 'Enter') {
         e.preventDefault()
-        void window.encodeThis.startQueue()
+        void window.EncodeIt.startQueue()
         return
       }
       if (mod && e.key === '.') {
         e.preventDefault()
-        void window.encodeThis.stopQueue()
+        void window.EncodeIt.stopQueue()
       }
     }
     window.addEventListener('keydown', onKey)
@@ -182,20 +182,20 @@ function MainApp() {
   async function addFiles(paths?: string[]) {
     const files = paths ?? (await pathPicker.openFiles())
     if (!files.length) return
-    await window.encodeThis.addToQueue(files, activePresetId || catalog?.defaultPresetId)
+    await window.EncodeIt.addToQueue(files, activePresetId || catalog?.defaultPresetId)
   }
 
   async function applyPreset(presetId: string) {
     setActivePresetId(presetId)
-    await window.encodeThis.setActivePreset(presetId)
+    await window.EncodeIt.setActivePreset(presetId)
     if (selectedIds.length) {
-      await window.encodeThis.setPreset(selectedIds, presetId)
+      await window.EncodeIt.setPreset(selectedIds, presetId)
     }
   }
 
   function selectJobs(ids: string[]) {
     setSelectedIds(ids)
-    void window.encodeThis.setSelectedJobs(ids)
+    void window.EncodeIt.setSelectedJobs(ids)
   }
 
   async function onDrop(e: DragEvent) {
@@ -245,14 +245,14 @@ function MainApp() {
         activePreset={activePreset}
         settings={settings}
         onSettings={async (next) => {
-          setSettings(await window.encodeThis.setSettings(next))
+          setSettings(await window.EncodeIt.setSettings(next))
         }}
       />
     )
   }
 
   if (!catalog || !settings) {
-    return <div className="empty">Loading Encode This…</div>
+    return <div className="empty">Loading EncodeIt…</div>
   }
 
   if (floatingPanel) {
@@ -274,7 +274,7 @@ function MainApp() {
           onAddMedia={(paths) => void addFiles(paths)}
           onSelectJobs={selectJobs}
           onApplyPreset={(id) => void applyPreset(id)}
-          onSettings={async (next) => setSettings(await window.encodeThis.setSettings(next))}
+          onSettings={async (next) => setSettings(await window.EncodeIt.setSettings(next))}
         />
       </div>
     )
@@ -299,19 +299,19 @@ function MainApp() {
       onDrop={(e) => void onDrop(e)}
     >
       <div className="title-chrome">
-        <span className="title-brand">Encode This</span>
+        <span className="title-brand">EncodeIt</span>
         <AppMenuBar
           actions={{
             onAddSource: () => void addFiles(),
-            onStartQueue: () => void window.encodeThis.startQueue(),
-            onStopQueue: () => void window.encodeThis.stopQueue(),
-            onClearDone: () => void window.encodeThis.clearDone(),
+            onStartQueue: () => void window.EncodeIt.startQueue(),
+            onStopQueue: () => void window.EncodeIt.stopQueue(),
+            onClearDone: () => void window.EncodeIt.clearDone(),
             onPreferences: () => setPrefsOpen(true),
-            onDockAll: () => void window.encodeThis.dockAllPanels(),
-            onShowAllPanels: () => void window.encodeThis.showAllPanels(),
-            onDocumentation: () => void window.encodeThis.openDocumentation(),
+            onDockAll: () => void window.EncodeIt.dockAllPanels(),
+            onShowAllPanels: () => void window.EncodeIt.showAllPanels(),
+            onDocumentation: () => void window.EncodeIt.openDocumentation(),
             onAbout: () => setAboutOpen(true),
-            onOpenLog: () => void window.encodeThis.openLogFile(),
+            onOpenLog: () => void window.EncodeIt.openLogFile(),
             canStart,
             canStop: running
           }}
@@ -329,7 +329,7 @@ function MainApp() {
             type="button"
             className="primary btn-with-icon"
             disabled={!canStart}
-            onClick={() => void window.encodeThis.startQueue()}
+            onClick={() => void window.EncodeIt.startQueue()}
           >
             <ButtonContent icon={Play}>Start Queue</ButtonContent>
           </button>
@@ -337,7 +337,7 @@ function MainApp() {
             type="button"
             className="btn-with-icon"
             disabled={!running}
-            onClick={() => void window.encodeThis.stopQueue()}
+            onClick={() => void window.EncodeIt.stopQueue()}
           >
             <ButtonContent icon={Square}>Stop</ButtonContent>
           </button>
@@ -346,7 +346,7 @@ function MainApp() {
             className="btn-with-icon"
             disabled={!selectedIds.length}
             onClick={() =>
-              void window.encodeThis.removeFromQueue(selectedIds).then(() => selectJobs([]))
+              void window.EncodeIt.removeFromQueue(selectedIds).then(() => selectJobs([]))
             }
           >
             <ButtonContent icon={Bin}>Remove</ButtonContent>
@@ -354,7 +354,7 @@ function MainApp() {
           <button
             type="button"
             className="btn-with-icon"
-            onClick={() => void window.encodeThis.clearDone()}
+            onClick={() => void window.EncodeIt.clearDone()}
           >
             <ButtonContent icon={X}>Clear Done</ButtonContent>
           </button>
@@ -362,7 +362,7 @@ function MainApp() {
             <button
               type="button"
               className="btn-with-icon"
-              onClick={() => void window.encodeThis.dockAllPanels()}
+              onClick={() => void window.EncodeIt.dockAllPanels()}
             >
               <ButtonContent icon={PanelsTopLeft}>Dock All Panels</ButtonContent>
             </button>
@@ -374,7 +374,7 @@ function MainApp() {
                   key={id}
                   type="button"
                   className="btn-with-icon"
-                  onClick={() => void window.encodeThis.dockPanel(id, 'right')}
+                  onClick={() => void window.EncodeIt.dockPanel(id, 'right')}
                 >
                   <ButtonContent icon={PanelLeftOpen}>Show {PANEL_TITLES[id]}</ButtonContent>
                 </button>
@@ -382,7 +382,7 @@ function MainApp() {
               <button
                 type="button"
                 className="btn-with-icon"
-                onClick={() => void window.encodeThis.showAllPanels()}
+                onClick={() => void window.EncodeIt.showAllPanels()}
               >
                 <ButtonContent icon={PanelsTopLeft}>Show All Panels</ButtonContent>
               </button>
@@ -404,7 +404,7 @@ function MainApp() {
         settings={settings}
         onClose={() => setPrefsOpen(false)}
         onSave={async (next) => {
-          const saved = await window.encodeThis.setSettings(next)
+          const saved = await window.EncodeIt.setSettings(next)
           setSettings(saved)
           return saved
         }}
@@ -431,7 +431,7 @@ function MainApp() {
           open={Boolean(settings.showIntegrationCoach) && !settings.needsIntegrationSetup}
           hostFolders={settings.hostFolders}
           onDismiss={() => {
-            void window.encodeThis.dismissIntegrationCoach().then(setSettings)
+            void window.EncodeIt.dismissIntegrationCoach().then(setSettings)
           }}
         />
       ) : null}
@@ -445,7 +445,7 @@ function MainApp() {
               setWorkspace((prev) => {
                 if (!prev.root || !deltaPx || !containerPx) return prev
                 const root = resizeAtPath(prev.root, path, leftIndex, deltaPx, containerPx)
-                void window.encodeThis.setWorkspaceRoot(root)
+                void window.EncodeIt.setWorkspaceRoot(root)
                 return { ...prev, root }
               })
             }}
@@ -453,7 +453,7 @@ function MainApp() {
               setWorkspace((prev) => {
                 if (!prev.root) return prev
                 const root = resetSplitPair(prev.root, path, leftIndex)
-                void window.encodeThis.setWorkspaceRoot(root)
+                void window.EncodeIt.setWorkspaceRoot(root)
                 return { ...prev, root }
               })
             }}

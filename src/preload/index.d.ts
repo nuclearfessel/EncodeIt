@@ -1,8 +1,8 @@
-import type { EncodeThisApi } from './index'
+import type { EncodeItApi } from './index'
 
 declare global {
   interface Window {
-    encodeThis: EncodeThisApi
+    EncodeIt: EncodeItApi
   }
 }
 

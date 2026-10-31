@@ -59,7 +59,7 @@ jobs:
             release/*-mac.zip
             release/*.AppImage
             release/*.deb
-            release/encode-this-ae-cep.zip
+            release/encodeit-ae-cep.zip
           fail_on_unmatched_files: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
