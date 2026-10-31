@@ -11,7 +11,7 @@
     "build": "electron-vite build",
     "preview": "electron-vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
-    "test": "tsx --test src/shared/fileSettle.test.ts src/shared/buildCommand.overwrite.test.ts src/shared/intakePayload.test.ts && node --test scripts/download-ffmpeg.redirect.test.mjs",
+    "test": "tsx --test src/shared/fileSettle.test.ts src/shared/buildCommand.overwrite.test.ts src/shared/intakePayload.test.ts src/shared/effectiveSettings.test.ts && node --test scripts/download-ffmpeg.redirect.test.mjs",
     "smoke": "tsx scripts/smoke-encode.ts",
     "download-ffmpeg": "node scripts/download-ffmpeg.mjs",
     "postinstall": "node scripts/download-ffmpeg.mjs",

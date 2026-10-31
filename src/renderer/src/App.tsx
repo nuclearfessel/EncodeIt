@@ -20,6 +20,7 @@ import type {
 } from '../../shared/types'
 import { DockDropOverlay } from './components/DockDropOverlay'
 import { EncodingPanel } from './components/EncodingPanel'
+import { ExportSettingsDialog } from './components/ExportSettingsDialog'
 import { AboutDialog } from './components/AboutDialog'
 import { HelpDocumentationWindow } from './components/HelpDocumentationWindow'
 import { IntegrationCoachBanner } from './components/IntegrationCoachBanner'
@@ -41,9 +42,16 @@ import { PanelHeader } from './components/PanelHeader'
 import { PresetBrowser } from './components/PresetBrowser'
 import { QueueTable } from './components/QueueTable'
 import { AppMenuBar } from './components/AppMenuBar'
+import { SaveWorkspaceDialog } from './components/SaveWorkspaceDialog'
 import { WindowControls } from './components/WindowControls'
 import { WorkspaceView } from './components/WorkspaceView'
 import { usePathPicker } from './pathPicker/PathPickerContext'
+
+interface WorkspaceCatalogView {
+  activeId: string | null
+  activeName: string | null
+  named: Array<{ id: string; name: string; updatedAt: number }>
+}
 
 interface CatalogPayload {
   presets: PresetDefinition[]
@@ -78,6 +86,12 @@ function MainApp() {
   const [running, setRunning] = useState(false)
   const [dragOver, setDragOver] = useState(false)
   const [workspace, setWorkspace] = useState<WorkspaceState>(() => defaultWorkspace())
+  const [wsCatalog, setWsCatalog] = useState<WorkspaceCatalogView>({
+    activeId: null,
+    activeName: null,
+    named: []
+  })
+  const [saveWorkspaceOpen, setSaveWorkspaceOpen] = useState(false)
   const [dragSession, setDragSession] = useState<{
     panelId: PanelId
     fromFloating: boolean
@@ -85,21 +99,44 @@ function MainApp() {
   const [dropTarget, setDropTarget] = useState<AnyDropTarget | null>(null)
   const [prefsOpen, setPrefsOpen] = useState(false)
   const [aboutOpen, setAboutOpen] = useState(false)
+  const [exportSettingsOpen, setExportSettingsOpen] = useState(false)
   const pathPicker = usePathPicker()
+
+  function applyCatalog(next: {
+    current: WorkspaceState
+    activeId: string | null
+    activeName: string | null
+    named: Array<{ id: string; name: string; updatedAt: number }>
+  }) {
+    setWorkspace(next.current)
+    setWsCatalog({
+      activeId: next.activeId,
+      activeName: next.activeName,
+      named: next.named
+    })
+  }
+
+  function openExportSettings(ids?: string[]) {
+    if (ids?.length) selectJobs(ids)
+    else if (!selectedIds.length) return
+    setExportSettingsOpen(true)
+  }
 
   useEffect(() => {
     void (async () => {
-      const [cat, cfg, queue, ws, ui] = await Promise.all([
+      const [cat, cfg, queue, ws, ui, wsc] = await Promise.all([
         window.EncodeIt.getCatalog(),
         window.EncodeIt.getSettings(),
         window.EncodeIt.listQueue(),
         window.EncodeIt.getWorkspace(),
-        window.EncodeIt.getUiState()
+        window.EncodeIt.getUiState(),
+        window.EncodeIt.getWorkspaceCatalog()
       ])
       setCatalog(cat)
       setSettings(cfg)
       setJobs(queue)
       setWorkspace(ws)
+      applyCatalog(wsc)
       setActivePresetId(ui.activePresetId || cat.defaultPresetId)
       setSelectedIds(ui.selectedJobIds)
     })()
@@ -108,6 +145,7 @@ function MainApp() {
     const offState = window.EncodeIt.onQueueState((s) => setRunning(s.running))
     const offProgress = window.EncodeIt.onQueueProgress(() => undefined)
     const offWs = window.EncodeIt.onWorkspaceChanged(setWorkspace)
+    const offWsCat = window.EncodeIt.onWorkspaceCatalog(applyCatalog)
     const offDrag = window.EncodeIt.onPanelDrag(({ session, target }) => {
       setDragSession(session)
       setDropTarget(target)
@@ -122,6 +160,7 @@ function MainApp() {
       offState()
       offProgress()
       offWs()
+      offWsCat()
       offDrag()
       offUi()
       offSettings()
@@ -193,6 +232,16 @@ function MainApp() {
     }
   }
 
+  async function deleteUserPreset(id: string) {
+    const result = await window.EncodeIt.deleteUserPreset(id)
+    if (result.catalog) setCatalog(result.catalog as CatalogPayload)
+    if (activePresetId === id && result.catalog) {
+      const nextId = (result.catalog as CatalogPayload).defaultPresetId
+      setActivePresetId(nextId)
+      await window.EncodeIt.setActivePreset(nextId)
+    }
+  }
+
   function selectJobs(ids: string[]) {
     setSelectedIds(ids)
     void window.EncodeIt.setSelectedJobs(ids)
@@ -220,6 +269,7 @@ function MainApp() {
             grouped={catalog.grouped}
             activePresetId={activePresetId}
             onSelect={(pid) => void applyPreset(pid)}
+            onDeleteUserPreset={(id) => void deleteUserPreset(id)}
           />
         </aside>
       )
@@ -233,7 +283,9 @@ function MainApp() {
             selectedIds={selectedIds}
             onSelect={selectJobs}
             presetName={(pid) => catalog.presets.find((p) => p.id === pid)?.name ?? pid}
+            presets={catalog.presets}
             onAdd={() => void addFiles()}
+            onOpenExportSettings={openExportSettings}
           />
         </section>
       )
@@ -242,8 +294,10 @@ function MainApp() {
       <EncodingPanel
         jobs={jobs}
         selectedJobs={selectedJobs}
+        presets={catalog.presets}
         activePreset={activePreset}
         settings={settings}
+        onOpenExportSettings={() => openExportSettings()}
         onSettings={async (next) => {
           setSettings(await window.EncodeIt.setSettings(next))
         }}
@@ -256,6 +310,9 @@ function MainApp() {
   }
 
   if (floatingPanel) {
+    if (!catalog || !settings) {
+      return <div className="empty">Loading EncodeIt…</div>
+    }
     return (
       <div className="app floating-app">
         <div className="float-titlebar">
@@ -274,7 +331,19 @@ function MainApp() {
           onAddMedia={(paths) => void addFiles(paths)}
           onSelectJobs={selectJobs}
           onApplyPreset={(id) => void applyPreset(id)}
+          onDeleteUserPreset={(id) => void deleteUserPreset(id)}
+          onOpenExportSettings={openExportSettings}
           onSettings={async (next) => setSettings(await window.EncodeIt.setSettings(next))}
+        />
+        <ExportSettingsDialog
+          open={exportSettingsOpen}
+          jobs={selectedJobs.length ? selectedJobs : []}
+          presets={catalog.presets}
+          onClose={() => setExportSettingsOpen(false)}
+          onApplied={setJobs}
+          onCatalogUpdated={(next) => {
+            setCatalog(next as CatalogPayload)
+          }}
         />
       </div>
     )
@@ -307,8 +376,36 @@ function MainApp() {
             onStopQueue: () => void window.EncodeIt.stopQueue(),
             onClearDone: () => void window.EncodeIt.clearDone(),
             onPreferences: () => setPrefsOpen(true),
+            onExportSettings: () => openExportSettings(),
+            canExportSettings: selectedJobs.some((j) => j.status !== 'encoding'),
             onDockAll: () => void window.EncodeIt.dockAllPanels(),
             onShowAllPanels: () => void window.EncodeIt.showAllPanels(),
+            onTogglePanel: (id) => void window.EncodeIt.togglePanel(id),
+            panelPlacement: workspace.placement,
+            workspace: {
+              activeId: wsCatalog.activeId,
+              activeName: wsCatalog.activeName,
+              named: wsCatalog.named.map(({ id, name }) => ({ id, name }))
+            },
+            onNewWorkspace: () => setSaveWorkspaceOpen(true),
+            onSaveWorkspace: () => {
+              void window.EncodeIt.saveActiveWorkspace().then(applyCatalog)
+            },
+            onSwitchWorkspace: (id) => {
+              void window.EncodeIt.switchWorkspace(id).then(applyCatalog)
+            },
+            onResetWorkspaceSaved: () => {
+              void window.EncodeIt.resetWorkspaceSaved().then(applyCatalog)
+            },
+            onResetWorkspaceDefault: () => {
+              void window.EncodeIt.resetWorkspaceDefault().then(applyCatalog)
+            },
+            onDeleteWorkspace: (id) => {
+              const name =
+                wsCatalog.named.find((n) => n.id === id)?.name ?? wsCatalog.activeName ?? 'Workspace'
+              if (!window.confirm(`Delete workspace “${name}”? This cannot be undone.`)) return
+              void window.EncodeIt.deleteWorkspace(id).then(applyCatalog)
+            },
             onDocumentation: () => void window.EncodeIt.openDocumentation(),
             onAbout: () => setAboutOpen(true),
             onOpenLog: () => void window.EncodeIt.openLogFile(),
@@ -393,6 +490,24 @@ function MainApp() {
           </button>
         </div>
         <div className="spacer" />
+        <label className="ws-switcher">
+          <span className="ws-switcher-label">Workspace</span>
+          <select
+            value={wsCatalog.activeId ?? ''}
+            title="Switch workspace"
+            onChange={(e) => {
+              const value = e.target.value
+              void window.EncodeIt.switchWorkspace(value || null).then(applyCatalog)
+            }}
+          >
+            <option value="">Default</option>
+            {wsCatalog.named.map((ws) => (
+              <option key={ws.id} value={ws.id}>
+                {ws.name}
+              </option>
+            ))}
+          </select>
+        </label>
         <div className="stats">
           {catalog.stats.formats} formats · {catalog.stats.codecs} codecs · {catalog.stats.presets}{' '}
           presets
@@ -402,11 +517,23 @@ function MainApp() {
       <PreferencesDialog
         open={prefsOpen}
         settings={settings}
+        presets={catalog.presets}
         onClose={() => setPrefsOpen(false)}
         onSave={async (next) => {
           const saved = await window.EncodeIt.setSettings(next)
           setSettings(saved)
           return saved
+        }}
+      />
+
+      <ExportSettingsDialog
+        open={exportSettingsOpen}
+        jobs={selectedJobs.length ? selectedJobs : []}
+        presets={catalog.presets}
+        onClose={() => setExportSettingsOpen(false)}
+        onApplied={setJobs}
+        onCatalogUpdated={(next) => {
+          setCatalog(next as CatalogPayload)
         }}
       />
 
@@ -416,6 +543,14 @@ function MainApp() {
         version={APP_VERSION}
         ffmpegPath={settings.ffmpegPath}
         ffmpegSource={settings.ffmpegSource}
+      />
+
+      <SaveWorkspaceDialog
+        open={saveWorkspaceOpen}
+        onClose={() => setSaveWorkspaceOpen(false)}
+        onSave={async (name) => {
+          applyCatalog(await window.EncodeIt.saveWorkspaceAs(name))
+        }}
       />
 
       {!floatingPanel ? (
@@ -488,6 +623,8 @@ function FloatingPanel({
   onAddMedia,
   onSelectJobs,
   onApplyPreset,
+  onDeleteUserPreset,
+  onOpenExportSettings,
   onSettings
 }: {
   panel: PanelId
@@ -501,6 +638,8 @@ function FloatingPanel({
   onAddMedia: (paths?: string[]) => void
   onSelectJobs: (ids: string[]) => void
   onApplyPreset: (id: string) => void
+  onDeleteUserPreset: (id: string) => void
+  onOpenExportSettings: (ids?: string[]) => void
   onSettings: (next: AppSettings) => Promise<void>
 }) {
   if (panel === 'media') {
@@ -514,6 +653,7 @@ function FloatingPanel({
           grouped={catalog.grouped}
           activePresetId={activePresetId}
           onSelect={onApplyPreset}
+          onDeleteUserPreset={onDeleteUserPreset}
         />
       </aside>
     )
@@ -527,7 +667,9 @@ function FloatingPanel({
           selectedIds={selectedIds}
           onSelect={onSelectJobs}
           presetName={(id) => catalog.presets.find((p) => p.id === id)?.name ?? id}
+          presets={catalog.presets}
           onAdd={() => onAddMedia()}
+          onOpenExportSettings={onOpenExportSettings}
         />
       </section>
     )
@@ -536,9 +678,11 @@ function FloatingPanel({
     <EncodingPanel
       jobs={jobs}
       selectedJobs={selectedJobs}
+      presets={catalog.presets}
       activePreset={activePreset}
       settings={settings}
       onSettings={onSettings}
+      onOpenExportSettings={() => onOpenExportSettings()}
       floating
     />
   )

@@ -75,6 +75,8 @@ export interface PresetDefinition {
   audio: AudioSettings
   muxerArgs?: string[]
   sequence?: boolean
+  /** System catalog vs user-saved custom preset. */
+  origin?: 'system' | 'user'
 }
 
 export type JobStatus =

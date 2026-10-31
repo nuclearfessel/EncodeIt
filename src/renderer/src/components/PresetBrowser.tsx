@@ -6,9 +6,15 @@ interface Props {
   grouped: Record<string, Record<string, PresetDefinition[]>>
   activePresetId: string
   onSelect: (id: string) => void
+  onDeleteUserPreset?: (id: string) => void
 }
 
-export function PresetBrowser({ grouped, activePresetId, onSelect }: Props) {
+export function PresetBrowser({
+  grouped,
+  activePresetId,
+  onSelect,
+  onDeleteUserPreset
+}: Props) {
   const [query, setQuery] = useState('')
 
   const filtered = useMemo(() => {
@@ -54,22 +60,38 @@ export function PresetBrowser({ grouped, activePresetId, onSelect }: Props) {
               <details
                 key={`${group}-${subgroup}`}
                 className="preset-subgroup"
-                open={Boolean(query)}
+                open={Boolean(query) || group === 'User'}
               >
                 <summary>
                   <ChevronRight className="preset-chevron" size={iconSize.sm} strokeWidth={2} />
                   <span>{subgroup}</span>
                 </summary>
                 {presets.map((preset) => (
-                  <button
-                    key={preset.id}
-                    type="button"
-                    className={`preset-item ${preset.id === activePresetId ? 'active' : ''}`}
-                    onClick={() => onSelect(preset.id)}
-                    title={preset.description ?? preset.id}
-                  >
-                    {preset.name}
-                  </button>
+                  <div key={preset.id} className="preset-item-row">
+                    <button
+                      type="button"
+                      className={`preset-item ${preset.id === activePresetId ? 'active' : ''}`}
+                      onClick={() => onSelect(preset.id)}
+                      title={preset.description ?? preset.id}
+                    >
+                      {preset.name}
+                    </button>
+                    {preset.origin === 'user' && onDeleteUserPreset ? (
+                      <button
+                        type="button"
+                        className="preset-item-delete"
+                        title="Delete custom preset"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          if (window.confirm(`Delete custom preset “${preset.name}”?`)) {
+                            onDeleteUserPreset(preset.id)
+                          }
+                        }}
+                      >
+                        ×
+                      </button>
+                    ) : null}
+                  </div>
                 ))}
               </details>
             ))}

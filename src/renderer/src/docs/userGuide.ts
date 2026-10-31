@@ -92,7 +92,11 @@ export const USER_GUIDE_SECTIONS: DocSection[] = [
       {
         type: 'ul',
         items: [
-          'Encoding panel — export video/audio, audio codec overrides, hardware acceleration for the selected job(s).',
+          'Encoding panel — quick edits: export tracks, resolution, frame rate, bitrate/CRF, audio codec, output path, hardware.',
+          'Export Settings… — full dialog from the Encoding panel, queue Preset/Format cells, or Edit → Export Settings…',
+          'Per-job overrides sit on top of the preset; a custom badge appears when they differ. Applying another preset clears overrides.',
+          'Save as Custom Preset stores a User preset in the Preset Browser.',
+          'Multi-select jobs before Export Settings to apply the same overrides together.',
           'Hardware — NVENC, QSV, AMF, or VideoToolbox when bundled FFmpeg and your GPU support them.',
           'Preferences → Hardware — see what was detected on this machine.',
           'Preferences → General — default output folder, max concurrent encodes (1–8), and overwrite behavior.',
@@ -111,7 +115,11 @@ export const USER_GUIDE_SECTIONS: DocSection[] = [
         items: [
           'Dock, split, and undock panels in a flexible workspace layout.',
           'Drag a panel header to tear it off or drop it on another edge.',
-          'View → Dock All Panels / Show All Panels restores visibility.',
+          'Window → panel names toggles visibility; View → Dock All / Show All restores panels.',
+          'Window → New Workspace… saves the current layout under a name (like Adobe Media Encoder).',
+          'Switch named layouts from Window → workspace list or the toolbar Workspace menu.',
+          'Save Changes to this Workspace updates the active named layout after you rearrange panels.',
+          'Reset to Saved Layout restores the last saved version; Reset to Default Layout clears custom arrangement.',
           'Media Browser browses folders and can add media to the queue.'
         ]
       }

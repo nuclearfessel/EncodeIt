@@ -1,6 +1,6 @@
 import { audioCodecLabel } from '../../../shared/audioCodecs'
-import { getPreset } from '../../../shared/presets'
-import type { QueueJob } from '../../../shared/types'
+import { hasCustomOverrides } from '../../../shared/effectiveSettings'
+import type { PresetDefinition, QueueJob } from '../../../shared/types'
 import { useState } from 'react'
 import { usePathPicker } from '../pathPicker/PathPickerContext'
 import { ButtonContent } from './ButtonContent'
@@ -17,17 +17,31 @@ interface Props {
   selectedIds: string[]
   onSelect: (ids: string[]) => void
   presetName: (id: string) => string
+  presets: PresetDefinition[]
   onAdd: () => void
+  onOpenExportSettings: (jobIds: string[]) => void
 }
 
 function basename(filePath: string): string {
   return filePath.replace(/^.*[\\/]/, '')
 }
 
-export function QueueTable({ jobs, selectedIds, onSelect, presetName, onAdd }: Props) {
+export function QueueTable({
+  jobs,
+  selectedIds,
+  onSelect,
+  presetName,
+  presets,
+  onAdd,
+  onOpenExportSettings
+}: Props) {
   const pathPicker = usePathPicker()
   const [detailId, setDetailId] = useState<string | null>(null)
   const [copiedId, setCopiedId] = useState<string | null>(null)
+
+  function resolvePreset(id: string) {
+    return presets.find((p) => p.id === id)
+  }
 
   function toggle(id: string, additive: boolean) {
     if (!additive) {
@@ -82,15 +96,46 @@ export function QueueTable({ jobs, selectedIds, onSelect, presetName, onAdd }: P
                   <span title={job.sourcePath}>{job.sourcePath}</span>
                 </div>
               </td>
-              <td>{presetName(job.presetId)}</td>
-              <td>{job.formatId}</td>
+              <td>
+                <button
+                  type="button"
+                  className="linkish queue-preset-link"
+                  title="Export Settings…"
+                  disabled={job.status === 'encoding'}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onSelect([job.id])
+                    onOpenExportSettings([job.id])
+                  }}
+                >
+                  {presetName(job.presetId)}
+                  {hasCustomOverrides(job) ? (
+                    <span className="custom-tag">custom</span>
+                  ) : null}
+                </button>
+              </td>
+              <td>
+                <button
+                  type="button"
+                  className="linkish queue-preset-link"
+                  title="Export Settings…"
+                  disabled={job.status === 'encoding'}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onSelect([job.id])
+                    onOpenExportSettings([job.id])
+                  }}
+                >
+                  {job.formatId}
+                </button>
+              </td>
               <td style={{ fontSize: '0.72rem', color: '#9aa6b5' }}>
                 {(() => {
                   const parts: string[] = []
                   if (job.exportVideo) parts.push('V')
                   if (job.exportAudio) {
                     const codec =
-                      job.audioOverrides?.codec ?? getPreset(job.presetId)?.audio.codec
+                      job.audioOverrides?.codec ?? resolvePreset(job.presetId)?.audio.codec
                     parts.push(codec ? `A · ${audioCodecLabel(codec)}` : 'A')
                   }
                   return parts.join(' + ') || '—'

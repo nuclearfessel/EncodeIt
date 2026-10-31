@@ -1,12 +1,9 @@
 import { Menu, app, BrowserWindow, ipcMain, shell } from 'electron'
 import path from 'path'
-import { getCatalogStats } from '../shared/catalog'
-import { CODEC_VARIANTS } from '../shared/codecs'
-import { FORMATS } from '../shared/formats'
 import type { PanelId } from '../shared/panels'
-import { DEFAULT_PRESET_ID, PRESETS, getPreset, presetsGrouped } from '../shared/presets'
+import { DEFAULT_PRESET_ID } from '../shared/presets'
 import type { InstallOptions } from '../shared/installOptions'
-import type { AppSettings } from '../shared/types'
+import type { AppSettings, AudioSettings, PresetDefinition, VideoSettings } from '../shared/types'
 import { resolveBundledFfmpeg } from './bundledFfmpeg'
 import { clearHardwareCache, detectHardwareCapabilities } from './hardwareDetect'
 import { detectHostApps } from './hostAppDetect'
@@ -28,6 +25,13 @@ import {
 import { DocsWindowManager } from './docsWindow'
 import { getLogPath, logger } from './logger'
 import { PanelWindowManager } from './panelWindows'
+import { catalogPayload, findPreset } from './presetCatalog'
+import {
+  deleteUserPreset,
+  listUserPresets,
+  renameUserPreset,
+  saveUserPreset
+} from './userPresets'
 import { EncodeQueue } from './queue'
 import {
   ffmpegSourceLabel,
@@ -122,19 +126,7 @@ function broadcast(channel: string, payload: unknown): void {
 }
 
 function registerIpc(): void {
-  ipcMain.handle('catalog:get', () => ({
-    formats: FORMATS,
-    codecs: CODEC_VARIANTS,
-    presets: PRESETS,
-    grouped: Object.fromEntries(
-      [...presetsGrouped().entries()].map(([group, subgroups]) => [
-        group,
-        Object.fromEntries(subgroups.entries())
-      ])
-    ),
-    stats: getCatalogStats(),
-    defaultPresetId: DEFAULT_PRESET_ID
-  }))
+  ipcMain.handle('catalog:get', () => catalogPayload())
 
   function settingsPayload() {
     return {
@@ -222,8 +214,26 @@ function registerIpc(): void {
     panels.dockAt(id, target as Parameters<typeof panels.dockAt>[1])
   )
   ipcMain.handle('panels:close', (_e, id: PanelId) => panels.close(id))
+  ipcMain.handle('panels:toggle', (_e, id: PanelId) => panels.togglePanel(id))
   ipcMain.handle('panels:dockAll', () => panels.dockAll())
   ipcMain.handle('panels:showAll', () => panels.showAll())
+  ipcMain.handle('workspace:getCatalog', () => panels.getCatalog())
+  ipcMain.handle('workspace:saveAs', (_e, name: string) => panels.saveAsNew(name))
+  ipcMain.handle('workspace:saveActive', () => panels.saveActive())
+  ipcMain.handle('workspace:switch', (_e, id: string | null) => {
+    panels.switchTo(id)
+    return panels.getCatalog()
+  })
+  ipcMain.handle('workspace:resetDefault', () => {
+    panels.resetToDefault()
+    return panels.getCatalog()
+  })
+  ipcMain.handle('workspace:resetSaved', () => {
+    panels.resetToSaved()
+    return panels.getCatalog()
+  })
+  ipcMain.handle('workspace:rename', (_e, id: string, name: string) => panels.renameNamed(id, name))
+  ipcMain.handle('workspace:delete', (_e, id: string) => panels.deleteNamed(id))
   ipcMain.handle('panels:dragBegin', (_e, id: PanelId, fromFloating: boolean) => {
     panels.beginDrag(id, fromFloating)
   })
@@ -325,11 +335,62 @@ function registerIpc(): void {
   )
   ipcMain.handle(
     'queue:setAudioOverrides',
-    (_e, ids: string[], overrides: Partial<import('../shared/types').AudioSettings>) => {
+    (_e, ids: string[], overrides: Partial<AudioSettings>) => {
       queue.setAudioOverrides(ids, overrides)
       return queue.list()
     }
   )
+  ipcMain.handle(
+    'queue:setVideoOverrides',
+    (
+      _e,
+      ids: string[],
+      overrides: Partial<VideoSettings> | null,
+      mode?: 'merge' | 'replace'
+    ) => {
+      queue.setVideoOverrides(ids, overrides, mode ?? 'merge')
+      return queue.list()
+    }
+  )
+  ipcMain.handle(
+    'queue:applyExportSettings',
+    (
+      _e,
+      ids: string[],
+      patch: {
+        presetId?: string
+        exportVideo?: boolean
+        exportAudio?: boolean
+        videoOverrides?: Partial<VideoSettings> | null
+        audioOverrides?: Partial<AudioSettings> | null
+      }
+    ) => {
+      queue.applyExportSettings(ids, patch)
+      return queue.list()
+    }
+  )
+  ipcMain.handle('presets:listUser', () => listUserPresets())
+  ipcMain.handle(
+    'presets:saveUser',
+    (
+      _e,
+      preset: Omit<PresetDefinition, 'origin' | 'id' | 'platforms'> & {
+        id?: string
+        platforms?: PresetDefinition['platforms']
+      }
+    ) => {
+      const saved = saveUserPreset(preset)
+      return { preset: saved, catalog: catalogPayload() }
+    }
+  )
+  ipcMain.handle('presets:renameUser', (_e, id: string, name: string) => {
+    const preset = renameUserPreset(id, name)
+    return { preset, catalog: catalogPayload() }
+  })
+  ipcMain.handle('presets:deleteUser', (_e, id: string) => {
+    const ok = deleteUserPreset(id)
+    return { ok, catalog: catalogPayload() }
+  })
   ipcMain.handle('queue:start', async () => {
     void queue.start()
     return { ok: true }
@@ -391,7 +452,7 @@ function registerIpc(): void {
   })
   ipcMain.handle('shell:openPath', (_e, filePath: string) => shell.openPath(filePath))
 
-  ipcMain.handle('preset:get', (_e, id: string) => getPreset(id))
+  ipcMain.handle('preset:get', (_e, id: string) => findPreset(id))
 }
 
 async function restartIntake(): Promise<void> {
@@ -483,7 +544,8 @@ app.whenReady().then(async () => {
     preloadPath,
     getMainWindow: () => mainWindow,
     onChange: (state) => broadcast('panels:changed', state),
-    onDrag: (session, target) => broadcast('panels:drag', { session, target })
+    onDrag: (session, target) => broadcast('panels:drag', { session, target }),
+    onCatalogChange: (catalog) => broadcast('workspace:catalog', catalog)
   })
   docsWindow = new DocsWindowManager({
     preloadPath,
@@ -498,6 +560,7 @@ app.whenReady().then(async () => {
   // No native OS menu — all chrome lives in the app UI.
   Menu.setApplicationMenu(null)
   createWindow()
+  panels.restoreFloatingPanels()
 
   // Warm hardware probe so Preferences / first encode are snappy.
   void detectHardwareCapabilities(settings.ffmpegPath).catch(() => undefined)

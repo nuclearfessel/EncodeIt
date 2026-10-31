@@ -6,12 +6,13 @@ import {
   type HardwareCapabilities
 } from '../../../shared/hardware'
 import { DEFAULT_PRESET_ID, PRESETS } from '../../../shared/presets'
-import type { AppSettings, SettingsView, WatchFolder } from '../../../shared/types'
+import type { AppSettings, PresetDefinition, SettingsView, WatchFolder } from '../../../shared/types'
 import { usePathPicker } from '../pathPicker/PathPickerContext'
 
 interface Props {
   open: boolean
   settings: SettingsView
+  presets?: PresetDefinition[]
   onClose: () => void
   onSave: (next: AppSettings) => Promise<SettingsView>
 }
@@ -33,7 +34,8 @@ function settingsDraft(settings: SettingsView): AppSettings {
   }
 }
 
-export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
+export function PreferencesDialog({ open, settings, presets, onClose, onSave }: Props) {
+  const presetList = presets?.length ? presets : PRESETS
   const [tab, setTab] = useState<PrefsTab>('general')
   const [draft, setDraft] = useState<AppSettings>(() => settingsDraft(settings))
   const [caps, setCaps] = useState<HardwareCapabilities | null>(null)
@@ -382,7 +384,7 @@ export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
                     value={newWatchPreset}
                     onChange={(e) => setNewWatchPreset(e.target.value)}
                   >
-                    {PRESETS.map((p) => (
+                    {presetList.map((p) => (
                       <option key={p.id} value={p.id}>
                         {p.group} / {p.name}
                       </option>
@@ -462,7 +464,7 @@ export function PreferencesDialog({ open, settings, onClose, onSave }: Props) {
                                 .then(setWatchFolders)
                             }}
                           >
-                            {PRESETS.map((p) => (
+                            {presetList.map((p) => (
                               <option key={p.id} value={p.id}>
                                 {p.group} / {p.name}
                               </option>

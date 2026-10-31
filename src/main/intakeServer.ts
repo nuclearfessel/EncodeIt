@@ -1,6 +1,6 @@
 import http from 'http'
 import type { IncomingMessage, ServerResponse } from 'http'
-import { PRESETS } from '../shared/presets'
+import { allPresets } from './presetCatalog'
 import type { EncodeQueue } from './queue'
 
 export interface IntakeServerOptions {
@@ -86,7 +86,7 @@ export class IntakeServer {
         sendJson(
           res,
           200,
-          PRESETS.map((p) => ({
+          allPresets().map((p) => ({
             id: p.id,
             name: p.name,
             group: p.group,

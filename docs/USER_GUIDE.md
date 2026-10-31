@@ -45,7 +45,15 @@ Presets map to open FFmpeg recipes for common delivery targets.
 
 ## Encoding options
 
-- **Encoding panel** — export video/audio, audio codec overrides, hardware acceleration for the selected job(s).
+- **Encoding panel** — quick edits for the selected job(s): export video/audio, resolution, frame rate, bitrate/CRF, audio codec, output path, and hardware acceleration.
+- **Export Settings…** — full AME-style dialog for deeper video/audio/advanced options. Open it from:
+  - the Encoding panel button
+  - clicking the **Preset** or **Format** cell on a queue row
+  - **Edit → Export Settings…**
+- Changing settings writes **per-job overrides** on top of the chosen preset. A **custom** badge appears on the queue when overrides differ from the preset.
+- **Save as Custom Preset** in Export Settings stores a reusable preset under the **User** group in the Preset Browser (delete with the × next to the name).
+- Applying a different preset to a job clears overrides.
+- Multi-select jobs before opening Export Settings to apply the same overrides to all selected waiting jobs.
 - **Hardware** — NVENC, QSV, AMF, or VideoToolbox when bundled FFmpeg and your GPU support them.
 - **Preferences → Hardware** — see what was detected on this machine.
 - **Preferences → General** — default output folder, max concurrent encodes (1–8), and overwrite behavior.

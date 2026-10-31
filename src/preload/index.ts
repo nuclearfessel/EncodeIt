@@ -11,8 +11,10 @@ import type {
   AppSettings,
   AudioSettings,
   EncodeProgress,
+  PresetDefinition,
   QueueJob,
   SettingsView,
+  VideoSettings,
   WatchFolder
 } from '../shared/types'
 
@@ -88,6 +90,35 @@ const api = {
   ): Promise<QueueJob[]> => ipcRenderer.invoke('queue:setExportTracks', ids, tracks),
   setAudioOverrides: (ids: string[], overrides: Partial<AudioSettings>): Promise<QueueJob[]> =>
     ipcRenderer.invoke('queue:setAudioOverrides', ids, overrides),
+  setVideoOverrides: (
+    ids: string[],
+    overrides: Partial<VideoSettings> | null,
+    mode?: 'merge' | 'replace'
+  ): Promise<QueueJob[]> => ipcRenderer.invoke('queue:setVideoOverrides', ids, overrides, mode),
+  applyExportSettings: (
+    ids: string[],
+    patch: {
+      presetId?: string
+      exportVideo?: boolean
+      exportAudio?: boolean
+      videoOverrides?: Partial<VideoSettings> | null
+      audioOverrides?: Partial<AudioSettings> | null
+    }
+  ): Promise<QueueJob[]> => ipcRenderer.invoke('queue:applyExportSettings', ids, patch),
+  saveUserPreset: (
+    preset: Omit<PresetDefinition, 'origin' | 'id' | 'platforms'> & {
+      id?: string
+      platforms?: PresetDefinition['platforms']
+    }
+  ): Promise<{ preset: PresetDefinition; catalog: unknown }> =>
+    ipcRenderer.invoke('presets:saveUser', preset),
+  renameUserPreset: (
+    id: string,
+    name: string
+  ): Promise<{ preset: PresetDefinition | undefined; catalog: unknown }> =>
+    ipcRenderer.invoke('presets:renameUser', id, name),
+  deleteUserPreset: (id: string): Promise<{ ok: boolean; catalog: unknown }> =>
+    ipcRenderer.invoke('presets:deleteUser', id),
   startQueue: () => ipcRenderer.invoke('queue:start'),
   stopQueue: () => ipcRenderer.invoke('queue:stop'),
   listWatchFolders: (): Promise<WatchFolder[]> => ipcRenderer.invoke('watch:list'),
@@ -123,8 +154,86 @@ const api = {
   dockPanelAt: (id: PanelId, target: AnyDropTarget): Promise<WorkspaceState> =>
     ipcRenderer.invoke('panels:dockAt', id, target),
   closePanel: (id: PanelId): Promise<WorkspaceState> => ipcRenderer.invoke('panels:close', id),
+  togglePanel: (id: PanelId): Promise<WorkspaceState> => ipcRenderer.invoke('panels:toggle', id),
   dockAllPanels: (): Promise<WorkspaceState> => ipcRenderer.invoke('panels:dockAll'),
   showAllPanels: (): Promise<WorkspaceState> => ipcRenderer.invoke('panels:showAll'),
+  getWorkspaceCatalog: (): Promise<{
+    current: WorkspaceState
+    activeId: string | null
+    activeName: string | null
+    named: Array<{ id: string; name: string; updatedAt: number }>
+  }> => ipcRenderer.invoke('workspace:getCatalog'),
+  saveWorkspaceAs: (
+    name: string
+  ): Promise<{
+    current: WorkspaceState
+    activeId: string | null
+    activeName: string | null
+    named: Array<{ id: string; name: string; updatedAt: number }>
+  }> => ipcRenderer.invoke('workspace:saveAs', name),
+  saveActiveWorkspace: (): Promise<{
+    current: WorkspaceState
+    activeId: string | null
+    activeName: string | null
+    named: Array<{ id: string; name: string; updatedAt: number }>
+  }> => ipcRenderer.invoke('workspace:saveActive'),
+  switchWorkspace: (
+    id: string | null
+  ): Promise<{
+    current: WorkspaceState
+    activeId: string | null
+    activeName: string | null
+    named: Array<{ id: string; name: string; updatedAt: number }>
+  }> => ipcRenderer.invoke('workspace:switch', id),
+  resetWorkspaceDefault: (): Promise<{
+    current: WorkspaceState
+    activeId: string | null
+    activeName: string | null
+    named: Array<{ id: string; name: string; updatedAt: number }>
+  }> => ipcRenderer.invoke('workspace:resetDefault'),
+  resetWorkspaceSaved: (): Promise<{
+    current: WorkspaceState
+    activeId: string | null
+    activeName: string | null
+    named: Array<{ id: string; name: string; updatedAt: number }>
+  }> => ipcRenderer.invoke('workspace:resetSaved'),
+  renameWorkspace: (
+    id: string,
+    name: string
+  ): Promise<{
+    current: WorkspaceState
+    activeId: string | null
+    activeName: string | null
+    named: Array<{ id: string; name: string; updatedAt: number }>
+  }> => ipcRenderer.invoke('workspace:rename', id, name),
+  deleteWorkspace: (
+    id: string
+  ): Promise<{
+    current: WorkspaceState
+    activeId: string | null
+    activeName: string | null
+    named: Array<{ id: string; name: string; updatedAt: number }>
+  }> => ipcRenderer.invoke('workspace:delete', id),
+  onWorkspaceCatalog: (
+    cb: (catalog: {
+      current: WorkspaceState
+      activeId: string | null
+      activeName: string | null
+      named: Array<{ id: string; name: string; updatedAt: number }>
+    }) => void
+  ) => {
+    const listener = (
+      _: IpcRendererEvent,
+      catalog: {
+        current: WorkspaceState
+        activeId: string | null
+        activeName: string | null
+        named: Array<{ id: string; name: string; updatedAt: number }>
+      }
+    ) => cb(catalog)
+    ipcRenderer.on('workspace:catalog', listener)
+    return () => ipcRenderer.removeListener('workspace:catalog', listener)
+  },
   beginPanelDrag: (id: PanelId, fromFloating: boolean): Promise<void> =>
     ipcRenderer.invoke('panels:dragBegin', id, fromFloating),
   setPanelDragTarget: (target: AnyDropTarget | null): Promise<void> =>
