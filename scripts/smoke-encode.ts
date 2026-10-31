@@ -49,7 +49,8 @@ async function main() {
     intakeEnabled: false,
     intakePort: 47821,
     watchFolders: [],
-    hostFoldersSeeded: true
+    hostFoldersSeeded: true,
+    checkForUpdatesEnabled: false
   }
 
   const job: QueueJob = {

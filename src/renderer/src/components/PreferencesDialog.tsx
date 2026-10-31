@@ -17,7 +17,7 @@ interface Props {
   onSave: (next: AppSettings) => Promise<SettingsView>
 }
 
-type PrefsTab = 'general' | 'media' | 'hardware' | 'integrations'
+type PrefsTab = 'general' | 'media' | 'hardware' | 'integrations' | 'updates'
 
 function settingsDraft(settings: SettingsView): AppSettings {
   return {
@@ -30,7 +30,8 @@ function settingsDraft(settings: SettingsView): AppSettings {
     intakeEnabled: settings.intakeEnabled,
     intakePort: settings.intakePort,
     watchFolders: settings.watchFolders ?? [],
-    hostFoldersSeeded: Boolean(settings.hostFoldersSeeded)
+    hostFoldersSeeded: Boolean(settings.hostFoldersSeeded),
+    checkForUpdatesEnabled: settings.checkForUpdatesEnabled !== false
   }
 }
 
@@ -54,6 +55,8 @@ export function PreferencesDialog({ open, settings, presets, onClose, onSave }: 
   const [watchFolders, setWatchFolders] = useState<WatchFolder[]>([])
   const [newWatchPreset, setNewWatchPreset] = useState(DEFAULT_PRESET_ID)
   const [newWatchOutput, setNewWatchOutput] = useState('')
+  const [updateMsg, setUpdateMsg] = useState<string | null>(null)
+  const [checkingUpdate, setCheckingUpdate] = useState(false)
   const pathPicker = usePathPicker()
 
   useEffect(() => {
@@ -62,6 +65,7 @@ export function PreferencesDialog({ open, settings, presets, onClose, onSave }: 
     setTab('general')
     setError(null)
     setCopied(false)
+    setUpdateMsg(null)
     setNewWatchPreset(DEFAULT_PRESET_ID)
     setNewWatchOutput(settings.outputDirectory || '')
     setProbing(true)
@@ -187,7 +191,8 @@ export function PreferencesDialog({ open, settings, presets, onClose, onSave }: 
                 ['general', 'General'],
                 ['media', 'Media'],
                 ['hardware', 'Hardware'],
-                ['integrations', 'Integrations']
+                ['integrations', 'Integrations'],
+                ['updates', 'Updates']
               ] as const
             ).map(([id, label]) => (
               <button
@@ -585,6 +590,57 @@ export function PreferencesDialog({ open, settings, presets, onClose, onSave }: 
                     <code>integrations/</code>.
                   </p>
                 </div>
+              </div>
+            ) : null}
+
+            {tab === 'updates' ? (
+              <div className="prefs-section">
+                <h3>Updates</h3>
+                <p className="prefs-help">
+                  EncodeIt can look for a newer release on GitHub. It never downloads or installs
+                  updates by itself — you choose Download from the status bar or release page.
+                </p>
+                <label className="prefs-check">
+                  <input
+                    type="checkbox"
+                    checked={draft.checkForUpdatesEnabled}
+                    onChange={(e) =>
+                      setDraft((d) => ({ ...d, checkForUpdatesEnabled: e.target.checked }))
+                    }
+                  />
+                  Check for updates
+                </label>
+                <p className="prefs-muted">
+                  When enabled, EncodeIt checks on launch and about once a day. Save Preferences to
+                  apply.
+                </p>
+                <div className="prefs-row" style={{ marginTop: '0.75rem' }}>
+                  <button
+                    type="button"
+                    disabled={checkingUpdate}
+                    onClick={() => {
+                      setCheckingUpdate(true)
+                      setUpdateMsg(null)
+                      void window.EncodeIt
+                        .checkForUpdates(true)
+                        .then((s) => {
+                          if (s.updateAvailable && s.latestVersion) {
+                            setUpdateMsg(
+                              `EncodeIt ${s.latestVersion} is available (you have ${s.currentVersion}). Use Download… on the status bar.`
+                            )
+                          } else if (s.error) {
+                            setUpdateMsg(`Could not check: ${s.error}`)
+                          } else {
+                            setUpdateMsg(`You’re up to date (EncodeIt ${s.currentVersion}).`)
+                          }
+                        })
+                        .finally(() => setCheckingUpdate(false))
+                    }}
+                  >
+                    {checkingUpdate ? 'Checking…' : 'Check now'}
+                  </button>
+                </div>
+                {updateMsg ? <p className="prefs-help">{updateMsg}</p> : null}
               </div>
             ) : null}
 

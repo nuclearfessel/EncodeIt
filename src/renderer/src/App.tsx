@@ -43,6 +43,8 @@ import { PresetBrowser } from './components/PresetBrowser'
 import { QueueTable } from './components/QueueTable'
 import { AppMenuBar } from './components/AppMenuBar'
 import { SaveWorkspaceDialog } from './components/SaveWorkspaceDialog'
+import { StatusBar, type UpdateBarStatus } from './components/StatusBar'
+import { UninstallDialog } from './components/UninstallDialog'
 import { WindowControls } from './components/WindowControls'
 import { WorkspaceView } from './components/WorkspaceView'
 import { usePathPicker } from './pathPicker/PathPickerContext'
@@ -92,6 +94,8 @@ function MainApp() {
     named: []
   })
   const [saveWorkspaceOpen, setSaveWorkspaceOpen] = useState(false)
+  const [uninstallOpen, setUninstallOpen] = useState(false)
+  const [updateStatus, setUpdateStatus] = useState<UpdateBarStatus | null>(null)
   const [dragSession, setDragSession] = useState<{
     panelId: PanelId
     fromFloating: boolean
@@ -155,6 +159,20 @@ function MainApp() {
       setSelectedIds(ui.selectedJobIds)
     })
     const offSettings = window.EncodeIt.onSettingsChanged(setSettings)
+    const offUpdate = window.EncodeIt.onUpdateStatus((s) => {
+      setUpdateStatus({
+        currentVersion: s.currentVersion,
+        latestVersion: s.latestVersion,
+        updateAvailable: s.updateAvailable
+      })
+    })
+    void window.EncodeIt.getUpdateStatus().then((s) => {
+      setUpdateStatus({
+        currentVersion: s.currentVersion,
+        latestVersion: s.latestVersion,
+        updateAvailable: s.updateAvailable
+      })
+    })
     return () => {
       offChange()
       offState()
@@ -164,6 +182,7 @@ function MainApp() {
       offDrag()
       offUi()
       offSettings()
+      offUpdate()
     }
   }, [])
 
@@ -409,6 +428,25 @@ function MainApp() {
             onDocumentation: () => void window.EncodeIt.openDocumentation(),
             onAbout: () => setAboutOpen(true),
             onOpenLog: () => void window.EncodeIt.openLogFile(),
+            onCheckForUpdates: () => {
+              void window.EncodeIt.checkForUpdates(true).then((s) => {
+                setUpdateStatus({
+                  currentVersion: s.currentVersion,
+                  latestVersion: s.latestVersion,
+                  updateAvailable: s.updateAvailable
+                })
+                if (s.updateAvailable && s.latestVersion) {
+                  window.alert(
+                    `EncodeIt ${s.latestVersion} is available (you have ${s.currentVersion}).\n\nUse Download… in the status bar at the bottom to open the release in your browser.`
+                  )
+                } else if (s.error) {
+                  window.alert(`Could not check for updates:\n${s.error}`)
+                } else {
+                  window.alert(`You’re up to date (EncodeIt ${s.currentVersion}).`)
+                }
+              })
+            },
+            onUninstall: () => setUninstallOpen(true),
             canStart,
             canStop: running
           }}
@@ -553,6 +591,8 @@ function MainApp() {
         }}
       />
 
+      <UninstallDialog open={uninstallOpen} onClose={() => setUninstallOpen(false)} />
+
       {!floatingPanel ? (
         <IntegrationSetupDialog
           open={Boolean(settings.needsIntegrationSetup)}
@@ -607,6 +647,20 @@ function MainApp() {
           draggingId={dragSession?.panelId}
         />
       </div>
+
+      <StatusBar
+        status={updateStatus}
+        onDownload={() => void window.EncodeIt.openUpdateDownload()}
+        onDismiss={() => {
+          void window.EncodeIt.dismissUpdate().then((s) => {
+            setUpdateStatus({
+              currentVersion: s.currentVersion,
+              latestVersion: s.latestVersion,
+              updateAvailable: s.updateAvailable
+            })
+          })
+        }}
+      />
     </div>
   )
 }

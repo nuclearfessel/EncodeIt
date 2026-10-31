@@ -30,6 +30,8 @@ export interface AppMenuActions {
   onDocumentation: () => void
   onAbout: () => void
   onOpenLog: () => void
+  onCheckForUpdates: () => void
+  onUninstall: () => void
   canStart: boolean
   canStop: boolean
 }
@@ -198,8 +200,11 @@ export function AppMenuBar({ actions }: Props) {
           shortcut: 'F1',
           action: actions.onDocumentation
         },
+        { label: 'Check for Updates…', action: actions.onCheckForUpdates },
         { label: 'Open Log File', action: actions.onOpenLog },
         { label: 'About EncodeIt', action: actions.onAbout },
+        { separator: true, label: '' },
+        { label: 'Uninstall EncodeIt…', action: actions.onUninstall },
         { separator: true, label: '' },
         {
           label: 'EncodeIt on GitHub',

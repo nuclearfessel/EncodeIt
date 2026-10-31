@@ -16,7 +16,8 @@ const DEFAULTS: AppSettings = {
   intakeEnabled: true,
   intakePort: 47821,
   watchFolders: [],
-  hostFoldersSeeded: false
+  hostFoldersSeeded: false,
+  checkForUpdatesEnabled: true
 }
 
 function normalizeWatchFolders(value: unknown): WatchFolderSettings[] {
@@ -118,7 +119,9 @@ export function normalizeAppSettings(input: AppSettings): AppSettings {
     intakeEnabled: Boolean(input.intakeEnabled),
     intakePort: Math.max(1024, Math.min(65535, Number(input.intakePort) || 47821)),
     watchFolders: normalizeWatchFolders(input.watchFolders),
-    hostFoldersSeeded: Boolean(input.hostFoldersSeeded)
+    hostFoldersSeeded: Boolean(input.hostFoldersSeeded),
+    checkForUpdatesEnabled:
+      input.checkForUpdatesEnabled === undefined ? true : Boolean(input.checkForUpdatesEnabled)
   }
 }
 

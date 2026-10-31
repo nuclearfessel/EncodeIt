@@ -1,0 +1,57 @@
+#!/bin/bash
+# macOS PKG preuninstall — clean EncodeIt data / plugins; prompt for media.
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+CLEANER="${SCRIPT_DIR}/clean-encodeit-paths.sh"
+
+CHOICE="wipe"
+if command -v osascript >/dev/null 2>&1; then
+  CHOICE="$(osascript <<'APPLESCRIPT' 2>/dev/null || echo wipe
+try
+  display dialog "Uninstall EncodeIt completely?
+
+App settings, logs, CEP panels, and host scripts will be removed.
+
+Click Keep Media to leave Movies/EncodeIt watch and Output folders alone. Otherwise those folders are deleted too." buttons {"Keep Media", "Remove Everything"} default button "Remove Everything" with icon caution with title "EncodeIt Uninstall"
+  if button returned of result is "Keep Media" then
+    return "keep"
+  else
+    return "wipe"
+  end if
+on error number -128
+  return "wipe"
+on error
+  return "wipe"
+end try
+APPLESCRIPT
+)"
+fi
+
+ARGS=()
+if [[ "${CHOICE}" == "keep" ]]; then
+  ARGS+=(--keep-media)
+fi
+
+if [[ -x "${CLEANER}" || -f "${CLEANER}" ]]; then
+  bash "${CLEANER}" "${ARGS[@]+"${ARGS[@]}"}"
+else
+  export ENCODEIT_KEEP_MEDIA=0
+  [[ "${CHOICE}" == "keep" ]] && export ENCODEIT_KEEP_MEDIA=1
+  HOME_DIR="${HOME}"
+  for name in "EncodeIt" "Encode This"; do
+    rm -rf "${HOME_DIR}/Library/Application Support/${name}"
+    rm -rf "${HOME_DIR}/Library/Logs/${name}"
+    rm -rf "${HOME_DIR}/Library/Caches/${name}"
+  done
+  rm -f "${HOME_DIR}/Library/Preferences/com.encodeit.app.plist"
+  rm -f "${HOME_DIR}/Library/Preferences/com.encode-this.app.plist"
+  if [[ "${CHOICE}" != "keep" ]]; then
+    rm -rf "${HOME_DIR}/Movies/EncodeIt" "${HOME_DIR}/Movies/Encode This"
+  fi
+  for id in encodeit-ae encode-this-ae; do
+    rm -rf "${HOME_DIR}/Library/Application Support/Adobe/CEP/extensions/${id}"
+  done
+fi
+
+exit 0

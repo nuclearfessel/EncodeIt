@@ -225,6 +225,26 @@ A JSON inbox folder (shown in Preferences) is also polled for dropped job files.
 
 ---
 
+## Updates & uninstall
+
+### Checking for updates
+
+- **Preferences → Updates → Check for updates** enables automatic checks on launch and about once a day (on by default).
+- When a newer version exists, a status bar appears at the bottom of the window.
+- **Download…** opens the release in your browser — nothing is downloaded automatically.
+- **Not now** hides the notice for that version until a newer one ships.
+- **Help → Check for Updates…** or Preferences → Updates → **Check now** runs a check immediately.
+
+### Uninstalling completely
+
+- **Help → Uninstall EncodeIt…** removes settings, logs, custom presets, workspaces, CEP panels, and known AE / Premiere / Resolve scripts.
+- By default it also deletes Videos/Movies → EncodeIt media folders (`from-ae`, Output, …). Check **Keep media folders** to spare those.
+- Windows Setup uninstall asks the same Yes (wipe media) / No (keep media) question, then removes the installed app.
+- macOS PKG uninstall prompts similarly. DMG installs: use Help → Uninstall, then remove EncodeIt from Applications.
+- Linux: deb remove runs cleanup; AppImage users can run `scripts/encodeit-uninstall.sh` or Help → Uninstall.
+
+---
+
 ## Keyboard shortcuts
 
 | Shortcut | Action |

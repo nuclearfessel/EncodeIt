@@ -412,6 +412,44 @@ export const USER_GUIDE_SECTIONS: DocSection[] = [
     ]
   },
   {
+    id: 'updates-uninstall',
+    title: 'Updates & uninstall',
+    blocks: [
+      {
+        type: 'sub',
+        title: 'Checking for updates',
+        blocks: [
+          {
+            type: 'ul',
+            items: [
+              'Preferences → Updates → **Check for updates** enables automatic checks on launch and about once a day (on by default).',
+              'When a newer version exists, a status bar appears at the bottom of the window.',
+              '**Download…** opens the release in your browser — nothing is downloaded automatically.',
+              '**Not now** hides the notice for that version until a newer one ships.',
+              '**Help → Check for Updates…** or Preferences → Updates → **Check now** runs a check immediately.'
+            ]
+          }
+        ]
+      },
+      {
+        type: 'sub',
+        title: 'Uninstalling completely',
+        blocks: [
+          {
+            type: 'ul',
+            items: [
+              '**Help → Uninstall EncodeIt…** removes settings, logs, custom presets, workspaces, CEP panels, and known AE / Premiere / Resolve scripts.',
+              'By default it also deletes Videos/Movies → EncodeIt media folders (from-ae, Output, …). Check **Keep media folders** to spare those.',
+              'Windows Setup uninstall asks the same Yes (wipe media) / No (keep media) question, then removes the installed app.',
+              'macOS PKG uninstall prompts similarly. DMG installs: use Help → Uninstall, then remove EncodeIt from Applications.',
+              'Linux: deb remove runs cleanup; AppImage users can run `scripts/encodeit-uninstall.sh` or Help → Uninstall.'
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
     id: 'shortcuts',
     title: 'Keyboard shortcuts',
     blocks: [

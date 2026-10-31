@@ -23,8 +23,10 @@ import {
   type BrowserListMode
 } from './mediaBrowser'
 import { DocsWindowManager } from './docsWindow'
+import { runCleanup } from './cleanup'
 import { getLogPath, logger } from './logger'
 import { PanelWindowManager } from './panelWindows'
+import { UpdateChecker } from './updateCheck'
 import { catalogPayload, findPreset } from './presetCatalog'
 import {
   deleteUserPreset,
@@ -50,6 +52,7 @@ let intakeError: string | null = null
 let inbox: InboxWatcher
 let panels: PanelWindowManager
 let docsWindow: DocsWindowManager
+let updateChecker!: UpdateChecker
 /** Pending first-launch setup when installer did not write install-options.json (e.g. DMG). */
 let needsIntegrationSetup = false
 /** One-shot coach after integration setup until dismissed. */
@@ -160,6 +163,9 @@ function registerIpc(): void {
     ) {
       await restartIntake()
     }
+    if (prev.checkForUpdatesEnabled !== settings.checkForUpdatesEnabled) {
+      updateChecker.setEnabled(settings.checkForUpdatesEnabled, { checkNow: true })
+    }
     const payload = settingsPayload()
     broadcast('settings:changed', payload)
     return payload
@@ -199,6 +205,26 @@ function registerIpc(): void {
   })
   ipcMain.handle('logs:showInFolder', () => {
     shell.showItemInFolder(getLogPath())
+  })
+
+  ipcMain.handle('updates:getStatus', () => updateChecker.getStatus())
+  ipcMain.handle('updates:checkNow', (_e, force?: boolean) => updateChecker.check(Boolean(force)))
+  ipcMain.handle('updates:dismiss', () => updateChecker.dismissCurrent())
+  ipcMain.handle('updates:openDownload', () => updateChecker.openDownload())
+
+  ipcMain.handle('app:uninstallCleanup', (_e, keepMedia: boolean) => {
+    const result = runCleanup({ keepMedia: Boolean(keepMedia) })
+    logger.info('In-app uninstall cleanup finished', {
+      removed: result.removed.length,
+      failed: result.failed.length,
+      keepMedia
+    })
+    return result
+  })
+  ipcMain.handle('app:quitAfterCleanup', () => {
+    setTimeout(() => {
+      app.quit()
+    }, 250)
   })
 
   ipcMain.handle('panels:getWorkspace', () => panels.getWorkspace())
@@ -562,6 +588,9 @@ app.whenReady().then(async () => {
   createWindow()
   panels.restoreFloatingPanels()
 
+  updateChecker = new UpdateChecker((status) => broadcast('updates:status', status))
+  updateChecker.setEnabled(settings.checkForUpdatesEnabled, { checkNow: true })
+
   // Warm hardware probe so Preferences / first encode are snappy.
   void detectHardwareCapabilities(settings.ffmpegPath).catch(() => undefined)
 
@@ -576,5 +605,6 @@ app.on('window-all-closed', () => {
   void intake?.stop()
   panels.dispose()
   docsWindow.dispose()
+  updateChecker?.stop()
   app.quit()
 })

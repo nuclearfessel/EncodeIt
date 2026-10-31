@@ -176,6 +176,11 @@ export interface AppSettings {
    * Prevents re-adding watches if the user removes them.
    */
   hostFoldersSeeded: boolean
+  /**
+   * When true, EncodeIt checks GitHub Releases on launch and periodically.
+   * Never auto-downloads — user must click Download.
+   */
+  checkForUpdatesEnabled: boolean
 }
 
 /** Extra fields returned by settings:get for the UI (not persisted). */

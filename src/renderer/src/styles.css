@@ -157,7 +157,7 @@ button.danger {
 
 .app {
   display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
   height: 100%;
 }
 
@@ -659,6 +659,58 @@ body.is-row-resizing * {
 
 .ws-save-field input:disabled {
   opacity: 0.55;
+}
+
+.app-status-bar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 32px;
+  padding: 4px 12px;
+  border-top: 1px solid var(--border);
+  background: #162032;
+  color: var(--text);
+  font-size: 12px;
+}
+
+.app-status-bar-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-status-bar-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+
+.uninstall-dialog {
+  width: min(440px, 100%);
+}
+
+.uninstall-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 0.75rem 0 0.35rem;
+  font-size: 0.84rem;
+  line-height: 1.35;
+  color: var(--text);
+}
+
+.uninstall-check input {
+  margin-top: 0.15rem;
+}
+
+.uninstall-warn {
+  margin: 0.35rem 0 0;
+  font-size: 0.8rem;
+  color: var(--warn);
 }
 
 .stats {

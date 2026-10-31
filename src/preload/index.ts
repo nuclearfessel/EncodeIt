@@ -306,6 +306,46 @@ const api = {
     return () => ipcRenderer.removeListener('settings:changed', listener)
   },
   openDocumentation: (): Promise<void> => ipcRenderer.invoke('docs:open'),
+  getUpdateStatus: () => ipcRenderer.invoke('updates:getStatus'),
+  checkForUpdates: (force?: boolean) => ipcRenderer.invoke('updates:checkNow', Boolean(force)),
+  dismissUpdate: () => ipcRenderer.invoke('updates:dismiss'),
+  openUpdateDownload: (): Promise<void> => ipcRenderer.invoke('updates:openDownload'),
+  onUpdateStatus: (
+    cb: (status: {
+      currentVersion: string
+      latestVersion: string | null
+      latestTag: string | null
+      releaseUrl: string | null
+      downloadUrl: string | null
+      updateAvailable: boolean
+      checkedAt: number | null
+      error: string | null
+    }) => void
+  ) => {
+    const listener = (
+      _: IpcRendererEvent,
+      status: {
+        currentVersion: string
+        latestVersion: string | null
+        latestTag: string | null
+        releaseUrl: string | null
+        downloadUrl: string | null
+        updateAvailable: boolean
+        checkedAt: number | null
+        error: string | null
+      }
+    ) => cb(status)
+    ipcRenderer.on('updates:status', listener)
+    return () => ipcRenderer.removeListener('updates:status', listener)
+  },
+  uninstallCleanup: (
+    keepMedia: boolean
+  ): Promise<{
+    removed: string[]
+    failed: Array<{ path: string; error: string }>
+    skippedMedia: boolean
+  }> => ipcRenderer.invoke('app:uninstallCleanup', keepMedia),
+  quitAfterCleanup: (): Promise<void> => ipcRenderer.invoke('app:quitAfterCleanup'),
   windowMinimize: (): Promise<void> => ipcRenderer.invoke('window:minimize'),
   windowMaximizeToggle: (): Promise<boolean> => ipcRenderer.invoke('window:maximizeToggle'),
   windowClose: (): Promise<void> => ipcRenderer.invoke('window:close'),

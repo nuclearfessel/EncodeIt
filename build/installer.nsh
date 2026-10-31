@@ -1,8 +1,8 @@
-; Windows NSIS — Standard vs Custom host integrations (installer only).
+; Windows NSIS — Standard vs Custom host integrations (installer).
+; Uninstall: wipe app data + plugins; ask whether to keep Videos\EncodeIt media.
 ; Detection = install folders / Resolve.exe on disk (apps do NOT need to be running).
 ; Standard: pre-checks apps found on this PC (folders only for those).
 ; Custom: user can choose any combination; checkboxes are always selectable.
-; electron-builder compiles this twice (installer + uninstaller); keep uninstall path empty.
 
 !include "nsDialogs.nsh"
 !include "LogicLib.nsh"
@@ -17,6 +17,43 @@
   !ifndef BUILD_UNINSTALLER
     Call EncodeItRunHostSetup
   !endif
+!macroend
+
+; Full clean uninstall (media wipe by default; user can Keep Media via No).
+!macro customUnInstall
+  MessageBox MB_YESNO|MB_ICONEXCLAMATION|MB_DEFBUTTON1 \
+    "Remove EncodeIt completely?$\r$\n$\r$\nYes — delete settings, plugins/scripts, AND media folders$\r$\n(Videos\EncodeIt including from-ae / Output).$\r$\n$\r$\nNo — delete settings and plugins but KEEP media folders." \
+    IDYES encodeit_wipe_media
+  Goto encodeit_clean_rest
+
+  encodeit_wipe_media:
+    RMDir /r "$PROFILE\Videos\EncodeIt"
+    RMDir /r "$PROFILE\Videos\Encode This"
+
+  encodeit_clean_rest:
+    RMDir /r "$APPDATA\EncodeIt"
+    RMDir /r "$APPDATA\Encode This"
+    RMDir /r "$LOCALAPPDATA\EncodeIt"
+    RMDir /r "$LOCALAPPDATA\Encode This"
+    RMDir /r "$APPDATA\Adobe\CEP\extensions\encodeit-ae"
+    RMDir /r "$APPDATA\Adobe\CEP\extensions\encode-this-ae"
+    Delete "$APPDATA\Blackmagic Design\DaVinci Resolve\Support\Fusion\Scripts\Utility\send_to_encodeit.py"
+    Delete "$APPDATA\Blackmagic Design\DaVinci Resolve\Support\Fusion\Scripts\Utility\send_to_encode_this.py"
+    Delete "$APPDATA\Blackmagic Design\DaVinci Resolve\Support\Fusion\Scripts\Utility\resolve_deliver_handoff.py"
+    Delete "$APPDATA\Blackmagic Design\DaVinci Resolve\Support\Fusion\Scripts\Utility\resolve_deliver_handoff_encode_this.py"
+    ; Best-effort Adobe Scripts (common year folders; missing paths are ignored)
+    Delete "$PROGRAMFILES\Adobe\Adobe After Effects 2024\Support Files\Scripts\SendToEncodeIt.jsx"
+    Delete "$PROGRAMFILES\Adobe\Adobe After Effects 2025\Support Files\Scripts\SendToEncodeIt.jsx"
+    Delete "$PROGRAMFILES\Adobe\Adobe After Effects 2026\Support Files\Scripts\SendToEncodeIt.jsx"
+    Delete "$PROGRAMFILES\Adobe\Adobe After Effects 2024\Support Files\Scripts\SendToEncodeThis.jsx"
+    Delete "$PROGRAMFILES\Adobe\Adobe After Effects 2025\Support Files\Scripts\SendToEncodeThis.jsx"
+    Delete "$PROGRAMFILES\Adobe\Adobe After Effects 2026\Support Files\Scripts\SendToEncodeThis.jsx"
+    Delete "$PROGRAMFILES\Adobe\Adobe Premiere Pro 2024\Scripts\SendToEncodeIt.jsx"
+    Delete "$PROGRAMFILES\Adobe\Adobe Premiere Pro 2025\Scripts\SendToEncodeIt.jsx"
+    Delete "$PROGRAMFILES\Adobe\Adobe Premiere Pro 2026\Scripts\SendToEncodeIt.jsx"
+    Delete "$PROGRAMFILES\Adobe\Adobe Premiere Pro 2024\Scripts\SendToEncodeThis.jsx"
+    Delete "$PROGRAMFILES\Adobe\Adobe Premiere Pro 2025\Scripts\SendToEncodeThis.jsx"
+    Delete "$PROGRAMFILES\Adobe\Adobe Premiere Pro 2026\Scripts\SendToEncodeThis.jsx"
 !macroend
 
 !ifndef BUILD_UNINSTALLER
