@@ -55,6 +55,7 @@ jobs:
           pkg.build.appId = 'com.encodeit.app'
           pkg.build.productName = 'EncodeIt'
           pkg.build.executableName = 'EncodeIt'
+          pkg.build.publish = null
           pkg.build.nsis = Object.assign({}, pkg.build.nsis, {
             artifactName: 'EncodeIt.Setup.${version}.exe'
           })
@@ -134,7 +135,10 @@ jobs:
         run: |
           set -euo pipefail
           shopt -s nullglob
-          files=(release/*.exe release/*.dmg release/*.pkg release/*-mac.zip release/*.AppImage release/*.deb release/encodeit-ae-cep.zip)
+          files=(release/*.exe release/*.dmg release/*.pkg release/*-mac.zip release/*.AppImage release/*.deb)
+          if [ -f release/encodeit-ae-cep.zip ]; then
+            files+=(release/encodeit-ae-cep.zip)
+          fi
           if [ ${#files[@]} -eq 0 ]; then
             echo "No installer files were produced."
             exit 1
