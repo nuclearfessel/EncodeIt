@@ -157,7 +157,7 @@ export function FooterPanels({
                 Export Audio
               </label>
               <div className="output-path-hint">
-                Uncheck Export Audio for a silent movie (same as Adobe Media Encoder).
+                Uncheck Export Audio for a silent movie.
               </div>
             </div>
 
@@ -201,8 +201,6 @@ export function FooterPanels({
                     }`
                   : 'None'}
             </dd>
-            <dt>Sources</dt>
-            <dd>{activePreset.sources.join(', ')}</dd>
           </dl>
         ) : (
           <div style={{ color: '#6b7787', fontSize: '0.8rem' }}>No preset selected</div>

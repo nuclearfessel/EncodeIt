@@ -6,7 +6,7 @@ In-app: **Help → Documentation** (or press **F1**).
 
 ## Overview
 
-EncodeIt is a batch media encoder with an Adobe Media Encoder / Shutter Encoder–style queue and preset browser.
+EncodeIt is a batch media encoder with an queue and preset browser powered by FFmpeg.
 
 Add media, choose a preset, start the queue, and FFmpeg encodes each job. Watch folders let After Effects, Premiere Pro, and DaVinci Resolve hand off renders without scripts.
 
@@ -35,11 +35,11 @@ Add media, choose a preset, start the queue, and FFmpeg encodes each job. Watch 
 
 ## Presets & formats
 
-The Preset Browser groups presets similarly to AME system presets — social, broadcast, mezzanine, and more.
+The Preset Browser groups presets by delivery target — social, broadcast, mezzanine, and more.
 
-Presets map to open FFmpeg recipes inspired by Adobe Media Encoder, Shutter Encoder, Apple Compressor, and TMPGEnc families.
+Presets map to open FFmpeg recipes for common delivery targets.
 
-> **Note:** Proprietary wrappers (full Dolby Vision packages, Wraptor DCP, certified AS-11, etc.) are not claimed. Broadcast options are best-effort FFmpeg mappings.
+> **Note:** Proprietary certified wrappers (full Dolby Vision packages, DCP packaging, certified AS-11, etc.) are not claimed. Broadcast options are best-effort FFmpeg mappings.
 
 ---
 
@@ -56,7 +56,7 @@ Presets map to open FFmpeg recipes inspired by Adobe Media Encoder, Shutter Enco
 
 ## Workspace
 
-- Dock, split, and undock panels like a dense AME-style layout.
+- Dock, split, and undock panels in a flexible workspace layout.
 - Drag a panel header to tear it off or drop it on another edge.
 - **View → Dock All Panels** / **Show All Panels** restores visibility.
 - **Media Browser** browses folders and can add media to the queue.
@@ -178,7 +178,7 @@ Recommended workflow: export sequences into the EncodeIt `from-premiere` watch f
 
 ### Tips
 
-- Adobe Media Encoder is not required for this path — export to disk into `from-premiere` instead.
+- Export to disk into `from-premiere` — no third-party encoder panel required.
 - Change the Premiere watch preset under **Preferences → Integrations**.
 - Batch: export several sequences into `from-premiere`; each completed file is queued separately.
 

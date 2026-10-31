@@ -47,4 +47,4 @@ Dockable panel under `cep/` (loads presets from `GET /presets`). See [cep/PACKAG
 | Supported | Not supported |
 | --- | --- |
 | Watch folder from AE Output Module | Replacing AE’s native render codecs |
-| Optional script / CEP → intake API | Full AME-style exporter plugin |
+| Optional script / CEP → intake API | Full in-host exporter plugin |

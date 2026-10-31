@@ -91,8 +91,7 @@ export class IntakeServer {
             name: p.name,
             group: p.group,
             subgroup: p.subgroup,
-            formatId: p.formatId,
-            sources: p.sources
+            formatId: p.formatId
           }))
         )
         return

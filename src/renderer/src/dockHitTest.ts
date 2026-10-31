@@ -6,7 +6,7 @@ import {
 } from '../../shared/workspaceLayout'
 
 /**
- * Resolve AME-style drop target under a point in the main workspace.
+ * Resolve Drop target under a point in the main workspace.
  * Prefers panel-edge (beside) targets, then outer workspace edges.
  */
 export function resolveDropTarget(

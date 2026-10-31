@@ -1,6 +1,6 @@
-import type { FormatDefinition } from './types'
+﻿import type { FormatDefinition } from './types'
 
-/** Containers / formats from Adobe Media Encoder export list + Shutter / Compressor / TMPGEnc. */
+/** Containers / formats supported by EncodeIt. */
 export const FORMATS: FormatDefinition[] = [
   {
     id: 'h264',
@@ -9,7 +9,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'mp4',
     category: 'video',
     platforms: ['all'],
-    sources: ['ame', 'shutter', 'compressor', 'tmpgenc', 'common'],
     description: 'AVC in MP4 — web, social, Blu-ray-style delivery, devices.',
     codecs: ['libx264', 'h264_nvenc', 'h264_qsv', 'h264_amf', 'h264_videotoolbox']
   },
@@ -20,7 +19,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'mpegts',
     category: 'video',
     platforms: ['all'],
-    sources: ['ame', 'tmpgenc'],
     description: 'H.264 Blu-ray–oriented MPEG-TS output.',
     codecs: ['libx264']
   },
@@ -31,7 +29,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'mp4',
     category: 'video',
     platforms: ['all'],
-    sources: ['ame', 'shutter', 'compressor', 'tmpgenc', 'common'],
     description: 'HEVC up to 8K; hardware when available.',
     codecs: ['libx265', 'hevc_nvenc', 'hevc_qsv', 'hevc_amf', 'hevc_videotoolbox']
   },
@@ -42,7 +39,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'mov',
     category: 'video',
     platforms: ['all'],
-    sources: ['compressor', 'ame', 'shutter'],
     description: 'HEVC in MOV (Apple devices / alpha workflows).',
     codecs: ['libx265', 'hevc_videotoolbox']
   },
@@ -53,7 +49,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'mp4',
     category: 'video',
     platforms: ['all'],
-    sources: ['ame', 'tmpgenc', 'shutter'],
     description: 'MPEG-4 Part 2 / simple MP4 delivery.',
     codecs: ['mpeg4', 'libx264']
   },
@@ -64,7 +59,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'mpeg',
     category: 'video',
     platforms: ['all'],
-    sources: ['ame', 'tmpgenc', 'shutter'],
     description: 'MPEG-2 program stream / DVD-style.',
     codecs: ['mpeg2video']
   },
@@ -75,7 +69,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'mpegts',
     category: 'video',
     platforms: ['all'],
-    sources: ['ame', 'tmpgenc'],
     description: 'MPEG-2 Blu-ray transport stream.',
     codecs: ['mpeg2video']
   },
@@ -86,7 +79,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'dvd',
     category: 'video',
     platforms: ['all'],
-    sources: ['ame', 'tmpgenc'],
     description: 'DVD-Video oriented MPEG-2.',
     codecs: ['mpeg2video']
   },
@@ -97,7 +89,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'mov',
     category: 'video',
     platforms: ['all'],
-    sources: ['ame', 'compressor', 'shutter', 'common'],
     description: 'ProRes 422 Proxy/LT/422/HQ and 4444/XQ in MOV.',
     codecs: ['prores_ks']
   },
@@ -108,7 +99,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'mxf',
     category: 'video',
     platforms: ['all'],
-    sources: ['ame'],
     description: 'ProRes essence in MXF OP1a.',
     codecs: ['prores_ks']
   },
@@ -119,7 +109,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'mxf',
     category: 'video',
     platforms: ['all'],
-    sources: ['ame', 'shutter', 'common'],
     description: 'Avid DNxHD and DNxHR in MXF OP1a.',
     codecs: ['dnxhd']
   },
@@ -130,7 +119,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'mov',
     category: 'video',
     platforms: ['all'],
-    sources: ['ame', 'shutter'],
     description: 'DNx family in QuickTime.',
     codecs: ['dnxhd']
   },
@@ -141,7 +129,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'mxf',
     category: 'video',
     platforms: ['all'],
-    sources: ['ame', 'shutter'],
     description:
       'Broadcast MXF: AVC-Intra, AVC-LongG, DV, DVCPRO, IMX, XAVC, XDCAM.',
     codecs: ['libx264', 'mpeg2video', 'dvvideo']
@@ -153,7 +140,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'mxf',
     category: 'video',
     platforms: ['all'],
-    sources: ['ame'],
     description: 'AS-10 XDCAM HD shims (best-effort FFmpeg mapping).',
     codecs: ['mpeg2video'],
     notes: 'Certified AS-10 wrappers may differ from this open mapping.'
@@ -165,7 +151,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'mxf',
     category: 'video',
     platforms: ['all'],
-    sources: ['ame'],
     description: 'AS-11 AVC-Intra / IMX shims (best-effort).',
     codecs: ['libx264', 'mpeg2video'],
     notes: 'Full DPP AS-11 metadata requires specialized tooling.'
@@ -177,7 +162,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'mxf',
     category: 'video',
     platforms: ['all'],
-    sources: ['ame'],
     description: 'JPEG 2000 essence in MXF.',
     codecs: ['jpeg2000']
   },
@@ -188,7 +172,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'mov',
     category: 'video',
     platforms: ['all'],
-    sources: ['ame', 'compressor', 'shutter'],
     description:
       'MOV with Animation, ProRes, DNx, DV, CineForm, uncompressed.',
     codecs: ['qtrle', 'prores_ks', 'dnxhd', 'dvvideo', 'cfhd', 'rawvideo', 'v210']
@@ -200,7 +183,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'avi',
     category: 'video',
     platforms: ['all'],
-    sources: ['ame', 'tmpgenc', 'shutter'],
     description: 'AVI with DV, uncompressed, and legacy codecs. Adobe lists Windows-only; EncodeIt offers cross-platform FFmpeg paths.',
     codecs: ['dvvideo', 'rawvideo', 'v210', 'msvideo1', 'utvideo']
   },
@@ -211,7 +193,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'avi',
     category: 'video',
     platforms: ['all'],
-    sources: ['ame'],
     description: 'Uncompressed UYVY / V210 AVI.',
     codecs: ['rawvideo', 'v210']
   },
@@ -222,7 +203,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'asf',
     category: 'video',
     platforms: ['all'],
-    sources: ['ame', 'tmpgenc'],
     description: 'WMV7/8-style delivery (open encoder approximations of WMV9).',
     codecs: ['wmv1', 'wmv2'],
     notes: 'WMV9 Advanced Profile is not available as a free encoder; WMV7/8 used as open stand-ins.'
@@ -234,7 +214,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'mxf',
     category: 'video',
     platforms: ['all'],
-    sources: ['ame'],
     description: 'Panasonic P2-style Op-Atom-ish MXF (DVCPRO / AVC-Intra).',
     codecs: ['dvvideo', 'libx264'],
     notes: 'Full P2 folder structure is not reproduced; essence encode is available.'
@@ -246,8 +225,7 @@ export const FORMATS: FormatDefinition[] = [
     container: 'mxf',
     category: 'video',
     platforms: ['all'],
-    sources: ['ame'],
-    description: 'JPEG 2000 DCP-oriented encode (not a full Wraptor package).',
+    description: 'JPEG 2000 DCP-oriented encode (not a full DCP package).',
     codecs: ['jpeg2000'],
     notes: 'Full encrypted DCP packaging requires specialized tools.'
   },
@@ -258,8 +236,7 @@ export const FORMATS: FormatDefinition[] = [
     container: 'mp4',
     category: 'video',
     platforms: ['all'],
-    sources: ['shutter', 'common'],
-    description: 'AV1 for modern web delivery (Shutter-style).',
+    description: 'AV1 for modern web delivery.',
     codecs: ['libaom-av1', 'libsvtav1', 'av1_nvenc']
   },
   {
@@ -269,7 +246,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'webm',
     category: 'video',
     platforms: ['all'],
-    sources: ['shutter', 'common'],
     description: 'VP9 in WebM.',
     codecs: ['libvpx-vp9']
   },
@@ -280,7 +256,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'webm',
     category: 'video',
     platforms: ['all'],
-    sources: ['shutter'],
     description: 'VP8 in WebM.',
     codecs: ['libvpx']
   },
@@ -291,7 +266,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'matroska',
     category: 'video',
     platforms: ['all'],
-    sources: ['shutter'],
     description: 'Lossless archival FFV1.',
     codecs: ['ffv1']
   },
@@ -302,7 +276,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'mov',
     category: 'video',
     platforms: ['all'],
-    sources: ['shutter', 'common'],
     description: 'Hap / Hap Alpha playback codecs.',
     codecs: ['hap']
   },
@@ -313,7 +286,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'matroska',
     category: 'video',
     platforms: ['all'],
-    sources: ['shutter', 'tmpgenc', 'common'],
     description: 'Flexible MKV container for many codecs.',
     codecs: ['libx264', 'libx265', 'ffv1', 'libvpx-vp9']
   },
@@ -324,7 +296,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'gif',
     category: 'video',
     platforms: ['all'],
-    sources: ['ame', 'shutter'],
     description: 'Animated GIF.',
     codecs: ['gif']
   },
@@ -335,7 +306,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'image2',
     category: 'still',
     platforms: ['all'],
-    sources: ['ame', 'shutter', 'compressor'],
     description: 'PNG still or sequence.',
     codecs: ['png']
   },
@@ -346,7 +316,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'image2',
     category: 'still',
     platforms: ['all'],
-    sources: ['ame', 'shutter'],
     description: 'JPEG still or sequence.',
     codecs: ['mjpeg']
   },
@@ -357,7 +326,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'image2',
     category: 'still',
     platforms: ['all'],
-    sources: ['ame', 'shutter', 'compressor'],
     description: 'TIFF still or sequence.',
     codecs: ['tiff']
   },
@@ -368,7 +336,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'image2',
     category: 'still',
     platforms: ['all'],
-    sources: ['ame'],
     description: 'TGA still or sequence.',
     codecs: ['targa']
   },
@@ -379,7 +346,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'image2',
     category: 'still',
     platforms: ['all'],
-    sources: ['ame', 'shutter'],
     description: 'DPX film/VFX sequence.',
     codecs: ['dpx']
   },
@@ -390,7 +356,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'image2',
     category: 'still',
     platforms: ['all'],
-    sources: ['ame', 'shutter', 'compressor'],
     description: 'OpenEXR still or sequence.',
     codecs: ['exr']
   },
@@ -401,7 +366,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'image2',
     category: 'still',
     platforms: ['all'],
-    sources: ['ame'],
     description: 'BMP still or sequence (Adobe: Windows-only listing).',
     codecs: ['bmp']
   },
@@ -412,7 +376,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'ipod',
     category: 'audio',
     platforms: ['all'],
-    sources: ['ame', 'shutter', 'compressor', 'tmpgenc'],
     description: 'AAC Version 1 / 2 style audio export.',
     codecs: ['aac']
   },
@@ -423,7 +386,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'mp3',
     category: 'audio',
     platforms: ['all'],
-    sources: ['ame', 'shutter', 'tmpgenc'],
     description: 'MPEG Audio Layer III.',
     codecs: ['libmp3lame']
   },
@@ -434,7 +396,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'wav',
     category: 'audio',
     platforms: ['all'],
-    sources: ['ame', 'shutter', 'compressor', 'tmpgenc'],
     description: 'PCM WAV.',
     codecs: ['pcm_s16le', 'pcm_s24le', 'pcm_f32le']
   },
@@ -445,7 +406,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'aiff',
     category: 'audio',
     platforms: ['all'],
-    sources: ['ame', 'compressor'],
     description: 'Audio Interchange File Format.',
     codecs: ['pcm_s16be', 'pcm_s24be']
   },
@@ -456,7 +416,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'flac',
     category: 'audio',
     platforms: ['all'],
-    sources: ['shutter', 'common'],
     description: 'Lossless FLAC.',
     codecs: ['flac']
   },
@@ -467,7 +426,6 @@ export const FORMATS: FormatDefinition[] = [
     container: 'opus',
     category: 'audio',
     platforms: ['all'],
-    sources: ['shutter', 'common'],
     description: 'Opus audio.',
     codecs: ['libopus']
   }

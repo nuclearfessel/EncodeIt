@@ -169,7 +169,7 @@ button.danger {
   background: var(--bg-panel);
 }
 
-.ame-workspace {
+.app-workspace {
   position: relative;
   display: flex;
   min-height: 0;
@@ -1193,15 +1193,6 @@ body.is-row-resizing * {
   color: #fff;
   font-weight: 500;
   box-shadow: inset 2px 0 0 var(--accent);
-}
-
-.preset-sources {
-  display: block;
-  font-size: 0.72rem;
-  font-weight: 400;
-  color: var(--text-mute);
-  margin-top: 0.08rem;
-  letter-spacing: 0.01em;
 }
 
 .queue-panel {

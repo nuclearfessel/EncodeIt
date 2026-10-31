@@ -6,13 +6,6 @@ export type Platform = 'win32' | 'darwin' | 'linux'
 
 export type BitrateMode = 'cbr' | 'vbr1' | 'vbr2' | 'crf' | 'cq'
 
-export type SourceFamily =
-  | 'ame'
-  | 'shutter'
-  | 'compressor'
-  | 'tmpgenc'
-  | 'common'
-
 export interface VideoSettings {
   codec: string
   encoder?: string
@@ -54,7 +47,6 @@ export interface FormatDefinition {
   container: string
   category: 'video' | 'audio' | 'still' | 'sequence'
   platforms: Array<Platform | 'all'>
-  sources: SourceFamily[]
   description: string
   codecs: string[]
   notes?: string
@@ -64,7 +56,6 @@ export interface CodecVariant {
   id: string
   name: string
   formatIds: string[]
-  sources: SourceFamily[]
   platforms: Array<Platform | 'all'>
   video: Partial<VideoSettings>
   audio?: Partial<AudioSettings>
@@ -78,7 +69,6 @@ export interface PresetDefinition {
   group: string
   subgroup?: string
   formatId: string
-  sources: SourceFamily[]
   platforms: Array<Platform | 'all'>
   description?: string
   video: VideoSettings
@@ -136,9 +126,9 @@ export interface QueueJob {
   startedAt?: number
   finishedAt?: number
   media?: MediaInfo
-  /** Adobe Media Encoder–style Export Video checkbox (default true). */
+  /** Export Video checkbox (default true). */
   exportVideo: boolean
-  /** Adobe Media Encoder–style Export Audio checkbox (default follows preset). */
+  /** Export Audio checkbox (default follows preset). */
   exportAudio: boolean
   videoOverrides?: Partial<VideoSettings>
   audioOverrides?: Partial<AudioSettings>
@@ -227,5 +217,4 @@ export interface CatalogStats {
   formats: number
   codecs: number
   presets: number
-  bySource: Record<SourceFamily, number>
 }

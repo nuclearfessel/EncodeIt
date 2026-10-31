@@ -21,7 +21,6 @@ export function PresetBrowser({ grouped, activePresetId, onSelect }: Props) {
           (p) =>
             p.name.toLowerCase().includes(q) ||
             p.id.toLowerCase().includes(q) ||
-            p.sources.join(' ').includes(q) ||
             group.toLowerCase().includes(q) ||
             subgroup.toLowerCase().includes(q)
         )
@@ -39,7 +38,7 @@ export function PresetBrowser({ grouped, activePresetId, onSelect }: Props) {
         <Search size={iconSize.sm} strokeWidth={2} aria-hidden="true" />
         <input
           className="preset-search"
-          placeholder="Search presets, AME, Shutter…"
+          placeholder="Search presets…"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
@@ -70,7 +69,6 @@ export function PresetBrowser({ grouped, activePresetId, onSelect }: Props) {
                     title={preset.description ?? preset.id}
                   >
                     {preset.name}
-                    <span className="preset-sources">{preset.sources.join(' · ')}</span>
                   </button>
                 ))}
               </details>

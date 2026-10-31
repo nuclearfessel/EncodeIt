@@ -40,8 +40,8 @@ export function AboutDialog({ open, onClose, version, ffmpegPath, ffmpegSource }
           <p className="about-brand">EncodeIt</p>
           <p className="about-meta">Version {version}</p>
           <p className="about-copy">
-            Open-source batch media encoder with an Adobe Media Encoder / Shutter Encoder–style
-            queue. Encoding is powered by bundled FFmpeg.
+            Open-source batch media encoder with a queue and preset browser. Encoding is powered by
+            bundled FFmpeg.
           </p>
           {ffmpegPath ? (
             <p className="about-meta">

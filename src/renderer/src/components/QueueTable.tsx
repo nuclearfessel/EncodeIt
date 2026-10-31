@@ -44,7 +44,7 @@ export function QueueTable({ jobs, selectedIds, onSelect, presetName, onAdd }: P
       <div className="empty">
         <div>
           <strong>Drop media here</strong>
-          <div>or use Add Source — queue encodes like Adobe Media Encoder / Shutter Encoder</div>
+          <div>or use Add Source to add files to the encode queue</div>
           <div style={{ marginTop: '0.85rem' }}>
             <button type="button" className="primary btn-with-icon" onClick={onAdd}>
               <ButtonContent icon={Plus}>Add Source…</ButtonContent>

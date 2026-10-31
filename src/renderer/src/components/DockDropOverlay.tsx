@@ -16,7 +16,7 @@ interface BesideBox {
 }
 
 /**
- * AME-style docking guides: outer edge bands + panel-edge highlight.
+ * Docking guides: outer edge bands + panel-edge highlight.
  */
 export function DockDropOverlay({ active, target }: Props) {
   const [beside, setBeside] = useState<BesideBox | null>(null)
@@ -26,7 +26,7 @@ export function DockDropOverlay({ active, target }: Props) {
       setBeside(null)
       return
     }
-    const workspace = document.querySelector<HTMLElement>('.ame-workspace')
+    const workspace = document.querySelector<HTMLElement>('.app-workspace')
     const el = workspace?.querySelector<HTMLElement>(`[data-panel-id="${target.beside}"]`)
     if (!workspace || !el) {
       setBeside(null)

@@ -1,4 +1,4 @@
-import type { AudioSettings, PresetDefinition, VideoSettings } from './types'
+﻿import type { AudioSettings, PresetDefinition, VideoSettings } from './types'
 
 const aacStereo = (kbps = 320): AudioSettings => ({
   enabled: true,
@@ -35,7 +35,6 @@ function h264(
     group,
     subgroup,
     formatId: 'h264',
-    sources: ['ame', 'shutter', 'compressor', 'tmpgenc', 'common'],
     platforms: ['all'],
     video: {
       codec: 'libx264',
@@ -69,7 +68,6 @@ function hevc(
     group,
     subgroup,
     formatId: 'hevc',
-    sources: ['ame', 'shutter', 'compressor', 'tmpgenc'],
     platforms: ['all'],
     video: {
       codec: 'libx265',
@@ -112,7 +110,6 @@ function prores(
     group: 'Broadcast',
     subgroup: formatId === 'prores-mxf' ? 'Apple ProRes MXF OP1a' : 'Apple ProRes',
     formatId,
-    sources: ['ame', 'compressor', 'shutter'],
     platforms: ['all'],
     video,
     audio: pcm48()
@@ -126,7 +123,6 @@ function dnxhr(name: string, profile: string, pix: string, formatId: 'dnx-mxf' |
     group: 'Broadcast',
     subgroup: formatId === 'dnx-mxf' ? 'DNxHR/DNxHD MXF OP1a' : 'DNx QuickTime',
     formatId,
-    sources: ['ame', 'shutter'],
     platforms: ['all'],
     video: {
       codec: 'dnxhd',
@@ -141,14 +137,13 @@ function dnxhr(name: string, profile: string, pix: string, formatId: 'dnx-mxf' |
 }
 
 const SYSTEM_PRESETS: PresetDefinition[] = [
-  // Match Source — like AME
+  // Match Source
   {
     id: 'h264-match-source-high-bitrate',
     name: 'Match Source - High bitrate',
     group: 'System Presets',
     subgroup: 'Match Source',
     formatId: 'h264',
-    sources: ['ame', 'shutter'],
     platforms: ['all'],
     description: 'Keep source frame size/rate; high-quality H.264.',
     video: {
@@ -171,7 +166,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'System Presets',
     subgroup: 'Match Source',
     formatId: 'h264',
-    sources: ['ame'],
     platforms: ['all'],
     video: {
       codec: 'libx264',
@@ -192,7 +186,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'System Presets',
     subgroup: 'Match Source HEVC',
     formatId: 'hevc',
-    sources: ['ame', 'compressor'],
     platforms: ['all'],
     video: {
       codec: 'libx265',
@@ -209,7 +202,7 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     audio: aacStereo(256)
   },
 
-  // Social / web — AME style
+  // Social / web
   h264('YouTube 2160p 4K', 'System Presets', 'YouTube', 3840, 2160, 45000),
   h264('YouTube 1080p HD', 'System Presets', 'YouTube', 1920, 1080, 16000),
   h264('YouTube 720p HD', 'System Presets', 'YouTube', 1280, 720, 10000),
@@ -222,21 +215,16 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
   h264('Facebook 720HD', 'System Presets', 'Facebook', 1280, 720, 8000),
   h264('Twitter 720P', 'System Presets', 'Twitter', 1280, 720, 6000),
   h264('Instagram Feed 1080x1080', 'System Presets', 'Instagram', 1080, 1080, 8000, {
-    sources: ['shutter', 'common']
   }),
   h264('Instagram Stories 1080x1920', 'System Presets', 'Instagram', 1080, 1920, 8000, {
-    sources: ['shutter', 'common']
   }),
   h264('TikTok 1080x1920', 'System Presets', 'TikTok', 1080, 1920, 10000, {
-    sources: ['shutter', 'common']
   }),
 
-  // Apple devices — Compressor style
+  // Apple devices
   h264('Apple Devices 1080p', 'System Presets', 'Apple Devices', 1920, 1080, 12000, {
-    sources: ['compressor', 'ame']
   }),
   h264('Apple Devices 4K', 'System Presets', 'Apple Devices', 3840, 2160, 35000, {
-    sources: ['compressor', 'ame']
   }),
   hevc('Apple Devices HEVC 1080p', 'System Presets', 'Apple Devices', 1920, 1080, 8000),
   hevc('Apple Devices HEVC 4K', 'System Presets', 'Apple Devices', 3840, 2160, 20000),
@@ -246,7 +234,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'System Presets',
     subgroup: 'Apple Devices',
     formatId: 'hevc-mov',
-    sources: ['compressor'],
     platforms: ['all'],
     description: 'HEVC Main with alpha via yuza when source has alpha; best on Apple silicon VideoToolbox later.',
     video: {
@@ -290,7 +277,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Broadcast',
     subgroup: 'DNxHR/DNxHD MXF OP1a',
     formatId: 'dnx-mxf',
-    sources: ['ame', 'shutter'],
     platforms: ['all'],
     video: {
       codec: 'dnxhd',
@@ -311,7 +297,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Broadcast',
     subgroup: 'DNxHR/DNxHD MXF OP1a',
     formatId: 'dnx-mxf',
-    sources: ['ame'],
     platforms: ['all'],
     video: {
       codec: 'dnxhd',
@@ -336,7 +321,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Broadcast',
     subgroup: 'QuickTime',
     formatId: 'quicktime',
-    sources: ['ame', 'shutter'],
     platforms: ['all'],
     video: {
       codec: 'cfhd',
@@ -354,7 +338,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Broadcast',
     subgroup: 'QuickTime',
     formatId: 'quicktime',
-    sources: ['ame', 'shutter'],
     platforms: ['all'],
     video: {
       codec: 'cfhd',
@@ -372,7 +355,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Broadcast',
     subgroup: 'QuickTime',
     formatId: 'quicktime',
-    sources: ['ame', 'compressor'],
     platforms: ['all'],
     video: {
       codec: 'qtrle',
@@ -389,7 +371,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Broadcast',
     subgroup: 'QuickTime',
     formatId: 'quicktime',
-    sources: ['ame'],
     platforms: ['all'],
     video: {
       codec: 'v210',
@@ -408,7 +389,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Broadcast',
     subgroup: 'MXF OP1a',
     formatId: 'mxf-op1a',
-    sources: ['ame'],
     platforms: ['all'],
     video: {
       codec: 'libx264',
@@ -427,7 +407,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Broadcast',
     subgroup: 'MXF OP1a',
     formatId: 'mxf-op1a',
-    sources: ['ame'],
     platforms: ['all'],
     video: {
       codec: 'libx264',
@@ -446,7 +425,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Broadcast',
     subgroup: 'MXF OP1a',
     formatId: 'mxf-op1a',
-    sources: ['ame'],
     platforms: ['all'],
     video: {
       codec: 'libx264',
@@ -465,7 +443,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Broadcast',
     subgroup: 'MXF OP1a',
     formatId: 'mxf-op1a',
-    sources: ['ame'],
     platforms: ['all'],
     video: {
       codec: 'libx264',
@@ -484,7 +461,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Broadcast',
     subgroup: 'MXF OP1a',
     formatId: 'mxf-op1a',
-    sources: ['ame'],
     platforms: ['all'],
     video: {
       codec: 'libx264',
@@ -506,7 +482,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Broadcast',
     subgroup: 'MXF OP1a',
     formatId: 'mxf-op1a',
-    sources: ['ame'],
     platforms: ['all'],
     video: {
       codec: 'mpeg2video',
@@ -529,7 +504,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Broadcast',
     subgroup: 'MXF OP1a',
     formatId: 'mxf-op1a',
-    sources: ['ame'],
     platforms: ['all'],
     video: {
       codec: 'mpeg2video',
@@ -549,7 +523,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Broadcast',
     subgroup: 'MXF OP1a',
     formatId: 'mxf-op1a',
-    sources: ['ame'],
     platforms: ['all'],
     video: {
       codec: 'mpeg2video',
@@ -569,7 +542,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Broadcast',
     subgroup: 'AS-10',
     formatId: 'as10',
-    sources: ['ame'],
     platforms: ['all'],
     video: {
       codec: 'mpeg2video',
@@ -588,7 +560,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Broadcast',
     subgroup: 'AS-11',
     formatId: 'as11',
-    sources: ['ame'],
     platforms: ['all'],
     video: {
       codec: 'libx264',
@@ -607,7 +578,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Broadcast',
     subgroup: 'AS-11',
     formatId: 'as11',
-    sources: ['ame'],
     platforms: ['all'],
     video: {
       codec: 'mpeg2video',
@@ -629,7 +599,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Broadcast',
     subgroup: 'DV',
     formatId: 'avi',
-    sources: ['ame', 'tmpgenc', 'shutter'],
     platforms: ['all'],
     video: {
       codec: 'dvvideo',
@@ -647,7 +616,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Broadcast',
     subgroup: 'DV',
     formatId: 'avi',
-    sources: ['ame', 'tmpgenc'],
     platforms: ['all'],
     video: {
       codec: 'dvvideo',
@@ -665,7 +633,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Broadcast',
     subgroup: 'P2 Movie',
     formatId: 'p2',
-    sources: ['ame'],
     platforms: ['all'],
     video: {
       codec: 'libx264',
@@ -679,14 +646,13 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     audio: pcm48()
   },
 
-  // MPEG-2 / Blu-ray / DVD — AME + TMPGEnc
+  // MPEG-2 / Blu-ray / DVD
   {
     id: 'mpeg2-dvd-ntsc',
     name: 'MPEG-2 DVD NTSC',
     group: 'Optical Disc',
     subgroup: 'DVD',
     formatId: 'mpeg2-dvd',
-    sources: ['ame', 'tmpgenc'],
     platforms: ['all'],
     video: {
       codec: 'mpeg2video',
@@ -706,7 +672,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Optical Disc',
     subgroup: 'DVD',
     formatId: 'mpeg2-dvd',
-    sources: ['ame', 'tmpgenc'],
     platforms: ['all'],
     video: {
       codec: 'mpeg2video',
@@ -726,7 +691,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Optical Disc',
     subgroup: 'Blu-ray',
     formatId: 'h264-bluray',
-    sources: ['ame', 'tmpgenc'],
     platforms: ['all'],
     video: {
       codec: 'libx264',
@@ -748,7 +712,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Optical Disc',
     subgroup: 'Blu-ray',
     formatId: 'mpeg2-bluray',
-    sources: ['ame', 'tmpgenc'],
     platforms: ['all'],
     video: {
       codec: 'mpeg2video',
@@ -770,7 +733,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Legacy',
     subgroup: 'Windows Media',
     formatId: 'windows-media',
-    sources: ['ame', 'tmpgenc'],
     platforms: ['all'],
     video: {
       codec: 'wmv2',
@@ -789,7 +751,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Legacy',
     subgroup: 'AVI',
     formatId: 'avi-uncompressed',
-    sources: ['ame'],
     platforms: ['all'],
     video: {
       codec: 'rawvideo',
@@ -807,7 +768,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Legacy',
     subgroup: 'AVI',
     formatId: 'avi-uncompressed',
-    sources: ['ame'],
     platforms: ['all'],
     video: {
       codec: 'v210',
@@ -826,7 +786,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Broadcast',
     subgroup: 'JPEG 2000',
     formatId: 'jpeg2000-mxf',
-    sources: ['ame'],
     platforms: ['all'],
     video: {
       codec: 'jpeg2000',
@@ -843,9 +802,8 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Cinema',
     subgroup: 'DCP',
     formatId: 'dcp',
-    sources: ['ame'],
     platforms: ['all'],
-    description: 'JPEG 2000 encode only — not a full Wraptor DCP package.',
+    description: 'JPEG 2000 encode only — not a full DCP package.',
     video: {
       codec: 'jpeg2000',
       pixelFormat: 'xyz12le',
@@ -857,14 +815,13 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     audio: pcm48()
   },
 
-  // Shutter-style modern web / archive
+  // Modern web / archive
   {
     id: 'av1-web-1080p',
     name: 'AV1 1080p Web',
     group: 'Modern Web',
     subgroup: 'AV1',
     formatId: 'av1',
-    sources: ['shutter', 'common'],
     platforms: ['all'],
     video: {
       codec: 'libaom-av1',
@@ -884,7 +841,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Modern Web',
     subgroup: 'VP9',
     formatId: 'vp9',
-    sources: ['shutter'],
     platforms: ['all'],
     video: {
       codec: 'libvpx-vp9',
@@ -904,7 +860,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Archive',
     subgroup: 'FFV1',
     formatId: 'ffv1',
-    sources: ['shutter'],
     platforms: ['all'],
     video: {
       codec: 'ffv1',
@@ -922,7 +877,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Playback',
     subgroup: 'Hap',
     formatId: 'hap',
-    sources: ['shutter'],
     platforms: ['all'],
     video: {
       codec: 'hap',
@@ -941,7 +895,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Stills',
     subgroup: 'Sequences',
     formatId: 'still-png',
-    sources: ['ame', 'shutter', 'compressor'],
     platforms: ['all'],
     sequence: true,
     video: { codec: 'png', width: 'match', height: 'match', frameRate: 'match' },
@@ -953,7 +906,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Stills',
     subgroup: 'Sequences',
     formatId: 'still-jpeg',
-    sources: ['ame', 'shutter'],
     platforms: ['all'],
     sequence: true,
     video: { codec: 'mjpeg', quality: 2, width: 'match', height: 'match', frameRate: 'match' },
@@ -965,7 +917,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Stills',
     subgroup: 'Sequences',
     formatId: 'still-tiff',
-    sources: ['ame', 'shutter', 'compressor'],
     platforms: ['all'],
     sequence: true,
     video: { codec: 'tiff', width: 'match', height: 'match', frameRate: 'match' },
@@ -977,7 +928,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Stills',
     subgroup: 'Sequences',
     formatId: 'still-dpx',
-    sources: ['ame', 'shutter'],
     platforms: ['all'],
     sequence: true,
     video: {
@@ -995,7 +945,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Stills',
     subgroup: 'Sequences',
     formatId: 'still-exr',
-    sources: ['ame', 'shutter', 'compressor'],
     platforms: ['all'],
     sequence: true,
     video: { codec: 'exr', width: 'match', height: 'match', frameRate: 'match' },
@@ -1007,7 +956,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Stills',
     subgroup: 'Sequences',
     formatId: 'still-tga',
-    sources: ['ame'],
     platforms: ['all'],
     sequence: true,
     video: { codec: 'targa', width: 'match', height: 'match', frameRate: 'match' },
@@ -1019,7 +967,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Stills',
     subgroup: 'Sequences',
     formatId: 'still-bmp',
-    sources: ['ame'],
     platforms: ['all'],
     sequence: true,
     video: { codec: 'bmp', width: 'match', height: 'match', frameRate: 'match' },
@@ -1031,7 +978,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Stills',
     subgroup: 'GIF',
     formatId: 'gif',
-    sources: ['ame', 'shutter'],
     platforms: ['all'],
     video: {
       codec: 'gif',
@@ -1052,7 +998,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Audio',
     subgroup: 'AAC',
     formatId: 'audio-aac',
-    sources: ['ame', 'shutter', 'compressor', 'tmpgenc'],
     platforms: ['all'],
     video: { codec: 'none' },
     audio: aacStereo(320)
@@ -1063,7 +1008,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Audio',
     subgroup: 'MP3',
     formatId: 'audio-mp3',
-    sources: ['ame', 'shutter', 'tmpgenc'],
     platforms: ['all'],
     video: { codec: 'none' },
     audio: { enabled: true, codec: 'libmp3lame', bitrateKbps: 320, sampleRate: 48000, channels: 2 }
@@ -1074,7 +1018,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Audio',
     subgroup: 'WAV',
     formatId: 'audio-wav',
-    sources: ['ame', 'shutter', 'compressor'],
     platforms: ['all'],
     video: { codec: 'none' },
     audio: { enabled: true, codec: 'pcm_s24le', sampleRate: 48000, channels: 2 }
@@ -1085,7 +1028,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Audio',
     subgroup: 'AIFF',
     formatId: 'audio-aiff',
-    sources: ['ame', 'compressor'],
     platforms: ['all'],
     video: { codec: 'none' },
     audio: { enabled: true, codec: 'pcm_s24be', sampleRate: 48000, channels: 2 }
@@ -1096,7 +1038,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Audio',
     subgroup: 'FLAC',
     formatId: 'audio-flac',
-    sources: ['shutter'],
     platforms: ['all'],
     video: { codec: 'none' },
     audio: { enabled: true, codec: 'flac', sampleRate: 48000, channels: 2 }
@@ -1107,7 +1048,6 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
     group: 'Audio',
     subgroup: 'Opus',
     formatId: 'audio-opus',
-    sources: ['shutter'],
     platforms: ['all'],
     video: { codec: 'none' },
     audio: { enabled: true, codec: 'libopus', bitrateKbps: 160, sampleRate: 48000, channels: 2 }
@@ -1119,14 +1059,13 @@ const SYSTEM_PRESETS: PresetDefinition[] = [
   hevc('HEVC 1080p', 'System Presets', 'HEVC', 1920, 1080, 12000),
   hevc('HEVC 720p', 'System Presets', 'HEVC', 1280, 720, 6000),
 
-  // TMPGEnc-style MPEG-4
+  // MPEG-4
   {
     id: 'mpeg4-asp-hdtv',
     name: 'MPEG-4 ASP HDTV',
     group: 'Legacy',
     subgroup: 'MPEG-4',
     formatId: 'mpeg4',
-    sources: ['ame', 'tmpgenc'],
     platforms: ['all'],
     video: {
       codec: 'mpeg4',

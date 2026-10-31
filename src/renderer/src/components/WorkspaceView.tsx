@@ -10,7 +10,7 @@ interface Props {
   onResetSplit: (path: number[], leftIndex: number) => void
 }
 
-/** Recursive AME-style split workspace with live splitter resizing. */
+/** Recursive split workspace with live splitter resizing. */
 export function WorkspaceView({ root, renderPanel, onResize, onResetSplit }: Props) {
   return (
     <div className="workspace-root">

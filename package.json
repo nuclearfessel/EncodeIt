@@ -1,7 +1,7 @@
 {
   "name": "encodeit",
   "version": "0.1.5",
-  "description": "Open-source batch media encoder — Adobe Media Encoder / Shutter Encoder style",
+  "description": "Open-source batch media encoder powered by FFmpeg",
   "main": "./out/main/index.js",
   "author": "nuclearfessel <nuclearfessel@users.noreply.github.com>",
   "license": "MIT",

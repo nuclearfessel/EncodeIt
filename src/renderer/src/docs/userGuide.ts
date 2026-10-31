@@ -24,7 +24,7 @@ export const USER_GUIDE_SECTIONS: DocSection[] = [
     blocks: [
       {
         type: 'p',
-        text: 'EncodeIt is a batch media encoder with an Adobe Media Encoder / Shutter Encoder–style queue and preset browser.'
+        text: 'EncodeIt is a batch media encoder with an queue and preset browser powered by FFmpeg.'
       },
       {
         type: 'p',
@@ -73,15 +73,15 @@ export const USER_GUIDE_SECTIONS: DocSection[] = [
     blocks: [
       {
         type: 'p',
-        text: 'The Preset Browser groups presets similarly to AME system presets — social, broadcast, mezzanine, and more.'
+        text: 'The Preset Browser groups presets by delivery target — social, broadcast, mezzanine, and more.'
       },
       {
         type: 'p',
-        text: 'Presets map to open FFmpeg recipes inspired by Adobe Media Encoder, Shutter Encoder, Apple Compressor, and TMPGEnc families.'
+        text: 'Presets map to open FFmpeg recipes for common delivery targets.'
       },
       {
         type: 'note',
-        text: 'Proprietary wrappers (full Dolby Vision packages, Wraptor DCP, certified AS-11, etc.) are not claimed. Broadcast options are best-effort FFmpeg mappings.'
+        text: 'Proprietary certified wrappers (full Dolby Vision packages, DCP packaging, certified AS-11, etc.) are not claimed. Broadcast options are best-effort FFmpeg mappings.'
       }
     ]
   },
@@ -109,7 +109,7 @@ export const USER_GUIDE_SECTIONS: DocSection[] = [
       {
         type: 'ul',
         items: [
-          'Dock, split, and undock panels like a dense AME-style layout.',
+          'Dock, split, and undock panels in a flexible workspace layout.',
           'Drag a panel header to tear it off or drop it on another edge.',
           'View → Dock All Panels / Show All Panels restores visibility.',
           'Media Browser browses folders and can add media to the queue.'
@@ -349,7 +349,7 @@ export const USER_GUIDE_SECTIONS: DocSection[] = [
           {
             type: 'ul',
             items: [
-              'Adobe Media Encoder is not required for this path — export to disk into `from-premiere` instead.',
+              'Export to disk into `from-premiere` — no third-party encoder panel required.',
               'Change the Premiere watch preset under Preferences → Integrations.',
               'Batch: export several sequences into `from-premiere`; each completed file is queued separately.'
             ]

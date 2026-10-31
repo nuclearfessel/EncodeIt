@@ -20,7 +20,7 @@ const EDGES: { edge: DockEdge; label: string }[] = [
 ]
 
 /**
- * AME-style panel chrome: grip + title + hamburger.
+ * Panel chrome: grip + title + hamburger.
  * Drag to tear off / retarget drop zones; menu offers Close and Dock sides.
  */
 export function PanelHeader({ title, panelId, floating }: Props) {
@@ -63,7 +63,7 @@ export function PanelHeader({ title, panelId, floating }: Props) {
       return
     }
 
-    const workspace = document.querySelector<HTMLElement>('.ame-workspace')
+    const workspace = document.querySelector<HTMLElement>('.app-workspace')
     if (!workspace) {
       await window.EncodeIt.setPanelDragTarget(null)
       return
@@ -127,7 +127,7 @@ export function PanelHeader({ title, panelId, floating }: Props) {
         return
       }
 
-      const workspace = document.querySelector<HTMLElement>('.ame-workspace')
+      const workspace = document.querySelector<HTMLElement>('.app-workspace')
       if (!workspace) {
         await window.EncodeIt.endPanelDrag('undock')
         return

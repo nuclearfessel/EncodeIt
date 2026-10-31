@@ -273,7 +273,7 @@ function insertEdge(root: LayoutNode | null, id: PanelId, edge: DockEdge): Layou
   return { type: 'split', dir: 'col', children: kids }
 }
 
-/** Split beside an existing panel (AME drop on a panel edge). */
+/** Split beside an existing panel (drop on a panel edge). */
 export function dockBeside(
   root: LayoutNode | null,
   id: PanelId,

@@ -1,14 +1,14 @@
 # EncodeIt
 
-Open-source batch media encoder with an **Adobe Media Encoder / Shutter Encoder–style** queue and preset browser.
+Open-source batch media encoder with a queue and preset browser, powered by FFmpeg.
 
 Cross-platform (**Windows, macOS, Linux**) via Electron + FFmpeg.
 
 ## Phase 1
 
 - Encoding queue with progress, start/stop, multi-select
-- Preset browser grouped like AME System Presets
-- Unified format/codec catalog spanning **Adobe Media Encoder**, **Shutter Encoder**, **Apple Compressor**, and **TMPGEnc** families (open FFmpeg mappings)
+- Preset browser grouped by delivery target (social, broadcast, mezzanine, and more)
+- Unified format/codec catalog with open FFmpeg mappings
 - Watch folders
 - Hardware encode options (NVENC / QSV / AMF / VideoToolbox) when FFmpeg supports them
 
@@ -34,7 +34,7 @@ npm run build
 
 ### Catalog notes
 
-Exact bit-for-bit clones of proprietary encoders/certified wrappers (full Dolby Vision, Wraptor DCP packages, DPP AS-11 metadata, TMPGEnc disc authoring) are **not** claimed. Broadcast formats use best-effort FFmpeg recipes labeled in the catalog.
+Proprietary certified wrappers (full Dolby Vision packages, DCP packaging, certified AS-11 metadata, disc authoring) are **not** claimed. Broadcast formats use best-effort FFmpeg recipes labeled in the catalog.
 
 ## Phase 2 — host integrations
 

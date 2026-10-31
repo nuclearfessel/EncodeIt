@@ -436,7 +436,7 @@ function MainApp() {
         />
       ) : null}
 
-      <div className="ame-workspace">
+      <div className="app-workspace">
         {workspace.root ? (
           <WorkspaceView
             root={workspace.root}

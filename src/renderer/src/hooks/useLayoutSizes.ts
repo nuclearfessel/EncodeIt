@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 export interface LayoutSizes {
   leftWidth: number
   leftBottomRatio: number
-  /** Height of the top-right Encoding panel (AME default). */
+  /** Height of the top-right Encoding panel (default). */
   rightTopHeight: number
 }
 

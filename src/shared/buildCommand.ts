@@ -163,7 +163,7 @@ export function buildFfmpegArgs(
   const exportVideo = job.exportVideo !== false
   const exportAudio = job.exportAudio !== false
   if (!exportVideo && !exportAudio) {
-    throw new Error('Enable Export Video and/or Export Audio (same as Adobe Media Encoder).')
+    throw new Error('Enable Export Video and/or Export Audio.')
   }
 
   const hw = hardware
