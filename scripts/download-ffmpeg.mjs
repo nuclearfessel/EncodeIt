@@ -46,6 +46,17 @@ function hasCurl() {
   return r.status === 0
 }
 
+/** Authenticate GitHub API/asset requests in CI to avoid anonymous 403 rate limits. */
+function githubHeaders() {
+  const headers = {
+    'User-Agent': 'encodeit-ffmpeg-fetch',
+    Accept: 'application/vnd.github+json'
+  }
+  const token = process.env.GITHUB_TOKEN || process.env.GH_TOKEN
+  if (token) headers.Authorization = `Bearer ${token}`
+  return headers
+}
+
 /**
  * Prefer curl on macOS/Linux — handles redirects and timeouts reliably on GH runners.
  * Falls back to Node https with connect + idle timeouts.
@@ -56,26 +67,28 @@ async function downloadFile(url, dest) {
 
   if (hasCurl()) {
     log('curl download', url)
-    const r = spawnSync(
-      'curl',
-      [
-        '-fL',
-        '--retry',
-        '3',
-        '--retry-delay',
-        '2',
-        '--connect-timeout',
-        '30',
-        '--max-time',
-        '600',
-        '-A',
-        'encodeit-ffmpeg-fetch',
-        '-o',
-        dest,
-        url
-      ],
-      { stdio: 'inherit' }
-    )
+    const headers = githubHeaders()
+    const args = [
+      '-fL',
+      '--retry',
+      '3',
+      '--retry-delay',
+      '2',
+      '--connect-timeout',
+      '30',
+      '--max-time',
+      '600',
+      '-A',
+      'encodeit-ffmpeg-fetch',
+      '-o',
+      dest
+    ]
+    for (const [key, value] of Object.entries(headers)) {
+      if (key === 'User-Agent') continue
+      args.push('-H', `${key}: ${value}`)
+    }
+    args.push(url)
+    const r = spawnSync('curl', args, { stdio: 'inherit' })
     if (r.status === 0 && existsSync(dest) && statSync(dest).size > 0) return
     log('curl failed; falling back to Node download')
   }
@@ -111,7 +124,7 @@ function downloadFileNode(url, dest) {
       const req = requestLib(current).get(
         current,
         {
-          headers: { 'User-Agent': 'encodeit-ffmpeg-fetch' },
+          headers: githubHeaders(),
           timeout: CONNECT_TIMEOUT_MS
         },
         (res) => {
@@ -177,7 +190,7 @@ function requestBuffer(url, redirects = 0) {
     const req = requestLib(url).get(
       url,
       {
-        headers: { 'User-Agent': 'encodeit-ffmpeg-fetch' },
+        headers: githubHeaders(),
         timeout: CONNECT_TIMEOUT_MS
       },
       (res) => {
