@@ -8,6 +8,15 @@
 !include "nsDialogs.nsh"
 !include "LogicLib.nsh"
 
+; Match the app dark asphalt chrome (must be defined before MUI pages init).
+!macro customHeader
+  !define MUI_BGCOLOR 101214
+  !define MUI_TEXTCOLOR E8EAED
+  !define MUI_HEADERTEXT_COLOR E8EAED
+  !define MUI_INSTFILESPAGE_COLORS "E8EAED 101214"
+  !define MUI_LICENSEPAGE_BGCOLOR 101214
+!macroend
+
 ; Keep-media flag — installer (Clean install) and uninstaller both use this.
 Var EncodeItKeepMedia
 
@@ -163,9 +172,11 @@ Var EncodeItKeepMedia
     ${If} $EncodeItIntegrationsDialog == error
       Abort
     ${EndIf}
+    SetCtlColors $EncodeItIntegrationsDialog 0xE8EAED 0x101214
 
     ${NSD_CreateLabel} 0 0 100% 12u "Standard uses apps found on this PC. Custom lets you pick AE, Resolve, and/or Premiere."
     Pop $0
+    SetCtlColors $0 0xE8EAED 0x101214
 
     ; Detection summary so greyed Standard state is understandable
     StrCpy $EncodeItDetectNote "Detected:"
@@ -187,24 +198,31 @@ Var EncodeItKeepMedia
     ${EndIf}
     ${NSD_CreateLabel} 0 14u 100% 10u "$EncodeItDetectNote"
     Pop $0
+    SetCtlColors $0 0xA8ADB4 0x101214
 
     ${NSD_CreateRadioButton} 0 28u 100% 12u "Standard install — set up every detected host app"
     Pop $EncodeItRadioStandard
+    SetCtlColors $EncodeItRadioStandard 0xE8EAED 0x101214
     ${NSD_Check} $EncodeItRadioStandard
 
     ${NSD_CreateRadioButton} 0 42u 100% 12u "Custom install — choose applications"
     Pop $EncodeItRadioCustom
+    SetCtlColors $EncodeItRadioCustom 0xE8EAED 0x101214
 
     ${NSD_CreateCheckbox} 18u 58u 100% 12u "After Effects"
     Pop $EncodeItCheckAE
+    SetCtlColors $EncodeItCheckAE 0xE8EAED 0x101214
     ${NSD_CreateCheckbox} 18u 72u 100% 12u "DaVinci Resolve"
     Pop $EncodeItCheckResolve
+    SetCtlColors $EncodeItCheckResolve 0xE8EAED 0x101214
     ${NSD_CreateCheckbox} 18u 86u 100% 12u "Premiere Pro"
     Pop $EncodeItCheckPremiere
+    SetCtlColors $EncodeItCheckPremiere 0xE8EAED 0x101214
 
     ; Ends ~112u — fully inside the pane. Media keep/wipe is asked on Install if checked.
     ${NSD_CreateCheckbox} 0 104u 100% 12u "Clean install — wipe previous settings and plugins"
     Pop $EncodeItCheckClean
+    SetCtlColors $EncodeItCheckClean 0xE8EAED 0x101214
     ${NSD_Uncheck} $EncodeItCheckClean
 
     ; Default checks from detection (Standard)

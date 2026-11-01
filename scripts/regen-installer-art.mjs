@@ -1,11 +1,12 @@
 /**
- * Regenerate Windows installer branding + sharper app icons from the color logo.
+ * Regenerate Windows installer branding + app icons from the color logo.
  * - build/icon.png, resources/icon.png (512)
- * - build/icon.ico (multi-size)
+ * - build/icon.ico / installerIcon.ico / uninstallerIcon.ico (multi-size)
  * - build/installerSidebar.bmp (164×314, 24-bit)
  * - build/installerHeader.bmp (150×57, 24-bit)
  *
- * Palette matches the app dark theme (asphalt + soft coral).
+ * Crops the transparent padding so the mark fills icon/BMP canvases the way
+ * it does in the app, then area-averages when downscaling for sharp edges.
  */
 import fs from 'node:fs'
 import path from 'node:path'
@@ -20,9 +21,7 @@ const LOGO =
 
 const BG = { r: 0x10, g: 0x12, b: 0x14 }
 const PANEL = { r: 0x17, g: 0x1a, b: 0x1d }
-const ELEV = { r: 0x21, g: 0x25, b: 0x29 }
 const ACCENT = { r: 0xe5, g: 0x8a, b: 0x84 }
-const ACCENT_STRONG = { r: 0xd0, g: 0x6e, b: 0x68 }
 
 function crcTable() {
   const table = new Uint32Array(256)
@@ -135,9 +134,87 @@ function encodePng(w, h, rgba) {
   ])
 }
 
-/** Bilinear resize — much cleaner than nearest for small ICO sizes. */
-function resizeBilinear(src, sw, sh, tw, th) {
+/** Opaque-ish alpha bbox with padding, then pad to square canvas. */
+function cropToMark(rgba, w, h, padRatio = 0.06) {
+  let minX = w
+  let minY = h
+  let maxX = 0
+  let maxY = 0
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      if (rgba[(y * w + x) * 4 + 3] < 16) continue
+      if (x < minX) minX = x
+      if (y < minY) minY = y
+      if (x > maxX) maxX = x
+      if (y > maxY) maxY = y
+    }
+  }
+  if (maxX < minX) throw new Error('logo has no opaque pixels')
+  const bw = maxX - minX + 1
+  const bh = maxY - minY + 1
+  const pad = Math.round(Math.max(bw, bh) * padRatio)
+  const side = Math.max(bw, bh) + pad * 2
+  const out = Buffer.alloc(side * side * 4)
+  const ox = Math.floor((side - bw) / 2)
+  const oy = Math.floor((side - bh) / 2)
+  for (let y = 0; y < bh; y++) {
+    for (let x = 0; x < bw; x++) {
+      const si = ((minY + y) * w + (minX + x)) * 4
+      const di = ((oy + y) * side + (ox + x)) * 4
+      out[di] = rgba[si]
+      out[di + 1] = rgba[si + 1]
+      out[di + 2] = rgba[si + 2]
+      out[di + 3] = rgba[si + 3]
+    }
+  }
+  return { w: side, h: side, rgba: out, bbox: [minX, minY, maxX, maxY] }
+}
+
+/** Area-average downsample (crisp for large reductions). Upscale uses bilinear. */
+function resizeRgba(src, sw, sh, tw, th) {
+  if (tw === sw && th === sh) return Buffer.from(src)
   const out = Buffer.alloc(tw * th * 4)
+  if (tw < sw && th < sh) {
+    for (let y = 0; y < th; y++) {
+      const y0 = (y * sh) / th
+      const y1 = ((y + 1) * sh) / th
+      for (let x = 0; x < tw; x++) {
+        const x0 = (x * sw) / tw
+        const x1 = ((x + 1) * sw) / tw
+        let r = 0
+        let g = 0
+        let b = 0
+        let a = 0
+        let weight = 0
+        const iy0 = Math.floor(y0)
+        const iy1 = Math.min(sh, Math.ceil(y1))
+        const ix0 = Math.floor(x0)
+        const ix1 = Math.min(sw, Math.ceil(x1))
+        for (let iy = iy0; iy < iy1; iy++) {
+          const yOverlap = Math.min(y1, iy + 1) - Math.max(y0, iy)
+          for (let ix = ix0; ix < ix1; ix++) {
+            const xOverlap = Math.min(x1, ix + 1) - Math.max(x0, ix)
+            const wgt = xOverlap * yOverlap
+            const si = (iy * sw + ix) * 4
+            const aa = (src[si + 3] / 255) * wgt
+            r += src[si] * aa
+            g += src[si + 1] * aa
+            b += src[si + 2] * aa
+            a += src[si + 3] * wgt
+            weight += wgt
+          }
+        }
+        const di = (y * tw + x) * 4
+        if (a < 0.001 || weight < 0.001) continue
+        const invA = 255 / a
+        out[di] = Math.min(255, Math.round(r * invA))
+        out[di + 1] = Math.min(255, Math.round(g * invA))
+        out[di + 2] = Math.min(255, Math.round(b * invA))
+        out[di + 3] = Math.min(255, Math.round(a / weight))
+      }
+    }
+    return out
+  }
   for (let y = 0; y < th; y++) {
     const sy = ((y + 0.5) * sh) / th - 0.5
     const y0 = Math.max(0, Math.floor(sy))
@@ -200,9 +277,8 @@ function verticalGradient(img, top, bot) {
   }
 }
 
-/** Composite RGBA logo onto RGB canvas with alpha blend. */
 function pasteRgba(img, rgba, sw, sh, dx, dy, dw, dh) {
-  const scaled = dw === sw && dh === sh ? rgba : resizeBilinear(rgba, sw, sh, dw, dh)
+  const scaled = dw === sw && dh === sh ? rgba : resizeRgba(rgba, sw, sh, dw, dh)
   for (let y = 0; y < dh; y++) {
     const py = dy + y
     if (py < 0 || py >= img.h) continue
@@ -232,7 +308,7 @@ function encodeBmp24(img) {
   file.writeUInt32LE(54, 10)
   file.writeUInt32LE(40, 14)
   file.writeInt32LE(w, 18)
-  file.writeInt32LE(h, 22) // positive = bottom-up
+  file.writeInt32LE(h, 22)
   file.writeUInt16LE(1, 26)
   file.writeUInt16LE(24, 28)
   file.writeUInt32LE(0, 30)
@@ -245,7 +321,6 @@ function encodeBmp24(img) {
     for (let x = 0; x < w; x++) {
       const si = (srcY * w + x) * 3
       const di = dest + x * 3
-      // BMP is BGR
       file[di] = rgb[si + 2]
       file[di + 1] = rgb[si + 1]
       file[di + 2] = rgb[si]
@@ -254,58 +329,56 @@ function encodeBmp24(img) {
   return file
 }
 
+/** Welcome/finish sidebar: large centered mark, quiet asphalt field. */
 function makeSidebar(logoRgba, lw, lh) {
   const img = createRgb(164, 314, BG)
   verticalGradient(img, BG, PANEL)
-  // Accent rail
-  fillRect(img, 0, 0, 5, 314, ACCENT)
-  // Elevated mark panel
-  fillRect(img, 22, 48, 142, 178, ELEV)
-  fillRect(img, 22, 178, 142, 183, ACCENT_STRONG)
-  const mark = 108
-  pasteRgba(img, logoRgba, lw, lh, Math.round((164 - mark) / 2), 58, mark, mark)
-  // Quiet geometric footer — no bitmap font (NSIS title already says EncodeIt)
-  fillRect(img, 22, 220, 142, 221, { r: 0x2c, g: 0x31, b: 0x36 })
-  fillRect(img, 22, 248, 70, 252, ACCENT)
-  fillRect(img, 78, 248, 142, 252, ACCENT_STRONG)
-  fillRect(img, 22, 280, 142, 284, ACCENT)
+  fillRect(img, 0, 0, 4, 314, ACCENT)
+  const mark = 136
+  pasteRgba(img, logoRgba, lw, lh, Math.round((164 - mark) / 2), 72, mark, mark)
+  fillRect(img, 28, 248, 136, 251, ACCENT)
   return img
 }
 
+/** Inner-page header: mark fills most of the 57px strip. */
 function makeHeader(logoRgba, lw, lh) {
   const img = createRgb(150, 57, PANEL)
-  verticalGradient(img, ELEV, PANEL)
-  fillRect(img, 0, 0, 150, 3, ACCENT)
-  fillRect(img, 0, 54, 150, 57, ACCENT_STRONG)
-  const mark = 42
-  pasteRgba(img, logoRgba, lw, lh, 12, 7, mark, mark)
-  // Accent chip instead of pixel text
-  fillRect(img, 64, 22, 138, 26, ACCENT)
-  fillRect(img, 64, 30, 110, 34, ACCENT_STRONG)
+  verticalGradient(img, { r: 0x1c, g: 0x20, b: 0x24 }, PANEL)
+  fillRect(img, 0, 0, 150, 2, ACCENT)
+  const mark = 48
+  pasteRgba(img, logoRgba, lw, lh, 8, Math.round((57 - mark) / 2), mark, mark)
+  fillRect(img, 66, 26, 142, 29, ACCENT)
   return img
 }
 
 const srcBuf = fs.readFileSync(LOGO)
-const { w, h, rgba } = decodePng(srcBuf)
-console.log('logo', { w, h, path: LOGO })
+const decoded = decodePng(srcBuf)
+const mark = cropToMark(decoded.rgba, decoded.w, decoded.h, 0.05)
+console.log('logo', {
+  src: { w: decoded.w, h: decoded.h },
+  cropped: { w: mark.w, h: mark.h, bbox: mark.bbox },
+  path: LOGO
+})
 
 fs.mkdirSync(path.join(ROOT, 'build'), { recursive: true })
 fs.mkdirSync(path.join(ROOT, 'resources'), { recursive: true })
 
-const png512 = encodePng(512, 512, resizeBilinear(rgba, w, h, 512, 512))
+const png512 = encodePng(512, 512, resizeRgba(mark.rgba, mark.w, mark.h, 512, 512))
 fs.writeFileSync(path.join(ROOT, 'build/icon.png'), png512)
 fs.writeFileSync(path.join(ROOT, 'resources/icon.png'), png512)
 
 const icoSizes = [16, 24, 32, 48, 64, 128, 256]
-const icoPngs = icoSizes.map((s) => encodePng(s, s, resizeBilinear(rgba, w, h, s, s)))
+const icoPngs = icoSizes.map((s) =>
+  encodePng(s, s, resizeRgba(mark.rgba, mark.w, mark.h, s, s))
+)
 const ico = await pngToIco(icoPngs)
 fs.writeFileSync(path.join(ROOT, 'build/icon.ico'), ico)
 fs.writeFileSync(path.join(ROOT, 'build/installerIcon.ico'), ico)
 fs.writeFileSync(path.join(ROOT, 'build/uninstallerIcon.ico'), ico)
 console.log('wrote icon.ico', ico.length)
 
-const sidebar = makeSidebar(rgba, w, h)
-const header = makeHeader(rgba, w, h)
+const sidebar = makeSidebar(mark.rgba, mark.w, mark.h)
+const header = makeHeader(mark.rgba, mark.w, mark.h)
 fs.writeFileSync(path.join(ROOT, 'build/installerSidebar.bmp'), encodeBmp24(sidebar))
 fs.writeFileSync(path.join(ROOT, 'build/uninstallerSidebar.bmp'), encodeBmp24(sidebar))
 fs.writeFileSync(path.join(ROOT, 'build/installerHeader.bmp'), encodeBmp24(header))
