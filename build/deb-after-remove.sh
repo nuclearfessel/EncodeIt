@@ -2,14 +2,12 @@
 # Debian/Ubuntu after-remove — wipe EncodeIt user data (per uninstalling user when possible).
 # Keep media: ENCODEIT_KEEP_MEDIA=1 or answer Keep in zenity when available.
 #
-# IMPORTANT: electron-builder substitutes ${Name} macros (letters only) in this file.
-# Prefer $VAR / ${VAR_WITH_UNDERSCORE} — never ${ACTION}, ${HOME}, ${USER}, etc.
+# IMPORTANT: electron-builder substitutes dollar-brace letter-only tokens in this file
+# (for example dollar-brace HOME). Prefer bare $VAR forms only.
 set -euo pipefail
 
-# Only run on remove/purge, not failed-upgrade.
 DPKG_ACTION="$1"
 if [ -n "$DPKG_ACTION" ] && [ "$DPKG_ACTION" != "remove" ] && [ "$DPKG_ACTION" != "purge" ]; then
-  # electron-builder may invoke without dpkg args; still clean.
   :
 fi
 
@@ -50,8 +48,8 @@ if [ -f "$CLEANER" ]; then
     HOME="$TARGET_HOME" bash "$CLEANER" "${ARGS[@]+"${ARGS[@]}"}"
 else
   HOME="$TARGET_HOME"
-  for name in EncodeIt encodeit "Encode This" encode-this; do
-    rm -rf "$HOME/.config/$name" "$HOME/.cache/$name"
+  for app_name in EncodeIt encodeit "Encode This" encode-this; do
+    rm -rf "$HOME/.config/$app_name" "$HOME/.cache/$app_name"
   done
   if [ "$KEEP_MEDIA" != "1" ]; then
     rm -rf "$HOME/Videos/EncodeIt" "$HOME/Videos/Encode This"
