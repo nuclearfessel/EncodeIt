@@ -1,0 +1,37 @@
+---
+description: Never commit, push, or develop on main — always use a branch
+alwaysApply: true
+---
+
+# Never work on `main`
+
+**No work is ever done on `main`. EVER.**
+
+## Required workflow
+
+1. Before any edits, commits, or releases: check `git branch --show-current`.
+2. If you are on `main` (or `master`): create and switch to a new branch first
+   (`git checkout -b <type>/<short-description>`).
+3. Do all coding, commits, version bumps, and tags from that branch.
+4. Ship via PR into `main` (push branch → `gh pr create` → merge). Do not
+   push commits directly to `main`.
+5. After merge: delete the feature branch (local + remote). Leave only `main`
+   (and optionally release tags).
+
+## Forbidden
+
+- Committing while checked out on `main`
+- `git push origin main` with new commits you just made on `main`
+- Fixing, releasing, or “quick” changes directly on `main`
+- Treating “user asked to push” as permission to push to `main` without a branch
+
+## Branch naming
+
+Use short prefixes: `fix/…`, `feat/…`, `chore/…`, `release/…`.
+
+## If already on `main` with uncommitted work
+
+```bash
+git checkout -b fix/describe-change
+# then commit on the new branch — never commit on main
+```
