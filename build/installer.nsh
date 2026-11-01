@@ -123,20 +123,16 @@ Var EncodeItThemeParent
   ${EndIf}
 
   ; Kill MUI /BRANDING emboss (offset “drop shadow”) on the footer version.
-  ; Prefer MUI’s cached HWNDs; also flatten colors in case the control is reshown.
-  StrCpy $0 $mui.Branding.Text
-  ${If} $0 == 0
-    GetDlgItem $0 $HWNDPARENT 1256
-  ${EndIf}
+  ; Use dialog item IDs only — $mui.Branding.* is declared later in MUI
+  ; Interface.nsh, so referencing it here makes makensis warning 6000 (treated
+  ; as error by electron-builder).
+  GetDlgItem $0 $HWNDPARENT 1256 ; branding text
   ${If} $0 != 0
     !insertmacro EncodeItFlatControl $0 0x101214 0x101214
     SendMessage $0 ${WM_SETTEXT} 0 "STR: "
     ShowWindow $0 ${SW_HIDE}
   ${EndIf}
-  StrCpy $0 $mui.Branding.Background
-  ${If} $0 == 0
-    GetDlgItem $0 $HWNDPARENT 1028
-  ${EndIf}
+  GetDlgItem $0 $HWNDPARENT 1028 ; branding background
   ${If} $0 != 0
     !insertmacro EncodeItFlatControl $0 0x101214 0x101214
     ShowWindow $0 ${SW_HIDE}
