@@ -34,17 +34,13 @@
   !define MUI_DIRECTORYPAGE_TEXTCOLOR E8EAED
 !endif
 
-; Outer-shell + first-page (install mode) theming. Later nsDialogs pages set
-; colors themselves; finish/welcome use MUI_BGCOLOR.
-!define MUI_CUSTOMFUNCTION_GUIINIT EncodeItGuiInit
-!define MUI_PAGE_CUSTOMFUNCTION_SHOW EncodeItThemePageShow
-
 ; Keep-media flag — installer (Clean install) and uninstaller both use this.
 Var EncodeItKeepMedia
 Var EncodeItThemeParent
 
 ; Soft coral on asphalt — match app dark theme as far as classic Win32 controls allow.
-Function EncodeItThemeChildWindows
+; Installer and uninstaller each need their own functions (NSIS cannot Call across).
+!macro EncodeItThemeChildWindowsImpl
   Exch $EncodeItThemeParent
   Push $0
   System::Call 'user32::GetWindow(p$EncodeItThemeParent, i5) p.r0' ; GW_CHILD
@@ -55,21 +51,21 @@ Function EncodeItThemeChildWindows
   ${EndWhile}
   Pop $0
   Pop $EncodeItThemeParent
-FunctionEnd
+!macroend
 
-Function EncodeItThemeInnerDialog
+!macro EncodeItThemeInnerDialogImpl UNPREFIX
   Push $0
   FindWindow $0 "#32770" "" $HWNDPARENT
   ${If} $0 != 0
     System::Call 'uxtheme::SetWindowTheme(p$0, w" ", w" ")'
     SetCtlColors $0 0xE8EAED 0x101214
     Push $0
-    Call EncodeItThemeChildWindows
+    Call ${UNPREFIX}EncodeItThemeChildWindows
   ${EndIf}
   Pop $0
-FunctionEnd
+!macroend
 
-Function EncodeItThemeOuter
+!macro EncodeItThemeOuterImpl
   Push $0
   SetCtlColors $HWNDPARENT 0xE8EAED 0x101214
 
@@ -98,18 +94,52 @@ Function EncodeItThemeOuter
     SetCtlColors $0 "" 0x2C3136
   ${EndIf}
   Pop $0
+!macroend
+
+Function EncodeItThemeChildWindows
+  !insertmacro EncodeItThemeChildWindowsImpl
+FunctionEnd
+Function un.EncodeItThemeChildWindows
+  !insertmacro EncodeItThemeChildWindowsImpl
+FunctionEnd
+
+Function EncodeItThemeInnerDialog
+  !insertmacro EncodeItThemeInnerDialogImpl ""
+FunctionEnd
+Function un.EncodeItThemeInnerDialog
+  !insertmacro EncodeItThemeInnerDialogImpl "un."
+FunctionEnd
+
+Function EncodeItThemeOuter
+  !insertmacro EncodeItThemeOuterImpl
+FunctionEnd
+Function un.EncodeItThemeOuter
+  !insertmacro EncodeItThemeOuterImpl
 FunctionEnd
 
 Function EncodeItGuiInit
   Call EncodeItThemeOuter
+FunctionEnd
+Function un.EncodeItGuiInit
+  Call un.EncodeItThemeOuter
 FunctionEnd
 
 Function EncodeItThemePageShow
   Call EncodeItThemeOuter
   Call EncodeItThemeInnerDialog
 FunctionEnd
+Function un.EncodeItThemePageShow
+  Call un.EncodeItThemeOuter
+  Call un.EncodeItThemeInnerDialog
+FunctionEnd
 
-!define MUI_CUSTOMFUNCTION_UNGUIINIT EncodeItGuiInit
+!ifndef BUILD_UNINSTALLER
+  !define MUI_CUSTOMFUNCTION_GUIINIT EncodeItGuiInit
+  !define MUI_PAGE_CUSTOMFUNCTION_SHOW EncodeItThemePageShow
+!else
+  !define MUI_CUSTOMFUNCTION_UNGUIINIT un.EncodeItGuiInit
+  !define MUI_PAGE_CUSTOMFUNCTION_SHOW un.EncodeItThemePageShow
+!endif
 
 ; Shared wipe used by real uninstall and by Clean install during Setup.
 ; Call after deciding media: $EncodeItKeepMedia = "1" to spare Videos\EncodeIt trees.
