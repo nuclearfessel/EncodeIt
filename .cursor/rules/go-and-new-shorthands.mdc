@@ -1,5 +1,5 @@
 ---
-description: Shorthand prompts — Go! ships work; New! starts a features branch
+description: Shorthand prompts — Go! ships a release; New! starts a features branch
 alwaysApply: true
 ---
 
@@ -11,20 +11,29 @@ the steps below unless a destructive step is blocked by another hard rule.
 
 ## `Go!`
 
-Means: **commit → push → merge → build → delete/clean branches.**
+Means: **version → commit → push → merge → tag/release → build → delete/clean branches.**
 
-1. **Commit** — Stage relevant work and create a commit on the current feature
-   branch (never on `main`). Follow the repo commit protocol (status/diff/log,
-   HEREDOC message, no secrets). Skip only if there is nothing to commit.
-2. **Push** — `git push -u origin HEAD` (or push the current tracking branch).
-3. **Merge** — Open a PR into `main` with `gh pr create` if needed, then merge
-   it (`gh pr merge`). Do not push commits directly onto `main`.
-4. **Build** — After merge, on an up-to-date `main` (or post-merge checkout),
-   run the project production build (`npm run build`). Fix build failures
-   before cleaning branches if they are caused by the just-merged work.
-5. **Delete / clean all branches** — Remove merged feature branches local and
-   remote. Prune stale remotes. **Keep `main`** (and release tags). Do not
-   delete `main` or force-delete unmerged work the user still needs.
+1. **Version** — Bump `package.json` (and lockfile if it stores version) on a
+   feature/`release/…` branch (never on `main`).
+   - If the conversation already named a version (e.g. `1.0.0`), use that.
+   - Otherwise bump the **patch** segment (`x.y.Z+1`), unless the user said
+     minor/major.
+2. **Commit** — Stage relevant work + version bump; commit on the feature
+   branch. Follow the repo commit protocol (status/diff/log, HEREDOC message,
+   no secrets). Skip the code commit only if the tree is empty aside from the
+   version bump (still commit the bump).
+3. **Push** — `git push -u origin HEAD`.
+4. **Merge** — Open a PR into `main` with `gh pr create` if needed, then merge
+   (`gh pr merge`). Do not push commits directly onto `main`.
+5. **Tag / release** — On up-to-date `main`, create and push annotated tag
+   `v<version>` (e.g. `v1.0.0`) so `.github/workflows/release.yml` builds and
+   publishes the GitHub Release. Do not recreate tags that already exist unless
+   the user explicitly asked to replace them.
+6. **Build** — Run `npm run build` (local sanity check). Fix failures from the
+   just-merged work before cleaning branches.
+7. **Delete / clean all branches** — Remove merged feature branches local and
+   remote; prune stale remotes. **Keep `main`** and release tags. Do not delete
+   `main`.
 
 Still obey `never-work-on-main`: all commits happen on a feature branch; ship
 only via PR merge into `main`.
