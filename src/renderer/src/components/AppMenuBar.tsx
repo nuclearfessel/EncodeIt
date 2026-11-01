@@ -209,7 +209,7 @@ export function AppMenuBar({ actions }: Props) {
         {
           label: 'EncodeIt on GitHub',
           action: () => {
-            void window.open('https://github.com/nuclearfessel/encodeit', '_blank')
+            void window.EncodeIt.openExternal('https://github.com/nuclearfessel/encodeit')
           }
         }
       ]

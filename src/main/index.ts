@@ -1,9 +1,15 @@
-import { Menu, app, BrowserWindow, ipcMain, shell } from 'electron'
+import { Menu, app, BrowserWindow, ipcMain, nativeTheme, shell } from 'electron'
 import path from 'path'
 import type { PanelId } from '../shared/panels'
 import { DEFAULT_PRESET_ID } from '../shared/presets'
 import type { InstallOptions } from '../shared/installOptions'
-import type { AppSettings, AudioSettings, PresetDefinition, VideoSettings } from '../shared/types'
+import type {
+  AppSettings,
+  AudioSettings,
+  PresetDefinition,
+  ThemeMode,
+  VideoSettings
+} from '../shared/types'
 import { resolveBundledFfmpeg } from './bundledFfmpeg'
 import { clearHardwareCache, detectHardwareCapabilities } from './hardwareDetect'
 import { detectHostApps } from './hostAppDetect'
@@ -25,6 +31,7 @@ import {
   listBrowserDirectory,
   type BrowserListMode
 } from './mediaBrowser'
+import { DialogWindowManager } from './dialogWindows'
 import { DocsWindowManager } from './docsWindow'
 import { runCleanup } from './cleanup'
 import { getLogPath, logger } from './logger'
@@ -55,6 +62,7 @@ let intakeError: string | null = null
 let inbox: InboxWatcher
 let panels: PanelWindowManager
 let docsWindow: DocsWindowManager
+let dialogWindows: DialogWindowManager
 let updateChecker!: UpdateChecker
 /** Pending first-launch setup when installer did not write install-options.json (e.g. DMG). */
 let needsIntegrationSetup = false
@@ -95,6 +103,25 @@ function applyIntegrationChoices(options: InstallOptions): void {
   queue.updateSettings(settings)
 }
 
+const WINDOW_BG = { light: '#eceef1', dark: '#171a1d' } as const
+
+function resolvedTheme(mode: ThemeMode | undefined): 'light' | 'dark' {
+  if (mode === 'light' || mode === 'dark') return mode
+  return nativeTheme.shouldUseDarkColors ? 'dark' : 'light'
+}
+
+function windowBackgroundFor(mode: ThemeMode | undefined): string {
+  return WINDOW_BG[resolvedTheme(mode)]
+}
+
+function syncWindowBackgrounds(mode: ThemeMode | undefined): void {
+  const bg = windowBackgroundFor(mode)
+  for (const win of BrowserWindow.getAllWindows()) {
+    if (!win.isDestroyed()) win.setBackgroundColor(bg)
+  }
+  dialogWindows?.setBackgroundColor(mode)
+}
+
 function createWindow(): void {
   mainWindow = new BrowserWindow({
     width: 1440,
@@ -102,7 +129,7 @@ function createWindow(): void {
     minWidth: 900,
     minHeight: 600,
     title: 'EncodeIt',
-    backgroundColor: '#1a1a1a',
+    backgroundColor: windowBackgroundFor(settings?.themeMode),
     frame: false,
     show: false,
     webPreferences: {
@@ -131,6 +158,10 @@ function createWindow(): void {
 
   mainWindow.on('closed', () => {
     mainWindow = null
+    // Aux windows outlive the main frame otherwise — close them so the app can quit.
+    dialogWindows?.dispose()
+    docsWindow?.dispose()
+    panels?.dispose()
   })
 }
 
@@ -157,6 +188,17 @@ function registerIpc(): void {
   }
 
   ipcMain.handle('settings:get', () => settingsPayload())
+  ipcMain.handle('settings:setThemeMode', (_e, mode: ThemeMode) => {
+    const prev = settings.themeMode
+    settings = normalizeAppSettings({ ...settings, themeMode: mode })
+    if (prev !== settings.themeMode) {
+      saveSettings(settings)
+      syncWindowBackgrounds(settings.themeMode)
+    }
+    const payload = settingsPayload()
+    broadcast('settings:changed', payload)
+    return payload
+  })
   ipcMain.handle('settings:set', async (_e, next: AppSettings) => {
     const prev = settings
     // Watch folders are managed via watch:* IPC — never wipe them from Preferences OK.
@@ -178,6 +220,9 @@ function registerIpc(): void {
     }
     if (prev.checkForUpdatesEnabled !== settings.checkForUpdatesEnabled) {
       updateChecker.setEnabled(settings.checkForUpdatesEnabled, { checkNow: true })
+    }
+    if (prev.themeMode !== settings.themeMode) {
+      syncWindowBackgrounds(settings.themeMode)
     }
     const payload = settingsPayload()
     broadcast('settings:changed', payload)
@@ -333,6 +378,19 @@ function registerIpc(): void {
   ipcMain.handle('docs:open', () => {
     docsWindow.open()
   })
+  ipcMain.handle('prefs:open', () => {
+    dialogWindows.openPreferences()
+  })
+  ipcMain.handle('exportSettings:open', (_e, jobIds?: string[]) => {
+    const ids = Array.isArray(jobIds)
+      ? jobIds.filter((id): id is string => typeof id === 'string' && Boolean(id))
+      : []
+    if (ids.length) {
+      uiState.selectedJobIds = ids
+      broadcast('ui:changed', uiState)
+    }
+    dialogWindows.openExportSettings(ids.length ? ids : undefined)
+  })
 
   ipcMain.handle('queue:list', () => queue.list())
   ipcMain.handle('queue:add', async (_e, paths: string[], presetId?: string) => {
@@ -340,6 +398,10 @@ function registerIpc(): void {
   })
   ipcMain.handle('queue:remove', (_e, ids: string[]) => {
     queue.remove(ids)
+    return queue.list()
+  })
+  ipcMain.handle('queue:duplicate', (_e, ids: string[]) => {
+    queue.duplicate(ids)
     return queue.list()
   })
   ipcMain.handle('queue:clearDone', () => {
@@ -491,6 +553,12 @@ function registerIpc(): void {
     shell.showItemInFolder(filePath)
   })
   ipcMain.handle('shell:openPath', (_e, filePath: string) => shell.openPath(filePath))
+  ipcMain.handle('shell:openExternal', async (_e, url: string) => {
+    if (typeof url !== 'string' || !/^https?:\/\//i.test(url)) {
+      throw new Error('Only http(s) URLs can be opened externally')
+    }
+    await shell.openExternal(url)
+  })
 
   ipcMain.handle('preset:get', (_e, id: string) => findPreset(id))
 }
@@ -591,6 +659,12 @@ app.whenReady().then(async () => {
     preloadPath,
     getMainWindow: () => mainWindow
   })
+  dialogWindows = new DialogWindowManager({
+    preloadPath,
+    getMainWindow: () => mainWindow,
+    getThemeMode: () => settings.themeMode,
+    systemDark: () => nativeTheme.shouldUseDarkColors
+  })
 
   queue.on('change', (jobs) => broadcast('queue:changed', jobs))
   queue.on('progress', (p) => broadcast('queue:progress', p))
@@ -601,6 +675,10 @@ app.whenReady().then(async () => {
   Menu.setApplicationMenu(null)
   createWindow()
   panels.restoreFloatingPanels()
+  syncWindowBackgrounds(settings.themeMode)
+  nativeTheme.on('updated', () => {
+    if (settings.themeMode === 'system') syncWindowBackgrounds('system')
+  })
 
   updateChecker = new UpdateChecker((status) => broadcast('updates:status', status))
   updateChecker.setEnabled(settings.checkForUpdatesEnabled, { checkNow: true })
@@ -619,6 +697,7 @@ app.on('window-all-closed', () => {
   void intake?.stop()
   panels.dispose()
   docsWindow.dispose()
+  dialogWindows.dispose()
   updateChecker?.stop()
   app.quit()
 })

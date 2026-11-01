@@ -348,7 +348,7 @@ export class PanelWindowManager {
       minWidth: 320,
       minHeight: 240,
       title: PANEL_TITLES[id],
-      backgroundColor: '#1a1a1a',
+      backgroundColor: '#eceef1',
       frame: false,
       show: false,
       webPreferences: {

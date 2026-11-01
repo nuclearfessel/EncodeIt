@@ -159,6 +159,9 @@ export interface WatchFolderSettings {
   recursive?: boolean
 }
 
+/** Appearance preference — system follows OS light/dark. */
+export type ThemeMode = 'system' | 'light' | 'dark'
+
 export interface AppSettings {
   ffmpegPath: string
   ffprobePath: string
@@ -181,6 +184,8 @@ export interface AppSettings {
    * Never auto-downloads — user must click Download.
    */
   checkForUpdatesEnabled: boolean
+  /** UI color theme: follow OS, or force light / dark. */
+  themeMode: ThemeMode
 }
 
 /** Extra fields returned by settings:get for the UI (not persisted). */

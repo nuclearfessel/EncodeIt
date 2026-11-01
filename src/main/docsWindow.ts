@@ -59,7 +59,7 @@ export class DocsWindowManager {
       minWidth: DEFAULTS.minWidth,
       minHeight: DEFAULTS.minHeight,
       title: 'Documentation',
-      backgroundColor: '#1a1a1a',
+      backgroundColor: '#eceef1',
       frame: false,
       show: false,
       resizable: true,

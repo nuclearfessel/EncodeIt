@@ -154,6 +154,36 @@ export class EncodeQueue extends EventEmitter {
     this.emitChange()
   }
 
+  /** Clone selected jobs (insert each copy after its source). */
+  duplicate(ids: string[]): QueueJob[] {
+    const created: QueueJob[] = []
+    for (const id of ids) {
+      const src = this.jobs.find((j) => j.id === id)
+      if (!src) continue
+      const copy: QueueJob = {
+        ...src,
+        id: uuid(),
+        status: 'waiting',
+        progress: 0,
+        speed: undefined,
+        fps: undefined,
+        time: undefined,
+        error: undefined,
+        createdAt: Date.now(),
+        startedAt: undefined,
+        finishedAt: undefined,
+        media: src.media ? structuredClone(src.media) : undefined,
+        videoOverrides: src.videoOverrides ? { ...src.videoOverrides } : undefined,
+        audioOverrides: src.audioOverrides ? { ...src.audioOverrides } : undefined
+      }
+      const idx = this.jobs.findIndex((j) => j.id === id)
+      this.jobs.splice(idx + 1, 0, copy)
+      created.push(copy)
+    }
+    if (created.length) this.emitChange()
+    return created
+  }
+
   clearDone(): void {
     this.jobs = this.jobs.filter((j) => j.status !== 'done' && j.status !== 'skipped')
     this.emitChange()

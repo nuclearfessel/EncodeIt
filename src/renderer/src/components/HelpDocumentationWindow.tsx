@@ -1,10 +1,11 @@
-import { useCallback, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import {
   USER_GUIDE_SECTIONS,
   USER_GUIDE_TITLE,
   type DocBlock,
   type DocSection
 } from '../docs/userGuide'
+import { applyThemeMode } from '../theme'
 import { Splitter } from './Splitter'
 import { WindowControls } from './WindowControls'
 
@@ -145,6 +146,14 @@ export function HelpDocumentationWindow() {
   const [navWidth, setNavWidth] = useState(NAV_WIDTH_DEFAULT)
   const section =
     USER_GUIDE_SECTIONS.find((s) => s.id === sectionId) ?? USER_GUIDE_SECTIONS[0]
+
+  useEffect(() => {
+    void window.EncodeIt.getSettings().then((cfg) => applyThemeMode(cfg.themeMode))
+    const off = window.EncodeIt.onSettingsChanged((cfg) => applyThemeMode(cfg.themeMode))
+    return () => {
+      off()
+    }
+  }, [])
 
   const onNavResize = useCallback((delta: number) => {
     setNavWidth((w) => Math.min(NAV_WIDTH_MAX, Math.max(NAV_WIDTH_MIN, w + delta)))

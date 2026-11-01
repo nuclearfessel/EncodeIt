@@ -14,6 +14,7 @@ import type {
   PresetDefinition,
   QueueJob,
   SettingsView,
+  ThemeMode,
   VideoSettings,
   WatchFolder
 } from '../shared/types'
@@ -23,6 +24,9 @@ const api = {
   getSettings: (): Promise<SettingsView> => ipcRenderer.invoke('settings:get'),
   setSettings: (settings: AppSettings): Promise<SettingsView> =>
     ipcRenderer.invoke('settings:set', settings),
+  /** Persist Appearance immediately so every window (main + prefs) updates together. */
+  setThemeMode: (mode: ThemeMode): Promise<SettingsView> =>
+    ipcRenderer.invoke('settings:setThemeMode', mode),
   detectHardware: (force?: boolean): Promise<HardwareCapabilities> =>
     ipcRenderer.invoke('hardware:detect', force),
   getIntakeStatus: (): Promise<{
@@ -74,6 +78,8 @@ const api = {
     ipcRenderer.invoke('queue:add', paths, presetId),
   removeFromQueue: (ids: string[]): Promise<QueueJob[]> =>
     ipcRenderer.invoke('queue:remove', ids),
+  duplicateInQueue: (ids: string[]): Promise<QueueJob[]> =>
+    ipcRenderer.invoke('queue:duplicate', ids),
   clearDone: (): Promise<QueueJob[]> => ipcRenderer.invoke('queue:clearDone'),
   clearAll: (): Promise<QueueJob[]> => ipcRenderer.invoke('queue:clearAll'),
   setPreset: (ids: string[], presetId: string): Promise<QueueJob[]> =>
@@ -143,6 +149,7 @@ const api = {
   ): Promise<WatchFolder[]> => ipcRenderer.invoke('watch:update', id, patch),
   showItem: (filePath: string) => ipcRenderer.invoke('shell:showItem', filePath),
   openPath: (filePath: string) => ipcRenderer.invoke('shell:openPath', filePath),
+  openExternal: (url: string): Promise<void> => ipcRenderer.invoke('shell:openExternal', url),
   getPreset: (id: string) => ipcRenderer.invoke('preset:get', id),
   getWorkspace: (): Promise<WorkspaceState> => ipcRenderer.invoke('panels:getWorkspace'),
   setWorkspaceRoot: (root: WorkspaceState['root']): Promise<void> =>
@@ -306,6 +313,9 @@ const api = {
     return () => ipcRenderer.removeListener('settings:changed', listener)
   },
   openDocumentation: (): Promise<void> => ipcRenderer.invoke('docs:open'),
+  openPreferences: (): Promise<void> => ipcRenderer.invoke('prefs:open'),
+  openExportSettings: (jobIds?: string[]): Promise<void> =>
+    ipcRenderer.invoke('exportSettings:open', jobIds),
   getUpdateStatus: () => ipcRenderer.invoke('updates:getStatus'),
   checkForUpdates: (force?: boolean) => ipcRenderer.invoke('updates:checkNow', Boolean(force)),
   dismissUpdate: () => ipcRenderer.invoke('updates:dismiss'),

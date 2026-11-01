@@ -21,8 +21,8 @@ export function WindowControls() {
         aria-label="Minimize"
         onClick={() => void window.EncodeIt.windowMinimize()}
       >
-        <svg width="10" height="1" viewBox="0 0 10 1" aria-hidden="true">
-          <rect width="10" height="1" fill="currentColor" />
+        <svg viewBox="0 0 10 10" aria-hidden="true">
+          <path d="M1 5h8" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
         </svg>
       </button>
       <button
@@ -33,15 +33,26 @@ export function WindowControls() {
         onClick={() => void window.EncodeIt.windowMaximizeToggle()}
       >
         {maximized ? (
-          <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+          <svg viewBox="0 0 10 10" aria-hidden="true">
             <path
-              d="M2 3h5v5H2V3zm1-1h5v1H3V2zm6 2v5H8V3H3V2h6v2z"
-              fill="currentColor"
+              d="M3 2.5h4.5V7M2.5 3.5H7v4.5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.2"
+              strokeLinejoin="round"
             />
           </svg>
         ) : (
-          <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
-            <rect x="1" y="1" width="8" height="8" fill="none" stroke="currentColor" strokeWidth="1" />
+          <svg viewBox="0 0 10 10" aria-hidden="true">
+            <rect
+              x="1.75"
+              y="1.75"
+              width="6.5"
+              height="6.5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.2"
+            />
           </svg>
         )}
       </button>
@@ -52,9 +63,9 @@ export function WindowControls() {
         aria-label="Close"
         onClick={() => void window.EncodeIt.windowClose()}
       >
-        <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+        <svg viewBox="0 0 10 10" aria-hidden="true">
           <path
-            d="M1.5 1.5l7 7M8.5 1.5l-7 7"
+            d="M2.2 2.2l5.6 5.6M7.8 2.2l-5.6 5.6"
             stroke="currentColor"
             strokeWidth="1.2"
             strokeLinecap="round"
