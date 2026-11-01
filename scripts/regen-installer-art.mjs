@@ -10,9 +10,10 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import zlib from 'node:zlib'
+import { fileURLToPath } from 'node:url'
 import pngToIco from 'png-to-ico'
 
-const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1')), '..')
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const LOGO =
   process.argv[2] ||
   path.join(ROOT, 'src/renderer/src/assets/encodeit-logo.png')
