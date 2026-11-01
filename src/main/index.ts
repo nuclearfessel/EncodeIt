@@ -7,6 +7,7 @@ import type { AppSettings, AudioSettings, PresetDefinition, VideoSettings } from
 import { resolveBundledFfmpeg } from './bundledFfmpeg'
 import { clearHardwareCache, detectHardwareCapabilities } from './hardwareDetect'
 import { detectHostApps } from './hostAppDetect'
+import { coachHostsFor } from './hostAddons'
 import {
   clearInstallOptionsFile,
   ensureHostFolders,
@@ -15,6 +16,8 @@ import {
   resolveHostFolderLayout,
   watchFolderSeedsForFlags
 } from './hostFolders'
+import type { HostAppPresence } from '../shared/hostAppDetect'
+import { emptyHostAppPresence } from '../shared/hostAppDetect'
 import { InboxWatcher, inboxDirectory } from './inbox'
 import { IntakeServer } from './intakeServer'
 import {
@@ -57,6 +60,8 @@ let updateChecker!: UpdateChecker
 let needsIntegrationSetup = false
 /** One-shot coach after integration setup until dismissed. */
 let showIntegrationCoach = false
+/** Which host add-ons the coach should mention (empty = hide paths / no coach). */
+let integrationCoachHosts: HostAppPresence = emptyHostAppPresence()
 let uiState = {
   activePresetId: DEFAULT_PRESET_ID,
   selectedJobIds: [] as string[]
@@ -79,7 +84,14 @@ function applyIntegrationChoices(options: InstallOptions): void {
   saveSettings(settings)
   clearInstallOptionsFile()
   needsIntegrationSetup = false
-  showIntegrationCoach = true
+  // Only coach when EncodeIt CEP / JSX / Resolve scripts are actually installed
+  // for the hosts we just set up — folder creation alone must not trigger it.
+  integrationCoachHosts = coachHostsFor(flags)
+  showIntegrationCoach = Boolean(
+    integrationCoachHosts.afterEffects ||
+      integrationCoachHosts.resolve ||
+      integrationCoachHosts.premiere
+  )
   queue.updateSettings(settings)
 }
 
@@ -139,6 +151,7 @@ function registerIpc(): void {
       hostFolders: resolveHostFolderLayout(),
       needsIntegrationSetup,
       showIntegrationCoach,
+      integrationCoachHosts: showIntegrationCoach ? integrationCoachHosts : undefined,
       hostAppPresence: detectHostApps()
     }
   }
@@ -192,6 +205,7 @@ function registerIpc(): void {
 
   ipcMain.handle('integrations:dismissCoach', () => {
     showIntegrationCoach = false
+    integrationCoachHosts = emptyHostAppPresence()
     const payload = settingsPayload()
     broadcast('settings:changed', payload)
     return payload

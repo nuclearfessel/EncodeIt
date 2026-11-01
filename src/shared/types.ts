@@ -200,8 +200,17 @@ export type SettingsView = AppSettings & {
    * (no installer options file — typical for macOS DMG / portable).
    */
   needsIntegrationSetup?: boolean
-  /** Show one-shot tip after host folders were created. */
+  /**
+   * Show one-shot tip after host folders were created — only when EncodeIt
+   * CEP / JSX / Resolve scripts are installed for those hosts.
+   */
   showIntegrationCoach?: boolean
+  /** Which hosts the coach should list (addons present + folders set up). */
+  integrationCoachHosts?: {
+    afterEffects: boolean
+    resolve: boolean
+    premiere: boolean
+  }
   /** Which host NLEs were detected on this machine. */
   hostAppPresence?: {
     afterEffects: boolean

@@ -605,6 +605,7 @@ function MainApp() {
         <IntegrationCoachBanner
           open={Boolean(settings.showIntegrationCoach) && !settings.needsIntegrationSetup}
           hostFolders={settings.hostFolders}
+          coachHosts={settings.integrationCoachHosts}
           onDismiss={() => {
             void window.EncodeIt.dismissIntegrationCoach().then(setSettings)
           }}
