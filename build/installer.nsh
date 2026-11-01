@@ -7,6 +7,7 @@
 
 !include "nsDialogs.nsh"
 !include "LogicLib.nsh"
+!include "WinMessages.nsh"
 
 ; Dark asphalt MUI chrome — top-level defines (installer.nsh is prepended before
 ; MUI2/pages). Do NOT put these in customHeader: electron-builder inserts that
@@ -26,9 +27,89 @@
 !ifndef MUI_LICENSEPAGE_BGCOLOR
   !define MUI_LICENSEPAGE_BGCOLOR 101214
 !endif
+!ifndef MUI_DIRECTORYPAGE_BGCOLOR
+  !define MUI_DIRECTORYPAGE_BGCOLOR 171A1D
+!endif
+!ifndef MUI_DIRECTORYPAGE_TEXTCOLOR
+  !define MUI_DIRECTORYPAGE_TEXTCOLOR E8EAED
+!endif
+
+; Outer-shell + first-page (install mode) theming. Later nsDialogs pages set
+; colors themselves; finish/welcome use MUI_BGCOLOR.
+!define MUI_CUSTOMFUNCTION_GUIINIT EncodeItGuiInit
+!define MUI_PAGE_CUSTOMFUNCTION_SHOW EncodeItThemePageShow
 
 ; Keep-media flag — installer (Clean install) and uninstaller both use this.
 Var EncodeItKeepMedia
+Var EncodeItThemeParent
+
+; Soft coral on asphalt — match app dark theme as far as classic Win32 controls allow.
+Function EncodeItThemeChildWindows
+  Exch $EncodeItThemeParent
+  Push $0
+  System::Call 'user32::GetWindow(p$EncodeItThemeParent, i5) p.r0' ; GW_CHILD
+  ${While} $0 != 0
+    System::Call 'uxtheme::SetWindowTheme(p$0, w" ", w" ")'
+    SetCtlColors $0 0xE8EAED 0x101214
+    System::Call 'user32::GetWindow(p$0, i2) p.r0' ; GW_HWNDNEXT
+  ${EndWhile}
+  Pop $0
+  Pop $EncodeItThemeParent
+FunctionEnd
+
+Function EncodeItThemeInnerDialog
+  Push $0
+  FindWindow $0 "#32770" "" $HWNDPARENT
+  ${If} $0 != 0
+    System::Call 'uxtheme::SetWindowTheme(p$0, w" ", w" ")'
+    SetCtlColors $0 0xE8EAED 0x101214
+    Push $0
+    Call EncodeItThemeChildWindows
+  ${EndIf}
+  Pop $0
+FunctionEnd
+
+Function EncodeItThemeOuter
+  Push $0
+  SetCtlColors $HWNDPARENT 0xE8EAED 0x101214
+
+  GetDlgItem $0 $HWNDPARENT 1034 ; header background
+  ${If} $0 != 0
+    SetCtlColors $0 "" 0x101214
+  ${EndIf}
+  GetDlgItem $0 $HWNDPARENT 1037 ; header title
+  ${If} $0 != 0
+    SetCtlColors $0 0xE8EAED 0x101214
+  ${EndIf}
+  GetDlgItem $0 $HWNDPARENT 1038 ; header subtitle
+  ${If} $0 != 0
+    SetCtlColors $0 0xA8ADB4 0x101214
+  ${EndIf}
+  GetDlgItem $0 $HWNDPARENT 1028 ; branding strip
+  ${If} $0 != 0
+    SetCtlColors $0 0xA8ADB4 0x101214
+  ${EndIf}
+  GetDlgItem $0 $HWNDPARENT 1256 ; branding text
+  ${If} $0 != 0
+    SetCtlColors $0 0xA8ADB4 0x101214
+  ${EndIf}
+  GetDlgItem $0 $HWNDPARENT 1035 ; separator line under header
+  ${If} $0 != 0
+    SetCtlColors $0 "" 0x2C3136
+  ${EndIf}
+  Pop $0
+FunctionEnd
+
+Function EncodeItGuiInit
+  Call EncodeItThemeOuter
+FunctionEnd
+
+Function EncodeItThemePageShow
+  Call EncodeItThemeOuter
+  Call EncodeItThemeInnerDialog
+FunctionEnd
+
+!define MUI_CUSTOMFUNCTION_UNGUIINIT EncodeItGuiInit
 
 ; Shared wipe used by real uninstall and by Clean install during Setup.
 ; Call after deciding media: $EncodeItKeepMedia = "1" to spare Videos\EncodeIt trees.
