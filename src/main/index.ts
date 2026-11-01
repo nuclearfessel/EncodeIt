@@ -31,6 +31,7 @@ import {
   listBrowserDirectory,
   type BrowserListMode
 } from './mediaBrowser'
+import { loadAppIcon } from './appIcon'
 import { DialogWindowManager } from './dialogWindows'
 import { DocsWindowManager } from './docsWindow'
 import { runCleanup } from './cleanup'
@@ -123,6 +124,7 @@ function syncWindowBackgrounds(mode: ThemeMode | undefined): void {
 }
 
 function createWindow(): void {
+  const icon = loadAppIcon()
   mainWindow = new BrowserWindow({
     width: 1440,
     height: 900,
@@ -132,6 +134,7 @@ function createWindow(): void {
     backgroundColor: windowBackgroundFor(settings?.themeMode),
     frame: false,
     show: false,
+    ...(icon ? { icon } : {}),
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.js'),
       contextIsolation: true,
@@ -139,6 +142,12 @@ function createWindow(): void {
       sandbox: false
     }
   })
+  if (icon) {
+    mainWindow.setIcon(icon)
+  }
+  if (process.platform === 'darwin' && icon) {
+    app.dock?.setIcon(icon)
+  }
 
   mainWindow.once('ready-to-show', () => mainWindow?.show())
   const emitWinState = () => {
@@ -580,6 +589,11 @@ async function restartIntake(): Promise<void> {
     logger.error('Intake server failed to start', intakeError)
     intake = null
   }
+}
+
+// Needed on Windows so the taskbar uses our icon instead of Electron's.
+if (process.platform === 'win32') {
+  app.setAppUserModelId('com.encodeit.app')
 }
 
 app.whenReady().then(async () => {

@@ -7,6 +7,7 @@ export type DocBlock =
   | { type: 'ul'; items: string[] }
   | { type: 'table'; headers: string[]; rows: string[][] }
   | { type: 'kbd'; rows: Array<{ keys: string; action: string }> }
+  | { type: 'figure'; src: string; alt: string; caption?: string }
   | { type: 'sub'; title: string; blocks: DocBlock[] }
 
 export interface DocSection {
@@ -22,6 +23,12 @@ export const USER_GUIDE_SECTIONS: DocSection[] = [
     id: 'overview',
     title: 'Overview',
     blocks: [
+      {
+        type: 'figure',
+        src: new URL('../assets/what-is-encodeit.svg', import.meta.url).href,
+        alt: 'EncodeIt is a desktop batch media encoder: add media, choose a preset, run the queue, and deliver with FFmpeg',
+        caption: 'Add media → choose a preset → run the queue → deliver. Watch folders connect AE, Premiere, and Resolve.'
+      },
       {
         type: 'p',
         text: 'EncodeIt is a batch media encoder with an queue and preset browser powered by FFmpeg.'

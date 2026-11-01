@@ -442,6 +442,26 @@ body.is-row-resizing * {
   z-index: 100;
 }
 
+.title-chrome-trailing {
+  display: flex;
+  align-items: stretch;
+  align-self: stretch;
+  height: 100%;
+  margin-left: auto;
+  flex: 0 0 auto;
+  -webkit-app-region: no-drag;
+  z-index: 20;
+}
+
+.title-chrome-trailing .window-controls {
+  margin-left: 0;
+}
+
+.theme-toggle svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+
 .title-chrome-drag {
   flex: 1 1 0;
   align-self: stretch;
@@ -452,6 +472,7 @@ body.is-row-resizing * {
 .title-chrome .app-menubar,
 .title-chrome .app-menu,
 .title-chrome .app-menu-pop,
+.title-chrome .title-chrome-trailing,
 .title-chrome .window-controls,
 .title-chrome button {
   -webkit-app-region: no-drag;
@@ -470,9 +491,10 @@ body.is-row-resizing * {
   flex: 0 1 auto;
   display: inline-flex;
   align-items: center;
+  gap: 0.4rem;
   height: 100%;
   min-width: 0;
-  max-width: 7.5rem;
+  max-width: 9.5rem;
   padding: 0 10px 0 12px;
   font-size: 14px;
   font-weight: 600;
@@ -484,6 +506,16 @@ body.is-row-resizing * {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.title-brand-logo {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  object-fit: contain;
+  display: block;
+  -webkit-user-drag: none;
 }
 
 .app-menubar {
@@ -2480,6 +2512,26 @@ button.linkish:hover:not(:disabled) {
   color: var(--text);
 }
 
+.help-docs-figure {
+  margin: 0 0 1rem;
+}
+
+.help-docs-figure-img {
+  display: block;
+  width: 100%;
+  max-width: 880px;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.help-docs-figure-caption {
+  margin-top: 0.45rem;
+  font-size: 0.82rem;
+  color: var(--text-mute);
+  line-height: 1.4;
+}
+
 .prefs-backdrop {
   position: fixed;
   inset: 0;
@@ -2593,6 +2645,28 @@ button.linkish:hover:not(:disabled) {
   margin-bottom: 0;
 }
 
+.about-brand-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin: 0 0 0.75rem;
+}
+
+.about-logo {
+  flex: 0 0 auto;
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  object-fit: cover;
+  display: block;
+  -webkit-user-drag: none;
+}
+
+.about-brand-row .about-brand,
+.about-brand-row .about-meta {
+  margin: 0;
+}
+
 .about-brand {
   font-size: 1.15rem;
   font-weight: 600;
@@ -2603,6 +2677,10 @@ button.linkish:hover:not(:disabled) {
   font-size: 0.8rem;
   color: var(--text-mute);
   word-break: break-word;
+}
+
+.about-meta-spaced {
+  margin-top: 0.75rem;
 }
 
 .about-code {

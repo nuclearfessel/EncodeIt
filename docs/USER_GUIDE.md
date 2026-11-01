@@ -2,9 +2,15 @@
 
 In-app: **Help → Documentation** (or press **F1**).
 
+<p align="center">
+  <img src="assets/encodeit-logo.svg" alt="EncodeIt" width="96" />
+</p>
+
 ---
 
 ## Overview
+
+![What EncodeIt is](assets/what-is-encodeit.svg)
 
 EncodeIt is a batch media encoder with an queue and preset browser powered by FFmpeg.
 

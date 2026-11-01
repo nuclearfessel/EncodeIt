@@ -37,8 +37,20 @@ export function AboutDialog({ open, onClose, version, ffmpegPath, ffmpegSource }
           </button>
         </header>
         <div className="about-body">
-          <p className="about-brand">EncodeIt</p>
-          <p className="about-meta">Version {version}</p>
+          <div className="about-brand-row">
+            <img
+              className="about-logo"
+              src={new URL('../assets/encodeit-logo.png', import.meta.url).href}
+              alt=""
+              width={56}
+              height={56}
+              draggable={false}
+            />
+            <div>
+              <p className="about-brand">EncodeIt</p>
+              <p className="about-meta">Version {version}</p>
+            </div>
+          </div>
           <p className="about-copy">
             Open-source batch media encoder with a queue and preset browser. Encoding is powered by
             bundled FFmpeg.
@@ -53,7 +65,9 @@ export function AboutDialog({ open, onClose, version, ffmpegPath, ffmpegSource }
               Log: <code className="about-code">{logPath}</code>
             </p>
           ) : null}
-          <p className="about-meta">MIT License · github.com/nuclearfessel/encodeit</p>
+          <p className="about-meta about-meta-spaced">
+            MIT License · github.com/nuclearfessel/encodeit
+          </p>
         </div>
         <footer className="about-footer">
           <button type="button" className="primary" onClick={onClose}>

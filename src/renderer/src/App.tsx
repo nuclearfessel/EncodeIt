@@ -45,6 +45,7 @@ import { AppMenuBar } from './components/AppMenuBar'
 import { SaveWorkspaceDialog } from './components/SaveWorkspaceDialog'
 import { StatusBar, type UpdateBarStatus } from './components/StatusBar'
 import { UninstallDialog } from './components/UninstallDialog'
+import { ThemeToggle } from './components/ThemeToggle'
 import { WindowControls } from './components/WindowControls'
 import { WorkspaceView } from './components/WorkspaceView'
 import { usePathPicker } from './pathPicker/PathPickerContext'
@@ -439,7 +440,17 @@ function MainApp() {
     >
       <div className="title-chrome">
         <div className="title-chrome-leading">
-          <span className="title-brand">EncodeIt</span>
+          <span className="title-brand">
+            <img
+              className="title-brand-logo"
+              src={new URL('./assets/encodeit-logo.png', import.meta.url).href}
+              alt=""
+              width={18}
+              height={18}
+              draggable={false}
+            />
+            EncodeIt
+          </span>
           <AppMenuBar
             actions={{
               onAddSource: () => void addFiles(),
@@ -507,7 +518,10 @@ function MainApp() {
           />
           <div className="title-chrome-drag" />
         </div>
-        <WindowControls />
+        <div className="title-chrome-trailing">
+          <ThemeToggle themeMode={settings?.themeMode} />
+          <WindowControls />
+        </div>
       </div>
 
       <header className="toolbar">

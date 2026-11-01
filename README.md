@@ -1,4 +1,12 @@
+<p align="center">
+  <img src="docs/assets/encodeit-logo.svg" alt="EncodeIt" width="112" />
+</p>
+
 # EncodeIt
+
+<p align="center">
+  <img src="docs/assets/what-is-encodeit.svg" alt="EncodeIt is a desktop batch media encoder: add media, choose a preset, run the queue, and deliver with FFmpeg" width="880" />
+</p>
 
 Open-source batch media encoder with a queue and preset browser, powered by FFmpeg.
 

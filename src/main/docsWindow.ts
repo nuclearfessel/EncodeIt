@@ -1,5 +1,6 @@
 import { BrowserWindow, screen } from 'electron'
 import path from 'path'
+import { loadAppIcon } from './appIcon'
 
 const DEFAULTS = { width: 920, height: 720, minWidth: 560, minHeight: 400 }
 
@@ -51,6 +52,7 @@ export class DocsWindowManager {
       )
     }
 
+    const icon = loadAppIcon()
     const win = new BrowserWindow({
       width: DEFAULTS.width,
       height: DEFAULTS.height,
@@ -64,6 +66,7 @@ export class DocsWindowManager {
       show: false,
       resizable: true,
       maximizable: true,
+      ...(icon ? { icon } : {}),
       webPreferences: {
         preload: this.preloadPath,
         contextIsolation: true,

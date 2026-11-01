@@ -110,6 +110,15 @@ function DocBlocks({ blocks }: { blocks: DocBlock[] }) {
                 </table>
               </div>
             )
+          case 'figure':
+            return (
+              <figure key={i} className="help-docs-figure">
+                <img className="help-docs-figure-img" src={block.src} alt={block.alt} />
+                {block.caption ? (
+                  <figcaption className="help-docs-figure-caption">{block.caption}</figcaption>
+                ) : null}
+              </figure>
+            )
           case 'sub':
             return (
               <section key={i} className="help-docs-sub">
