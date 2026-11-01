@@ -50,7 +50,8 @@ async function main() {
     intakePort: 47821,
     watchFolders: [],
     hostFoldersSeeded: true,
-    checkForUpdatesEnabled: false
+    checkForUpdatesEnabled: false,
+    themeMode: 'system'
   }
 
   const job: QueueJob = {

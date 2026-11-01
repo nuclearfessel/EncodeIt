@@ -20,12 +20,12 @@ import type {
 } from '../../shared/types'
 import { DockDropOverlay } from './components/DockDropOverlay'
 import { EncodingPanel } from './components/EncodingPanel'
-import { ExportSettingsDialog } from './components/ExportSettingsDialog'
 import { AboutDialog } from './components/AboutDialog'
+import { ExportSettingsWindow } from './components/ExportSettingsWindow'
 import { HelpDocumentationWindow } from './components/HelpDocumentationWindow'
 import { IntegrationCoachBanner } from './components/IntegrationCoachBanner'
 import { IntegrationSetupDialog } from './components/IntegrationSetupDialog'
-import { PreferencesDialog } from './components/PreferencesDialog'
+import { PreferencesWindow } from './components/PreferencesWindow'
 import { version as APP_VERSION } from '../../../package.json'
 import { ButtonContent } from './components/ButtonContent'
 import {
@@ -48,6 +48,7 @@ import { UninstallDialog } from './components/UninstallDialog'
 import { WindowControls } from './components/WindowControls'
 import { WorkspaceView } from './components/WorkspaceView'
 import { usePathPicker } from './pathPicker/PathPickerContext'
+import { applyThemeMode } from './theme'
 
 interface WorkspaceCatalogView {
   activeId: string | null
@@ -71,9 +72,23 @@ function isDocsWindow(): boolean {
   return new URLSearchParams(window.location.search).get('docs') === '1'
 }
 
+function isPrefsWindow(): boolean {
+  return new URLSearchParams(window.location.search).get('prefs') === '1'
+}
+
+function isExportSettingsWindow(): boolean {
+  return new URLSearchParams(window.location.search).get('exportSettings') === '1'
+}
+
 export default function App() {
   if (isDocsWindow()) {
     return <HelpDocumentationWindow />
+  }
+  if (isPrefsWindow()) {
+    return <PreferencesWindow />
+  }
+  if (isExportSettingsWindow()) {
+    return <ExportSettingsWindow />
   }
   return <MainApp />
 }
@@ -101,9 +116,7 @@ function MainApp() {
     fromFloating: boolean
   } | null>(null)
   const [dropTarget, setDropTarget] = useState<AnyDropTarget | null>(null)
-  const [prefsOpen, setPrefsOpen] = useState(false)
   const [aboutOpen, setAboutOpen] = useState(false)
-  const [exportSettingsOpen, setExportSettingsOpen] = useState(false)
   const pathPicker = usePathPicker()
 
   function applyCatalog(next: {
@@ -121,9 +134,14 @@ function MainApp() {
   }
 
   function openExportSettings(ids?: string[]) {
+    const jobIds = ids?.length ? ids : selectedIds
+    if (!jobIds.length) return
     if (ids?.length) selectJobs(ids)
-    else if (!selectedIds.length) return
-    setExportSettingsOpen(true)
+    void window.EncodeIt.openExportSettings(jobIds)
+  }
+
+  function openPreferences() {
+    void window.EncodeIt.openPreferences()
   }
 
   useEffect(() => {
@@ -138,6 +156,7 @@ function MainApp() {
       ])
       setCatalog(cat)
       setSettings(cfg)
+      applyThemeMode(cfg.themeMode)
       setJobs(queue)
       setWorkspace(ws)
       applyCatalog(wsc)
@@ -158,7 +177,10 @@ function MainApp() {
       setActivePresetId(ui.activePresetId)
       setSelectedIds(ui.selectedJobIds)
     })
-    const offSettings = window.EncodeIt.onSettingsChanged(setSettings)
+    const offSettings = window.EncodeIt.onSettingsChanged((next) => {
+      setSettings(next)
+      applyThemeMode(next.themeMode)
+    })
     const offUpdate = window.EncodeIt.onUpdateStatus((s) => {
       setUpdateStatus({
         currentVersion: s.currentVersion,
@@ -187,6 +209,16 @@ function MainApp() {
   }, [])
 
   useEffect(() => {
+    if (!settings) return
+    applyThemeMode(settings.themeMode)
+    if (settings.themeMode !== 'system') return
+    const mq = window.matchMedia('(prefers-color-scheme: dark)')
+    const onChange = () => applyThemeMode('system')
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [settings?.themeMode])
+
+  useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement | null
       const typing =
@@ -205,7 +237,7 @@ function MainApp() {
       }
       if (mod && e.key === ',') {
         e.preventDefault()
-        setPrefsOpen(true)
+        openPreferences()
         return
       }
       if (mod && e.key.toLowerCase() === 'o') {
@@ -221,11 +253,28 @@ function MainApp() {
       if (mod && e.key === '.') {
         e.preventDefault()
         void window.EncodeIt.stopQueue()
+        return
+      }
+      if (mod && e.key.toLowerCase() === 'a') {
+        e.preventDefault()
+        if (!jobs.length) return
+        const ids = jobs.map((j) => j.id)
+        setSelectedIds(ids)
+        void window.EncodeIt.setSelectedJobs(ids)
+        return
+      }
+      if (e.key === 'Delete' || e.key === 'Backspace') {
+        if (!selectedIds.length) return
+        e.preventDefault()
+        void window.EncodeIt.removeFromQueue(selectedIds).then(() => {
+          setSelectedIds([])
+          void window.EncodeIt.setSelectedJobs([])
+        })
       }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  })
+  }, [jobs, selectedIds])
 
   const selectedJobs = useMemo(
     () => jobs.filter((j) => selectedIds.includes(j.id)),
@@ -305,6 +354,18 @@ function MainApp() {
             presets={catalog.presets}
             onAdd={() => void addFiles()}
             onOpenExportSettings={openExportSettings}
+            onRemove={(ids) => {
+              void window.EncodeIt.removeFromQueue(ids).then(() => selectJobs([]))
+            }}
+            onDuplicate={(ids) => {
+              void window.EncodeIt.duplicateInQueue(ids).then((next) => {
+                setJobs(next)
+                const created = next
+                  .filter((j) => !jobs.some((o) => o.id === j.id))
+                  .map((j) => j.id)
+                if (created.length) selectJobs(created)
+              })
+            }}
           />
         </section>
       )
@@ -354,16 +415,6 @@ function MainApp() {
           onOpenExportSettings={openExportSettings}
           onSettings={async (next) => setSettings(await window.EncodeIt.setSettings(next))}
         />
-        <ExportSettingsDialog
-          open={exportSettingsOpen}
-          jobs={selectedJobs.length ? selectedJobs : []}
-          presets={catalog.presets}
-          onClose={() => setExportSettingsOpen(false)}
-          onApplied={setJobs}
-          onCatalogUpdated={(next) => {
-            setCatalog(next as CatalogPayload)
-          }}
-        />
       </div>
     )
   }
@@ -387,71 +438,75 @@ function MainApp() {
       onDrop={(e) => void onDrop(e)}
     >
       <div className="title-chrome">
-        <span className="title-brand">EncodeIt</span>
-        <AppMenuBar
-          actions={{
-            onAddSource: () => void addFiles(),
-            onStartQueue: () => void window.EncodeIt.startQueue(),
-            onStopQueue: () => void window.EncodeIt.stopQueue(),
-            onClearDone: () => void window.EncodeIt.clearDone(),
-            onPreferences: () => setPrefsOpen(true),
-            onExportSettings: () => openExportSettings(),
-            canExportSettings: selectedJobs.some((j) => j.status !== 'encoding'),
-            onDockAll: () => void window.EncodeIt.dockAllPanels(),
-            onShowAllPanels: () => void window.EncodeIt.showAllPanels(),
-            onTogglePanel: (id) => void window.EncodeIt.togglePanel(id),
-            panelPlacement: workspace.placement,
-            workspace: {
-              activeId: wsCatalog.activeId,
-              activeName: wsCatalog.activeName,
-              named: wsCatalog.named.map(({ id, name }) => ({ id, name }))
-            },
-            onNewWorkspace: () => setSaveWorkspaceOpen(true),
-            onSaveWorkspace: () => {
-              void window.EncodeIt.saveActiveWorkspace().then(applyCatalog)
-            },
-            onSwitchWorkspace: (id) => {
-              void window.EncodeIt.switchWorkspace(id).then(applyCatalog)
-            },
-            onResetWorkspaceSaved: () => {
-              void window.EncodeIt.resetWorkspaceSaved().then(applyCatalog)
-            },
-            onResetWorkspaceDefault: () => {
-              void window.EncodeIt.resetWorkspaceDefault().then(applyCatalog)
-            },
-            onDeleteWorkspace: (id) => {
-              const name =
-                wsCatalog.named.find((n) => n.id === id)?.name ?? wsCatalog.activeName ?? 'Workspace'
-              if (!window.confirm(`Delete workspace “${name}”? This cannot be undone.`)) return
-              void window.EncodeIt.deleteWorkspace(id).then(applyCatalog)
-            },
-            onDocumentation: () => void window.EncodeIt.openDocumentation(),
-            onAbout: () => setAboutOpen(true),
-            onOpenLog: () => void window.EncodeIt.openLogFile(),
-            onCheckForUpdates: () => {
-              void window.EncodeIt.checkForUpdates(true).then((s) => {
-                setUpdateStatus({
-                  currentVersion: s.currentVersion,
-                  latestVersion: s.latestVersion,
-                  updateAvailable: s.updateAvailable
+        <div className="title-chrome-leading">
+          <span className="title-brand">EncodeIt</span>
+          <AppMenuBar
+            actions={{
+              onAddSource: () => void addFiles(),
+              onStartQueue: () => void window.EncodeIt.startQueue(),
+              onStopQueue: () => void window.EncodeIt.stopQueue(),
+              onClearDone: () => void window.EncodeIt.clearDone(),
+              onPreferences: () => openPreferences(),
+              onExportSettings: () => openExportSettings(),
+              canExportSettings: selectedJobs.some((j) => j.status !== 'encoding'),
+              onDockAll: () => void window.EncodeIt.dockAllPanels(),
+              onShowAllPanels: () => void window.EncodeIt.showAllPanels(),
+              onTogglePanel: (id) => void window.EncodeIt.togglePanel(id),
+              panelPlacement: workspace.placement,
+              workspace: {
+                activeId: wsCatalog.activeId,
+                activeName: wsCatalog.activeName,
+                named: wsCatalog.named.map(({ id, name }) => ({ id, name }))
+              },
+              onNewWorkspace: () => setSaveWorkspaceOpen(true),
+              onSaveWorkspace: () => {
+                void window.EncodeIt.saveActiveWorkspace().then(applyCatalog)
+              },
+              onSwitchWorkspace: (id) => {
+                void window.EncodeIt.switchWorkspace(id).then(applyCatalog)
+              },
+              onResetWorkspaceSaved: () => {
+                void window.EncodeIt.resetWorkspaceSaved().then(applyCatalog)
+              },
+              onResetWorkspaceDefault: () => {
+                void window.EncodeIt.resetWorkspaceDefault().then(applyCatalog)
+              },
+              onDeleteWorkspace: (id) => {
+                const name =
+                  wsCatalog.named.find((n) => n.id === id)?.name ??
+                  wsCatalog.activeName ??
+                  'Workspace'
+                if (!window.confirm(`Delete workspace “${name}”? This cannot be undone.`)) return
+                void window.EncodeIt.deleteWorkspace(id).then(applyCatalog)
+              },
+              onDocumentation: () => void window.EncodeIt.openDocumentation(),
+              onAbout: () => setAboutOpen(true),
+              onOpenLog: () => void window.EncodeIt.openLogFile(),
+              onCheckForUpdates: () => {
+                void window.EncodeIt.checkForUpdates(true).then((s) => {
+                  setUpdateStatus({
+                    currentVersion: s.currentVersion,
+                    latestVersion: s.latestVersion,
+                    updateAvailable: s.updateAvailable
+                  })
+                  if (s.updateAvailable && s.latestVersion) {
+                    window.alert(
+                      `EncodeIt ${s.latestVersion} is available (you have ${s.currentVersion}).\n\nUse Download… in the status bar at the bottom to open the release in your browser.`
+                    )
+                  } else if (s.error) {
+                    window.alert(`Could not check for updates:\n${s.error}`)
+                  } else {
+                    window.alert(`You’re up to date (EncodeIt ${s.currentVersion}).`)
+                  }
                 })
-                if (s.updateAvailable && s.latestVersion) {
-                  window.alert(
-                    `EncodeIt ${s.latestVersion} is available (you have ${s.currentVersion}).\n\nUse Download… in the status bar at the bottom to open the release in your browser.`
-                  )
-                } else if (s.error) {
-                  window.alert(`Could not check for updates:\n${s.error}`)
-                } else {
-                  window.alert(`You’re up to date (EncodeIt ${s.currentVersion}).`)
-                }
-              })
-            },
-            onUninstall: () => setUninstallOpen(true),
-            canStart,
-            canStop: running
-          }}
-        />
-        <div className="title-chrome-drag" />
+              },
+              onUninstall: () => setUninstallOpen(true),
+              canStart,
+              canStop: running
+            }}
+          />
+          <div className="title-chrome-drag" />
+        </div>
         <WindowControls />
       </div>
 
@@ -523,7 +578,7 @@ function MainApp() {
               </button>
             </>
           ) : null}
-          <button type="button" onClick={() => setPrefsOpen(true)}>
+          <button type="button" onClick={() => openPreferences()}>
             Preferences…
           </button>
         </div>
@@ -551,29 +606,6 @@ function MainApp() {
           presets
         </div>
       </header>
-
-      <PreferencesDialog
-        open={prefsOpen}
-        settings={settings}
-        presets={catalog.presets}
-        onClose={() => setPrefsOpen(false)}
-        onSave={async (next) => {
-          const saved = await window.EncodeIt.setSettings(next)
-          setSettings(saved)
-          return saved
-        }}
-      />
-
-      <ExportSettingsDialog
-        open={exportSettingsOpen}
-        jobs={selectedJobs.length ? selectedJobs : []}
-        presets={catalog.presets}
-        onClose={() => setExportSettingsOpen(false)}
-        onApplied={setJobs}
-        onCatalogUpdated={(next) => {
-          setCatalog(next as CatalogPayload)
-        }}
-      />
 
       <AboutDialog
         open={aboutOpen}
@@ -726,6 +758,17 @@ function FloatingPanel({
           presets={catalog.presets}
           onAdd={() => onAddMedia()}
           onOpenExportSettings={onOpenExportSettings}
+          onRemove={(ids) => {
+            void window.EncodeIt.removeFromQueue(ids).then(() => onSelectJobs([]))
+          }}
+          onDuplicate={(ids) => {
+            void window.EncodeIt.duplicateInQueue(ids).then((next) => {
+              // Floating panel: parent owns jobs via queue:changed; select new copies by diffing ids.
+              const before = new Set(jobs.map((j) => j.id))
+              const created = next.filter((j) => !before.has(j.id)).map((j) => j.id)
+              if (created.length) onSelectJobs(created)
+            })
+          }}
         />
       </section>
     )

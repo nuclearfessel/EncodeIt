@@ -2,7 +2,7 @@ import { app } from 'electron'
 import fs from 'fs'
 import path from 'path'
 import type { HardwareAcceleration } from '../shared/hardware'
-import type { AppSettings, WatchFolderSettings } from '../shared/types'
+import type { AppSettings, ThemeMode, WatchFolderSettings } from '../shared/types'
 import { pickBinaryPath, resolveBundledFfmpeg } from './bundledFfmpeg'
 import { whichBinary } from './ffmpeg'
 
@@ -17,7 +17,14 @@ const DEFAULTS: AppSettings = {
   intakePort: 47821,
   watchFolders: [],
   hostFoldersSeeded: false,
-  checkForUpdatesEnabled: true
+  checkForUpdatesEnabled: true,
+  themeMode: 'system'
+}
+
+const THEME_MODES: ThemeMode[] = ['system', 'light', 'dark']
+
+function normalizeThemeMode(value: unknown): ThemeMode {
+  return THEME_MODES.includes(value as ThemeMode) ? (value as ThemeMode) : 'system'
 }
 
 function normalizeWatchFolders(value: unknown): WatchFolderSettings[] {
@@ -121,7 +128,8 @@ export function normalizeAppSettings(input: AppSettings): AppSettings {
     watchFolders: normalizeWatchFolders(input.watchFolders),
     hostFoldersSeeded: Boolean(input.hostFoldersSeeded),
     checkForUpdatesEnabled:
-      input.checkForUpdatesEnabled === undefined ? true : Boolean(input.checkForUpdatesEnabled)
+      input.checkForUpdatesEnabled === undefined ? true : Boolean(input.checkForUpdatesEnabled),
+    themeMode: normalizeThemeMode(input.themeMode)
   }
 }
 

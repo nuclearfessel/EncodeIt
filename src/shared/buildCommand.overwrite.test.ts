@@ -16,7 +16,8 @@ function settings(overwrite: boolean): AppSettings {
     intakePort: 47821,
     watchFolders: [],
     hostFoldersSeeded: false,
-    checkForUpdatesEnabled: true
+    checkForUpdatesEnabled: true,
+    themeMode: 'system'
   }
 }
 

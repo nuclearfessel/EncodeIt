@@ -43,6 +43,8 @@ import type {
   QueueJob,
   VideoSettings
 } from '../../../shared/types'
+import { NumberStepper } from './NumberStepper'
+import { WindowControls } from './WindowControls'
 
 type TabId = 'video' | 'audio' | 'advanced'
 
@@ -53,6 +55,8 @@ interface Props {
   onClose: () => void
   onApplied: (jobs: QueueJob[]) => void
   onCatalogUpdated: (catalog: unknown) => void
+  /** Floating BrowserWindow chrome instead of modal overlay. */
+  presentation?: 'modal' | 'window'
 }
 
 function cloneVideo(v: VideoSettings): VideoSettings {
@@ -127,8 +131,10 @@ export function ExportSettingsDialog({
   presets,
   onClose,
   onApplied,
-  onCatalogUpdated
+  onCatalogUpdated,
+  presentation = 'modal'
 }: Props) {
+  const asWindow = presentation === 'window'
   const focus = jobs[0]
   const basePreset = useMemo(
     () => presets.find((p) => p.id === focus?.presetId) ?? presets[0],
@@ -157,8 +163,8 @@ export function ExportSettingsDialog({
     setHeightText(String(height))
   }
 
-  function evenDim(n: number): number {
-    return Math.max(16, Math.round(n / 2) * 2)
+  function clampDim(n: number): number {
+    return Math.max(16, Math.round(n))
   }
 
   function aspectRatio(v: VideoSettings): number {
@@ -363,16 +369,15 @@ export function ExportSettingsDialog({
   const levelOptions = levelsForCodec(codecValue)
   const pixOptions = pixelFormatsForCodec(codecValue)
 
-  return (
-    <div className="ex-backdrop" role="presentation" onMouseDown={onClose}>
+  const dialogBody = (
       <div
-        className="ex-dialog"
+        className={`ex-dialog ${asWindow ? 'ex-dialog-window' : ''}`}
         role="dialog"
-        aria-modal="true"
+        aria-modal={asWindow ? undefined : true}
         aria-labelledby="ex-title"
-        onMouseDown={(e) => e.stopPropagation()}
+        onMouseDown={asWindow ? undefined : (e) => e.stopPropagation()}
       >
-        <header className="ex-header">
+        <header className={`ex-header ${asWindow ? 'ex-header-window' : ''}`}>
           <div>
             <h2 id="ex-title">Export Settings</h2>
             <p className="ex-subtitle">
@@ -380,9 +385,11 @@ export function ExportSettingsDialog({
               {jobs.length > 1 ? ` · ${jobs.length} selected jobs` : ''}
             </p>
           </div>
-          <button type="button" className="icon-btn" title="Close" onClick={onClose}>
-            ×
-          </button>
+          {asWindow ? null : (
+            <button type="button" className="icon-btn" title="Close" onClick={onClose}>
+              ×
+            </button>
+          )}
         </header>
 
         <div className="ex-topbar">
@@ -591,6 +598,21 @@ export function ExportSettingsDialog({
                         }}
                       />
                     </Field>
+                    <Field label="Frame rate">
+                      <Select
+                        id="ex-fps"
+                        disabled={!editable || !exportVideo}
+                        value={
+                          !video.frameRate || video.frameRate === 'match'
+                            ? 'match'
+                            : String(video.frameRate)
+                        }
+                        options={FRAME_RATE_OPTIONS}
+                        onChange={(v) =>
+                          patchVideo({ frameRate: v === 'match' ? 'match' : v })
+                        }
+                      />
+                    </Field>
                     {customResolution || resKey === 'custom' ? (
                       <div className="ex-size-field">
                         <span className="ex-field-label">
@@ -604,36 +626,25 @@ export function ExportSettingsDialog({
                         <div className="ex-size-row">
                           <label className="ex-size-dim" htmlFor="ex-w">
                             <span>W</span>
-                            <input
+                            <NumberStepper
                               id="ex-w"
-                              type="text"
-                              inputMode="numeric"
-                              autoComplete="off"
-                              spellCheck={false}
+                              min={16}
+                              max={16384}
+                              step={1}
+                              normalize={clampDim}
                               disabled={!editable || !exportVideo}
                               value={widthText}
-                              onChange={(e) => setWidthText(e.target.value.replace(/[^\d]/g, ''))}
-                              onBlur={() => {
-                                const n = Number.parseInt(widthText, 10)
-                                if (!Number.isFinite(n) || n <= 0) {
-                                  syncSizeFields(
-                                    typeof video.width === 'number' ? video.width : 1920,
-                                    typeof video.height === 'number' ? video.height : 1080
-                                  )
-                                  return
-                                }
-                                const w = evenDim(n)
+                              onTextChange={setWidthText}
+                              onValueChange={(n) => {
+                                const w = clampDim(n)
                                 if (constrainAspect) {
-                                  const h = evenDim(w / aspectRatio(video))
+                                  const h = clampDim(w / aspectRatio(video))
                                   patchVideo({ width: w, height: h })
                                   syncSizeFields(w, h)
                                 } else {
                                   patchVideo({ width: w })
                                   setWidthText(String(w))
                                 }
-                              }}
-                              onKeyDown={(e) => {
-                                if (e.key === 'Enter') (e.target as HTMLInputElement).blur()
                               }}
                             />
                           </label>
@@ -676,27 +687,19 @@ export function ExportSettingsDialog({
                           </button>
                           <label className="ex-size-dim" htmlFor="ex-h">
                             <span>H</span>
-                            <input
+                            <NumberStepper
                               id="ex-h"
-                              type="text"
-                              inputMode="numeric"
-                              autoComplete="off"
-                              spellCheck={false}
+                              min={16}
+                              max={16384}
+                              step={1}
+                              normalize={clampDim}
                               disabled={!editable || !exportVideo}
                               value={heightText}
-                              onChange={(e) => setHeightText(e.target.value.replace(/[^\d]/g, ''))}
-                              onBlur={() => {
-                                const n = Number.parseInt(heightText, 10)
-                                if (!Number.isFinite(n) || n <= 0) {
-                                  syncSizeFields(
-                                    typeof video.width === 'number' ? video.width : 1920,
-                                    typeof video.height === 'number' ? video.height : 1080
-                                  )
-                                  return
-                                }
-                                const h = evenDim(n)
+                              onTextChange={setHeightText}
+                              onValueChange={(n) => {
+                                const h = clampDim(n)
                                 if (constrainAspect) {
-                                  const w = evenDim(h * aspectRatio(video))
+                                  const w = clampDim(h * aspectRatio(video))
                                   patchVideo({ width: w, height: h })
                                   syncSizeFields(w, h)
                                 } else {
@@ -704,29 +707,11 @@ export function ExportSettingsDialog({
                                   setHeightText(String(h))
                                 }
                               }}
-                              onKeyDown={(e) => {
-                                if (e.key === 'Enter') (e.target as HTMLInputElement).blur()
-                              }}
                             />
                           </label>
                         </div>
                       </div>
                     ) : null}
-                    <Field label="Frame rate">
-                      <Select
-                        id="ex-fps"
-                        disabled={!editable || !exportVideo}
-                        value={
-                          !video.frameRate || video.frameRate === 'match'
-                            ? 'match'
-                            : String(video.frameRate)
-                        }
-                        options={FRAME_RATE_OPTIONS}
-                        onChange={(v) =>
-                          patchVideo({ frameRate: v === 'match' ? 'match' : v })
-                        }
-                      />
-                    </Field>
                   </div>
                 </section>
 
@@ -943,6 +928,23 @@ export function ExportSettingsDialog({
           </div>
         </footer>
       </div>
+  )
+
+  if (asWindow) {
+    return (
+      <div className="app floating-app export-settings-window-app">
+        <div className="float-titlebar">
+          <span className="float-titlebar-label">Export Settings</span>
+          <WindowControls />
+        </div>
+        {dialogBody}
+      </div>
+    )
+  }
+
+  return (
+    <div className="ex-backdrop" role="presentation" onMouseDown={onClose}>
+      {dialogBody}
     </div>
   )
 }

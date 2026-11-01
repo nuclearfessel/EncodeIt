@@ -8,6 +8,9 @@ import {
 import { DEFAULT_PRESET_ID, PRESETS } from '../../../shared/presets'
 import type { AppSettings, PresetDefinition, SettingsView, WatchFolder } from '../../../shared/types'
 import { usePathPicker } from '../pathPicker/PathPickerContext'
+import { applyThemeMode } from '../theme'
+import { NumberStepper } from './NumberStepper'
+import { WindowControls } from './WindowControls'
 
 interface Props {
   open: boolean
@@ -15,6 +18,8 @@ interface Props {
   presets?: PresetDefinition[]
   onClose: () => void
   onSave: (next: AppSettings) => Promise<SettingsView>
+  /** Floating BrowserWindow chrome instead of modal overlay. */
+  presentation?: 'modal' | 'window'
 }
 
 type PrefsTab = 'general' | 'media' | 'hardware' | 'integrations' | 'updates'
@@ -31,11 +36,20 @@ function settingsDraft(settings: SettingsView): AppSettings {
     intakePort: settings.intakePort,
     watchFolders: settings.watchFolders ?? [],
     hostFoldersSeeded: Boolean(settings.hostFoldersSeeded),
-    checkForUpdatesEnabled: settings.checkForUpdatesEnabled !== false
+    checkForUpdatesEnabled: settings.checkForUpdatesEnabled !== false,
+    themeMode: settings.themeMode ?? 'system'
   }
 }
 
-export function PreferencesDialog({ open, settings, presets, onClose, onSave }: Props) {
+export function PreferencesDialog({
+  open,
+  settings,
+  presets,
+  onClose,
+  onSave,
+  presentation = 'modal'
+}: Props) {
+  const asWindow = presentation === 'window'
   const presetList = presets?.length ? presets : PRESETS
   const [tab, setTab] = useState<PrefsTab>('general')
   const [draft, setDraft] = useState<AppSettings>(() => settingsDraft(settings))
@@ -59,6 +73,8 @@ export function PreferencesDialog({ open, settings, presets, onClose, onSave }: 
   const [checkingUpdate, setCheckingUpdate] = useState(false)
   const pathPicker = usePathPicker()
 
+  // Reset the form when the dialog opens — not on every settings broadcast (Appearance
+  // persists immediately and would wipe in-progress edits if we keyed off `settings`).
   useEffect(() => {
     if (!open) return
     setDraft(settingsDraft(settings))
@@ -82,7 +98,14 @@ export function PreferencesDialog({ open, settings, presets, onClose, onSave }: 
       .listWatchFolders()
       .then(setWatchFolders)
       .catch(() => setWatchFolders([]))
-  }, [open, settings])
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only re-init when opened
+  }, [open])
+
+  // Keep draft Appearance aligned if theme changes from another window.
+  useEffect(() => {
+    if (!open) return
+    setDraft((d) => (d.themeMode === settings.themeMode ? d : { ...d, themeMode: settings.themeMode }))
+  }, [open, settings.themeMode])
 
   useEffect(() => {
     if (!open) return
@@ -92,6 +115,12 @@ export function PreferencesDialog({ open, settings, presets, onClose, onSave }: 
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [open, onClose])
+
+  // Keep this window's tokens in sync with draft Appearance (all windows follow via setThemeMode).
+  useEffect(() => {
+    if (!open) return
+    applyThemeMode(draft.themeMode)
+  }, [open, draft.themeMode])
 
   const options = useMemo(
     () =>
@@ -113,8 +142,6 @@ export function PreferencesDialog({ open, settings, presets, onClose, onSave }: 
     () => (caps ? resolveHardwareAcceleration(draft.hardwareAcceleration, caps) : 'none'),
     [caps, draft.hardwareAcceleration]
   )
-
-  if (!open) return null
 
   async function pickOutput() {
     const dir = await pathPicker.openDirectory(draft.outputDirectory)
@@ -168,21 +195,28 @@ export function PreferencesDialog({ open, settings, presets, onClose, onSave }: 
     if (dir) setNewWatchOutput(dir)
   }
 
-  return (
-    <div className="prefs-backdrop" role="presentation" onMouseDown={onClose}>
+  if (!open) return null
+
+  const dialogBody = (
       <div
-        className="prefs-dialog"
+        className={`prefs-dialog ${asWindow ? 'prefs-dialog-window' : ''}`}
         role="dialog"
-        aria-modal="true"
+        aria-modal={asWindow ? undefined : true}
         aria-labelledby="prefs-title"
-        onMouseDown={(e) => e.stopPropagation()}
+        onMouseDown={asWindow ? undefined : (e) => e.stopPropagation()}
       >
-        <header className="prefs-header">
-          <h2 id="prefs-title">Preferences</h2>
-          <button type="button" className="icon-btn" title="Close" onClick={onClose}>
-            ×
-          </button>
-        </header>
+        {asWindow ? (
+          <h2 id="prefs-title" className="sr-only">
+            Preferences
+          </h2>
+        ) : (
+          <header className="prefs-header">
+            <h2 id="prefs-title">Preferences</h2>
+            <button type="button" className="icon-btn" title="Close" onClick={onClose}>
+              ×
+            </button>
+          </header>
+        )}
 
         <div className="prefs-body">
           <nav className="prefs-nav" aria-label="Preference sections">
@@ -210,6 +244,39 @@ export function PreferencesDialog({ open, settings, presets, onClose, onSave }: 
             {tab === 'general' ? (
               <div className="prefs-section">
                 <h3>General</h3>
+                <div className="prefs-field">
+                  <span>Appearance</span>
+                  <div
+                    className="prefs-segmented"
+                    role="radiogroup"
+                    aria-label="Appearance"
+                  >
+                    {(
+                      [
+                        ['system', 'System'],
+                        ['light', 'Light'],
+                        ['dark', 'Dark']
+                      ] as const
+                    ).map(([value, label]) => (
+                      <button
+                        key={value}
+                        type="button"
+                        role="radio"
+                        aria-checked={draft.themeMode === value}
+                        className={draft.themeMode === value ? 'active' : ''}
+                        onClick={() => {
+                          setDraft((d) => ({ ...d, themeMode: value }))
+                          void window.EncodeIt.setThemeMode(value)
+                        }}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <p className="prefs-help">
+                  System follows your OS light/dark setting. Light and Dark lock EncodeIt’s theme.
+                </p>
                 <label className="prefs-field">
                   <span>Default output folder</span>
                   <div className="prefs-row">
@@ -221,17 +288,12 @@ export function PreferencesDialog({ open, settings, presets, onClose, onSave }: 
                 </label>
                 <label className="prefs-field">
                   <span>Max concurrent encodes</span>
-                  <input
-                    type="number"
+                  <NumberStepper
                     min={1}
                     max={8}
+                    step={1}
                     value={draft.maxConcurrent}
-                    onChange={(e) =>
-                      setDraft((d) => ({
-                        ...d,
-                        maxConcurrent: Math.max(1, Math.min(8, Number(e.target.value) || 1))
-                      }))
-                    }
+                    onValueChange={(n) => setDraft((d) => ({ ...d, maxConcurrent: n }))}
                   />
                 </label>
                 <label className="prefs-check">
@@ -528,18 +590,13 @@ export function PreferencesDialog({ open, settings, presets, onClose, onSave }: 
                 </label>
                 <label className="prefs-field">
                   <span>Intake port</span>
-                  <input
-                    type="number"
+                  <NumberStepper
                     min={1024}
                     max={65535}
+                    step={1}
                     value={draft.intakePort}
                     disabled={!draft.intakeEnabled}
-                    onChange={(e) =>
-                      setDraft((d) => ({
-                        ...d,
-                        intakePort: Math.max(1024, Math.min(65535, Number(e.target.value) || 47821))
-                      }))
-                    }
+                    onValueChange={(n) => setDraft((d) => ({ ...d, intakePort: n }))}
                   />
                 </label>
                 <div className="prefs-intake-status">
@@ -657,6 +714,23 @@ export function PreferencesDialog({ open, settings, presets, onClose, onSave }: 
           </button>
         </footer>
       </div>
+  )
+
+  if (asWindow) {
+    return (
+      <div className="app floating-app prefs-window-app">
+        <div className="float-titlebar">
+          <span className="float-titlebar-label">Preferences</span>
+          <WindowControls />
+        </div>
+        {dialogBody}
+      </div>
+    )
+  }
+
+  return (
+    <div className="prefs-backdrop" role="presentation" onMouseDown={onClose}>
+      {dialogBody}
     </div>
   )
 }

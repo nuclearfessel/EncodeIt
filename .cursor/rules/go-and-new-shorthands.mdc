@@ -1,0 +1,51 @@
+---
+description: Shorthand prompts — Go! ships work; New! starts a features branch
+alwaysApply: true
+---
+
+# Go! / New! shorthands
+
+When the user says or prompts with these exact cues (alone or as the clear intent
+of the message), treat them as standing orders. Do not ask for confirmation of
+the steps below unless a destructive step is blocked by another hard rule.
+
+## `Go!`
+
+Means: **commit → push → merge → build → delete/clean branches.**
+
+1. **Commit** — Stage relevant work and create a commit on the current feature
+   branch (never on `main`). Follow the repo commit protocol (status/diff/log,
+   HEREDOC message, no secrets). Skip only if there is nothing to commit.
+2. **Push** — `git push -u origin HEAD` (or push the current tracking branch).
+3. **Merge** — Open a PR into `main` with `gh pr create` if needed, then merge
+   it (`gh pr merge`). Do not push commits directly onto `main`.
+4. **Build** — After merge, on an up-to-date `main` (or post-merge checkout),
+   run the project production build (`npm run build`). Fix build failures
+   before cleaning branches if they are caused by the just-merged work.
+5. **Delete / clean all branches** — Remove merged feature branches local and
+   remote. Prune stale remotes. **Keep `main`** (and release tags). Do not
+   delete `main` or force-delete unmerged work the user still needs.
+
+Still obey `never-work-on-main`: all commits happen on a feature branch; ship
+only via PR merge into `main`.
+
+## `New!`
+
+Means: **create and enter `features-updates-fixes`.**
+
+1. Ensure a clean enough working tree to switch (stash or commit only if the
+   user already directed that; otherwise report blockers).
+2. Update from `main` when practical (`git fetch origin` / checkout `main` /
+   pull), then:
+   `git checkout -b features-updates-fixes`
+   (or `git checkout features-updates-fixes` if it already exists locally).
+3. If the branch exists only on the remote, check it out tracking origin.
+4. Confirm with `git branch --show-current` that you are on
+   `features-updates-fixes` before further work.
+
+## Matching
+
+- Trigger on `Go!` / `go!` and `New!` / `new!` when they are the command (or the
+  clear primary intent).
+- If both appear, run **New!** only after finishing **Go!** unless the user
+  ordered otherwise.
