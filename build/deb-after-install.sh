@@ -39,8 +39,8 @@ fi
 DO_CLEAN="${ENCODEIT_CLEAN_INSTALL:-0}"
 if [ "$DO_CLEAN" != "1" ] && [ -n "${DISPLAY:-}" ] && command -v zenity >/dev/null 2>&1; then
   if sudo -u "$TARGET_USER" DISPLAY="$DISPLAY" zenity --question \
-    --title="EncodeIt Install" \
-    --text="EncodeIt data was found on this system.\n\nKeep Settings upgrades in place.\nClean Install wipes previous settings and plugins (you can keep media)." \
+    --title="EncodeIt Install" --width=420 \
+    --text="EncodeIt data was found.\n\nKeep Settings: upgrade in place.\nClean Install: wipe settings and plugins (you can keep media)." \
     --ok-label="Clean Install" --cancel-label="Keep Settings" 2>/dev/null; then
     DO_CLEAN=1
   else
@@ -55,9 +55,9 @@ fi
 KEEP_MEDIA="${ENCODEIT_KEEP_MEDIA:-0}"
 if [ -z "${ENCODEIT_KEEP_MEDIA:-}" ] && [ -n "${DISPLAY:-}" ] && command -v zenity >/dev/null 2>&1; then
   if sudo -u "$TARGET_USER" DISPLAY="$DISPLAY" zenity --question \
-    --title="EncodeIt Clean Install" \
+    --title="EncodeIt Clean Install" --width=420 \
     --text="Also delete EncodeIt media folders under Videos?" \
-    --ok-label="Remove Everything" --cancel-label="Keep Media" 2>/dev/null; then
+    --ok-label="Remove All" --cancel-label="Keep Media" 2>/dev/null; then
     KEEP_MEDIA=0
   else
     KEEP_MEDIA=1

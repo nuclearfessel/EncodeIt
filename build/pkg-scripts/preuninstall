@@ -11,9 +11,9 @@ if command -v osascript >/dev/null 2>&1; then
 try
   display dialog "Uninstall EncodeIt completely?
 
-App settings, logs, CEP panels, and host scripts will be removed.
+Settings, logs, CEP panels, and host scripts will be removed.
 
-Click Keep Media to leave Movies/EncodeIt watch and Output folders alone. Otherwise those folders are deleted too." buttons {"Keep Media", "Remove Everything"} default button "Remove Everything" with icon caution with title "EncodeIt Uninstall"
+Keep Media leaves Movies/EncodeIt alone. Remove All deletes media too." buttons {"Keep Media", "Remove All"} default button "Remove All" with icon caution with title "EncodeIt Uninstall"
   if button returned of result is "Keep Media" then
     return "keep"
   else

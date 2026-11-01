@@ -27,11 +27,11 @@ if [[ "${has_prior}" == true ]]; then
   if command -v osascript >/dev/null 2>&1; then
     CHOICE="$(osascript <<'APPLESCRIPT' 2>/dev/null || echo keep
 try
-  display dialog "EncodeIt is already installed on this Mac.
+  display dialog "EncodeIt is already installed.
 
-Keep Settings upgrades in place and preserves settings, queue, and media.
+Keep Settings: upgrade and preserve settings, queue, and media.
 
-Clean Install removes previous settings and plugins, then continues. You will be asked whether to also delete media folders." buttons {"Keep Settings", "Clean Install"} default button "Keep Settings" with icon caution with title "EncodeIt Install"
+Clean Install: wipe settings and plugins (you will be asked about media)." buttons {"Keep Settings", "Clean Install"} default button "Keep Settings" with icon caution with title "EncodeIt Install"
   if button returned of result is "Clean Install" then
     return "clean"
   else
@@ -51,9 +51,9 @@ APPLESCRIPT
     if command -v osascript >/dev/null 2>&1; then
       MEDIA_CHOICE="$(osascript <<'APPLESCRIPT' 2>/dev/null || echo wipe
 try
-  display dialog "Also delete EncodeIt media folders under Movies (from-ae, Output, …)?
+  display dialog "Also delete EncodeIt media under Movies (from-ae, Output, …)?
 
-Keep Media leaves watch folders and Output alone. Remove Everything deletes them too." buttons {"Keep Media", "Remove Everything"} default button "Keep Media" with icon caution with title "EncodeIt Clean Install"
+Keep Media leaves those folders alone." buttons {"Keep Media", "Remove All"} default button "Keep Media" with icon caution with title "EncodeIt Clean Install"
   if button returned of result is "Keep Media" then
     return "keep"
   else

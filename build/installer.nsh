@@ -65,7 +65,7 @@ Var EncodeItKeepMedia
   ${ifNot} ${isUpdated}
     StrCpy $EncodeItKeepMedia "0"
     MessageBox MB_YESNO|MB_ICONEXCLAMATION|MB_DEFBUTTON1 \
-      "Remove EncodeIt completely?$\r$\n$\r$\nYes — delete settings, plugins/scripts, AND media folders$\r$\n(Videos\EncodeIt including from-ae / Output).$\r$\n$\r$\nNo — delete settings and plugins but KEEP media folders." \
+      "Remove EncodeIt completely?$\r$\n$\r$\nYes = delete settings, plugins, AND media$\r$\n(Videos\EncodeIt).$\r$\n$\r$\nNo = delete settings/plugins but KEEP media." \
       IDYES encodeit_un_wipe
     StrCpy $EncodeItKeepMedia "1"
     encodeit_un_wipe:
@@ -154,13 +154,16 @@ Var EncodeItKeepMedia
   Function EncodeItIntegrationsPageCreate
     Call EncodeItDetectHostApps
 
+    ; Keep all controls inside the ~120u MUI inner pane so nothing is clipped.
+    !insertmacro MUI_HEADER_TEXT "Host integrations" "Choose apps to set up. Optional clean wipe below."
+
     nsDialogs::Create 1018
     Pop $EncodeItIntegrationsDialog
     ${If} $EncodeItIntegrationsDialog == error
       Abort
     ${EndIf}
 
-    ${NSD_CreateLabel} 0 0 100% 20u "Standard sets up apps found on this PC. Custom lets you tick After Effects, Resolve, and/or Premiere yourself."
+    ${NSD_CreateLabel} 0 0 100% 12u "Standard uses apps found on this PC. Custom lets you pick AE, Resolve, and/or Premiere."
     Pop $0
 
     ; Detection summary so greyed Standard state is understandable
@@ -177,32 +180,31 @@ Var EncodeItKeepMedia
     ${If} $EncodeItHasAE == "0"
       ${If} $EncodeItHasResolve == "0"
         ${If} $EncodeItHasPremiere == "0"
-          StrCpy $EncodeItDetectNote "Detected: none (Custom can still create folders for apps you plan to use)"
+          StrCpy $EncodeItDetectNote "Detected: none (Custom can still create folders)"
         ${EndIf}
       ${EndIf}
     ${EndIf}
-    ${NSD_CreateLabel} 0 22u 100% 12u "$EncodeItDetectNote"
+    ${NSD_CreateLabel} 0 14u 100% 10u "$EncodeItDetectNote"
     Pop $0
 
-    ${NSD_CreateRadioButton} 0 40u 100% 12u "Standard install — set up every detected host app"
+    ${NSD_CreateRadioButton} 0 28u 100% 12u "Standard install — set up every detected host app"
     Pop $EncodeItRadioStandard
     ${NSD_Check} $EncodeItRadioStandard
 
-    ${NSD_CreateRadioButton} 0 56u 100% 12u "Custom install — choose applications"
+    ${NSD_CreateRadioButton} 0 42u 100% 12u "Custom install — choose applications"
     Pop $EncodeItRadioCustom
 
-    ${NSD_CreateCheckbox} 18u 78u 100% 12u "After Effects"
+    ${NSD_CreateCheckbox} 18u 58u 100% 12u "After Effects"
     Pop $EncodeItCheckAE
-    ${NSD_CreateCheckbox} 18u 94u 100% 12u "DaVinci Resolve"
+    ${NSD_CreateCheckbox} 18u 72u 100% 12u "DaVinci Resolve"
     Pop $EncodeItCheckResolve
-    ${NSD_CreateCheckbox} 18u 110u 100% 12u "Premiere Pro"
+    ${NSD_CreateCheckbox} 18u 86u 100% 12u "Premiere Pro"
     Pop $EncodeItCheckPremiere
 
-    ${NSD_CreateCheckbox} 0 132u 100% 12u "Clean install — wipe previous settings and plugins"
+    ; Ends ~112u — fully inside the pane. Media keep/wipe is asked on Install if checked.
+    ${NSD_CreateCheckbox} 0 104u 100% 12u "Clean install — wipe previous settings and plugins"
     Pop $EncodeItCheckClean
     ${NSD_Uncheck} $EncodeItCheckClean
-    ${NSD_CreateLabel} 18u 146u 100% 16u "Leave unchecked to upgrade and keep settings / queue / media. If checked, you will be asked whether to also delete media folders."
-    Pop $0
 
     ; Default checks from detection (Standard)
     ${If} $EncodeItHasAE == "1"
@@ -323,7 +325,7 @@ Var EncodeItKeepMedia
 
     StrCpy $EncodeItKeepMedia "0"
     MessageBox MB_YESNO|MB_ICONEXCLAMATION|MB_DEFBUTTON2 \
-      "Clean install will remove previous EncodeIt settings and plugins.$\r$\n$\r$\nYes — also delete media folders$\r$\n(Videos\EncodeIt including from-ae / Output).$\r$\n$\r$\nNo — keep media folders; only wipe settings and plugins." \
+      "Clean install removes previous settings and plugins.$\r$\n$\r$\nYes = also delete media (Videos\EncodeIt).$\r$\n$\r$\nNo = keep media; wipe settings/plugins only." \
       IDYES encodeit_ci_wipe
     StrCpy $EncodeItKeepMedia "1"
     encodeit_ci_wipe:

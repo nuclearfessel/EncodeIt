@@ -29,9 +29,9 @@ fi
 KEEP_MEDIA="${ENCODEIT_KEEP_MEDIA:-0}"
 if [ "$KEEP_MEDIA" != "1" ] && [ -n "${DISPLAY:-}" ] && command -v zenity >/dev/null 2>&1; then
   if sudo -u "$TARGET_USER" DISPLAY="$DISPLAY" zenity --question \
-    --title="EncodeIt Uninstall" \
+    --title="EncodeIt Uninstall" --width=420 \
     --text="Remove EncodeIt media folders (Videos/EncodeIt) as well?" \
-    --ok-label="Remove Everything" --cancel-label="Keep Media" 2>/dev/null; then
+    --ok-label="Remove All" --cancel-label="Keep Media" 2>/dev/null; then
     KEEP_MEDIA=0
   else
     KEEP_MEDIA=1
