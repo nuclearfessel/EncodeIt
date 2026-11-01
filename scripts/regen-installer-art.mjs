@@ -329,25 +329,37 @@ function encodeBmp24(img) {
   return file
 }
 
-/** Welcome/finish sidebar: large centered mark, quiet asphalt field. */
+/** Welcome/finish sidebar: logo only on solid left-rail asphalt. */
 function makeSidebar(logoRgba, lw, lh) {
   const img = createRgb(164, 314, BG)
-  verticalGradient(img, BG, PANEL)
-  fillRect(img, 0, 0, 4, 314, ACCENT)
-  const mark = 136
-  pasteRgba(img, logoRgba, lw, lh, Math.round((164 - mark) / 2), 72, mark, mark)
-  fillRect(img, 28, 248, 136, 251, ACCENT)
+  const mark = 132
+  pasteRgba(
+    img,
+    logoRgba,
+    lw,
+    lh,
+    Math.round((164 - mark) / 2),
+    Math.round((314 - mark) / 2),
+    mark,
+    mark
+  )
   return img
 }
 
-/** Inner-page header: mark fills most of the 57px strip. */
+/** Inner-page header: logo only on the same asphalt as the left rail. */
 function makeHeader(logoRgba, lw, lh) {
-  const img = createRgb(150, 57, PANEL)
-  verticalGradient(img, { r: 0x1c, g: 0x20, b: 0x24 }, PANEL)
-  fillRect(img, 0, 0, 150, 2, ACCENT)
-  const mark = 48
-  pasteRgba(img, logoRgba, lw, lh, 8, Math.round((57 - mark) / 2), mark, mark)
-  fillRect(img, 66, 26, 142, 29, ACCENT)
+  const img = createRgb(150, 57, BG)
+  const mark = 49
+  pasteRgba(
+    img,
+    logoRgba,
+    lw,
+    lh,
+    Math.round((150 - mark) / 2),
+    Math.round((57 - mark) / 2),
+    mark,
+    mark
+  )
   return img
 }
 
