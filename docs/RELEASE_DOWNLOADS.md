@@ -2,6 +2,8 @@
 
 Same EncodeIt build, different packaging. Pick **one** for your OS.
 
+**Versioning:** `major.minor.patch` where **patch** only runs `0`–`9`. After `x.y.9` the next release is `x.(y+1).0` (for example `0.1.9` → `0.2.0`, never `0.1.10`).
+
 ### Windows
 | File pattern | What it is |
 |---|---|
