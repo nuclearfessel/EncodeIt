@@ -8,14 +8,24 @@
 !include "nsDialogs.nsh"
 !include "LogicLib.nsh"
 
-; Match the app dark asphalt chrome (must be defined before MUI pages init).
-!macro customHeader
+; Dark asphalt MUI chrome — top-level defines (installer.nsh is prepended before
+; MUI2/pages). Do NOT put these in customHeader: electron-builder inserts that
+; macro after assisted pages, which already defines MUI_BGCOLOR and breaks NSIS.
+!ifndef MUI_BGCOLOR
   !define MUI_BGCOLOR 101214
+!endif
+!ifndef MUI_TEXTCOLOR
   !define MUI_TEXTCOLOR E8EAED
+!endif
+!ifndef MUI_HEADERTEXT_COLOR
   !define MUI_HEADERTEXT_COLOR E8EAED
+!endif
+!ifndef MUI_INSTFILESPAGE_COLORS
   !define MUI_INSTFILESPAGE_COLORS "E8EAED 101214"
+!endif
+!ifndef MUI_LICENSEPAGE_BGCOLOR
   !define MUI_LICENSEPAGE_BGCOLOR 101214
-!macroend
+!endif
 
 ; Keep-media flag — installer (Clean install) and uninstaller both use this.
 Var EncodeItKeepMedia
