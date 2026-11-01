@@ -1,16 +1,26 @@
 <p align="center">
-  <img src="docs/assets/encodeit-logo.svg" alt="EncodeIt" width="112" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme-banner-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme-banner-light.svg">
+    <img src="docs/assets/readme-banner-light.svg" alt="EncodeIt — Open-source batch media encoding. Powered by FFmpeg. Windows, macOS, and Linux." width="100%">
+  </picture>
 </p>
 
 # EncodeIt
 
-<p align="center">
-  <img src="docs/assets/what-is-encodeit.svg" alt="EncodeIt is a desktop batch media encoder: add media, choose a preset, run the queue, and deliver with FFmpeg" width="880" />
-</p>
-
 Open-source batch media encoder with a queue and preset browser, powered by FFmpeg.
 
 Cross-platform (**Windows, macOS, Linux**) via Electron + FFmpeg.
+
+## Workflow
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/workflow-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="docs/assets/workflow-light.svg">
+    <img src="docs/assets/workflow-light.svg" alt="EncodeIt workflow: add media, choose a preset, start the queue, then deliver encoded files to your chosen output path." width="100%">
+  </picture>
+</p>
 
 ## Phase 1
 
@@ -46,6 +56,14 @@ Proprietary certified wrappers (full Dolby Vision packages, DCP packaging, certi
 
 ## Phase 2 — host integrations
 
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/integrations-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="docs/assets/integrations-light.svg">
+    <img src="docs/assets/integrations-light.svg" alt="After Effects, Premiere Pro, and DaVinci Resolve export to watch folders. After files settle, the EncodeIt queue uses FFmpeg to encode them to Output. EncodeIt processes files after the host finishes exporting; it is not a native host codec replacement." width="100%">
+  </picture>
+</p>
+
 | Integration | Location | Mechanism |
 | --- | --- | --- |
 | **Watch folders** (primary) | Preferences → Integrations | Detects AE / Resolve / Premiere; Standard sets up only installed apps; Custom picks among them |
@@ -63,3 +81,5 @@ curl -X POST http://127.0.0.1:47821/queue/add \
   -H "Content-Type: application/json" \
   -d '{"paths":["/path/to/clip.mp4"],"presetId":"h264-match-source-high-bitrate","start":true}'
 ```
+
+Documentation artwork notes: [`docs/GRAPHICS.md`](docs/GRAPHICS.md).

@@ -7,7 +7,7 @@ export type DocBlock =
   | { type: 'ul'; items: string[] }
   | { type: 'table'; headers: string[]; rows: string[][] }
   | { type: 'kbd'; rows: Array<{ keys: string; action: string }> }
-  | { type: 'figure'; src: string; alt: string; caption?: string }
+  | { type: 'figure'; src: string; srcDark?: string; alt: string; caption?: string }
   | { type: 'sub'; title: string; blocks: DocBlock[] }
 
 export interface DocSection {
@@ -25,9 +25,9 @@ export const USER_GUIDE_SECTIONS: DocSection[] = [
     blocks: [
       {
         type: 'figure',
-        src: new URL('../assets/what-is-encodeit.svg', import.meta.url).href,
-        alt: 'EncodeIt is a desktop batch media encoder: add media, choose a preset, run the queue, and deliver with FFmpeg',
-        caption: 'Add media → choose a preset → run the queue → deliver. Watch folders connect AE, Premiere, and Resolve.'
+        src: new URL('../assets/readme-banner-light.svg', import.meta.url).href,
+        srcDark: new URL('../assets/readme-banner-dark.svg', import.meta.url).href,
+        alt: 'EncodeIt — Open-source batch media encoding. Powered by FFmpeg. Windows, macOS, and Linux.'
       },
       {
         type: 'p',
@@ -36,6 +36,13 @@ export const USER_GUIDE_SECTIONS: DocSection[] = [
       {
         type: 'p',
         text: 'Add media, choose a preset, start the queue, and FFmpeg encodes each job. Watch folders let After Effects, Premiere Pro, and DaVinci Resolve hand off renders without scripts.'
+      },
+      {
+        type: 'figure',
+        src: new URL('../assets/workflow-light.svg', import.meta.url).href,
+        srcDark: new URL('../assets/workflow-dark.svg', import.meta.url).href,
+        alt: 'EncodeIt workflow: add media, choose a preset, start the queue, then deliver encoded files to your chosen output path.',
+        caption: 'SOURCE → PRESET → QUEUE → OUTPUT'
       }
     ]
   },
@@ -136,6 +143,13 @@ export const USER_GUIDE_SECTIONS: DocSection[] = [
     id: 'watch-folders',
     title: 'Watch folders',
     blocks: [
+      {
+        type: 'figure',
+        src: new URL('../assets/integrations-light.svg', import.meta.url).href,
+        srcDark: new URL('../assets/integrations-dark.svg', import.meta.url).href,
+        alt: 'After Effects, Premiere Pro, and DaVinci Resolve export to watch folders. After files settle, the EncodeIt queue uses FFmpeg to encode them to Output.',
+        caption: 'File handoff — not a native host codec replacement.'
+      },
       {
         type: 'p',
         text: 'Watch folders automatically queue new media that appears in a directory. This is the primary way After Effects, Premiere Pro, and DaVinci Resolve hand work to EncodeIt — no scripts required.'

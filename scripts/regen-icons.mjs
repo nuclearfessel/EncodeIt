@@ -205,46 +205,7 @@ const logoSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" w
   <image width="256" height="256" href="${dataUri}"/>
 </svg>
 `
-const hero = `<svg xmlns="http://www.w3.org/2000/svg" width="880" height="280" viewBox="0 0 880 280" role="img" aria-labelledby="title desc">
-  <title id="title">What EncodeIt is</title>
-  <desc id="desc">EncodeIt is a desktop batch media encoder: add media, choose a preset, run the queue, and deliver with FFmpeg. Watch folders connect After Effects, Premiere Pro, and DaVinci Resolve.</desc>
-  <defs>
-    <linearGradient id="panel" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#1c1e22"/>
-      <stop offset="100%" stop-color="#121418"/>
-    </linearGradient>
-    <linearGradient id="chip" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#2a2e36"/>
-      <stop offset="100%" stop-color="#22262e"/>
-    </linearGradient>
-  </defs>
-  <rect width="880" height="280" rx="18" fill="url(#panel)"/>
-  <rect x="1" y="1" width="878" height="278" rx="17" fill="none" stroke="#3a3f4a" stroke-width="1"/>
-  <image x="36" y="52" width="148" height="148" href="${dataUri}" />
-  <text x="210" y="88" fill="#f3f4f6" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="34" font-weight="700">EncodeIt</text>
-  <text x="210" y="124" fill="#c4c8d0" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="17">Open-source desktop batch media encoder, powered by FFmpeg</text>
-  <g font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="13" font-weight="600">
-    <rect x="210" y="152" width="118" height="44" rx="10" fill="url(#chip)" stroke="#4a5160"/>
-    <text x="269" y="179" text-anchor="middle" fill="#f3f4f6">Add media</text>
-    <path d="M336 174h18" stroke="#d45a4a" stroke-width="2" stroke-linecap="round"/>
-    <path d="M348 168l8 6-8 6" fill="none" stroke="#d45a4a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    <rect x="364" y="152" width="128" height="44" rx="10" fill="url(#chip)" stroke="#4a5160"/>
-    <text x="428" y="179" text-anchor="middle" fill="#f3f4f6">Choose preset</text>
-    <path d="M500 174h18" stroke="#d45a4a" stroke-width="2" stroke-linecap="round"/>
-    <path d="M512 168l8 6-8 6" fill="none" stroke="#d45a4a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    <rect x="528" y="152" width="126" height="44" rx="10" fill="url(#chip)" stroke="#4a5160"/>
-    <text x="591" y="179" text-anchor="middle" fill="#f3f4f6">Run the queue</text>
-    <path d="M662 174h18" stroke="#d45a4a" stroke-width="2" stroke-linecap="round"/>
-    <path d="M674 168l8 6-8 6" fill="none" stroke="#d45a4a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    <rect x="690" y="152" width="140" height="44" rx="10" fill="url(#chip)" stroke="#4a5160"/>
-    <text x="760" y="179" text-anchor="middle" fill="#f3f4f6">Deliver files</text>
-  </g>
-  <text x="210" y="232" fill="#9aa1ad" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="14">Watch folders hand off renders from After Effects, Premiere Pro, and DaVinci Resolve — no scripts required.</text>
-</svg>
-`
 
 fs.writeFileSync('docs/assets/encodeit-logo.svg', logoSvg)
 fs.writeFileSync('src/renderer/src/assets/encodeit-logo.svg', logoSvg)
-fs.writeFileSync('docs/assets/what-is-encodeit.svg', hero)
-fs.writeFileSync('src/renderer/src/assets/what-is-encodeit.svg', hero)
 console.log('brand assets refreshed')
