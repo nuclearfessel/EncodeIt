@@ -155,7 +155,8 @@ Var EncodeItKeepMedia
     Call EncodeItDetectHostApps
 
     ; Keep all controls inside the ~120u MUI inner pane so nothing is clipped.
-    !insertmacro MUI_HEADER_TEXT "Host integrations" "Choose apps to set up. Optional clean wipe below."
+    ; (Do not call MUI_HEADER_TEXT here — electron-builder's NSIS include
+    ; context does not define that macro and the build will fail.)
 
     nsDialogs::Create 1018
     Pop $EncodeItIntegrationsDialog
