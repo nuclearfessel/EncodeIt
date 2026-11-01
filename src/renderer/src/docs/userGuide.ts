@@ -433,6 +433,21 @@ export const USER_GUIDE_SECTIONS: DocSection[] = [
       },
       {
         type: 'sub',
+        title: 'Installing a newer version',
+        blocks: [
+          {
+            type: 'ul',
+            items: [
+              'Windows Setup detects an existing install, replaces the app, and keeps settings / queue / media by default. Check **Clean install** on the host-integrations page to wipe previous settings and plugins (you will be asked about media).',
+              'macOS PKG upgrades in place; if prior data exists it offers **Keep Settings** or **Clean Install**.',
+              'Linux .deb upgrades in place and keeps data by default; GUI installs can offer Clean Install (or set ENCODEIT_CLEAN_INSTALL=1).',
+              'DMG / portable / AppImage: replace the app file; settings stay on disk. Use Help → Uninstall first if you want a wipe.'
+            ]
+          }
+        ]
+      },
+      {
+        type: 'sub',
         title: 'Uninstalling completely',
         blocks: [
           {
@@ -440,7 +455,7 @@ export const USER_GUIDE_SECTIONS: DocSection[] = [
             items: [
               '**Help → Uninstall EncodeIt…** removes settings, logs, custom presets, workspaces, CEP panels, and known AE / Premiere / Resolve scripts.',
               'By default it also deletes Videos/Movies → EncodeIt media folders (from-ae, Output, …). Check **Keep media folders** to spare those.',
-              'Windows Setup uninstall asks the same Yes (wipe media) / No (keep media) question, then removes the installed app.',
+              'Windows Setup uninstall asks the same Yes (wipe media) / No (keep media) question, then removes the installed app. That wipe is skipped when Setup is only upgrading (use **Clean install** on Setup to wipe during an upgrade).',
               'macOS PKG uninstall prompts similarly. DMG installs: use Help → Uninstall, then remove EncodeIt from Applications.',
               'Linux: deb remove runs cleanup; AppImage users can run `scripts/encodeit-uninstall.sh` or Help → Uninstall.'
             ]

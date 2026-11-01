@@ -1,6 +1,6 @@
 {
   "name": "encodeit",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Open-source batch media encoder powered by FFmpeg",
   "main": "./out/main/index.js",
   "author": "nuclearfessel <nuclearfessel@users.noreply.github.com>",
@@ -95,6 +95,7 @@
       "category": "AudioVideo"
     },
     "deb": {
+      "afterInstall": "build/deb-after-install.sh",
       "afterRemove": "build/deb-after-remove.sh"
     }
   },

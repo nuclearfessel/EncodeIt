@@ -1,14 +1,81 @@
 #!/bin/bash
 # macOS PKG — detect AE / Resolve / Premiere by install location on disk
 # (Applications folders). Apps do not need to be running.
+# If previous EncodeIt data exists, offer Clean install vs keep (upgrade).
 
 set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+CLEANER="${SCRIPT_DIR}/clean-encodeit-paths.sh"
 
 VIDEOS="${HOME}/Movies"
 ROOT="${VIDEOS}/EncodeIt"
 SUPPORT="${HOME}/Library/Application Support/EncodeIt"
 APPS="/Applications"
 USER_APPS="${HOME}/Applications"
+
+# --- Clean install prompt (only when prior app data is present) ---
+has_prior=false
+if [[ -d "${SUPPORT}" ]] || [[ -d "${HOME}/Library/Application Support/Encode This" ]]; then
+  has_prior=true
+elif [[ -f "${HOME}/Library/Preferences/com.encodeit.app.plist" ]]; then
+  has_prior=true
+fi
+
+if [[ "${has_prior}" == true ]]; then
+  CHOICE="keep"
+  if command -v osascript >/dev/null 2>&1; then
+    CHOICE="$(osascript <<'APPLESCRIPT' 2>/dev/null || echo keep
+try
+  display dialog "EncodeIt is already installed on this Mac.
+
+Keep Settings upgrades in place and preserves settings, queue, and media.
+
+Clean Install removes previous settings and plugins, then continues. You will be asked whether to also delete media folders." buttons {"Keep Settings", "Clean Install"} default button "Keep Settings" with icon caution with title "EncodeIt Install"
+  if button returned of result is "Clean Install" then
+    return "clean"
+  else
+    return "keep"
+  end if
+on error number -128
+  return "keep"
+on error
+  return "keep"
+end try
+APPLESCRIPT
+)"
+  fi
+
+  if [[ "${CHOICE}" == "clean" ]]; then
+    MEDIA_CHOICE="wipe"
+    if command -v osascript >/dev/null 2>&1; then
+      MEDIA_CHOICE="$(osascript <<'APPLESCRIPT' 2>/dev/null || echo wipe
+try
+  display dialog "Also delete EncodeIt media folders under Movies (from-ae, Output, …)?
+
+Keep Media leaves watch folders and Output alone. Remove Everything deletes them too." buttons {"Keep Media", "Remove Everything"} default button "Keep Media" with icon caution with title "EncodeIt Clean Install"
+  if button returned of result is "Keep Media" then
+    return "keep"
+  else
+    return "wipe"
+  end if
+on error number -128
+  return "keep"
+on error
+  return "keep"
+end try
+APPLESCRIPT
+)"
+    fi
+    ARGS=()
+    if [[ "${MEDIA_CHOICE}" == "keep" ]]; then
+      ARGS+=(--keep-media)
+    fi
+    if [[ -x "${CLEANER}" || -f "${CLEANER}" ]]; then
+      bash "${CLEANER}" "${ARGS[@]+"${ARGS[@]}"}" || true
+    fi
+  fi
+fi
 
 mkdir -p "${ROOT}/Output" "${SUPPORT}"
 

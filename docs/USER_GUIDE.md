@@ -235,11 +235,18 @@ A JSON inbox folder (shown in Preferences) is also polled for dropped job files.
 - **Not now** clears the update notice for that version until a newer one ships.
 - **Help → Check for Updates…** or Preferences → Updates → **Check now** runs a check immediately.
 
+### Installing a newer version
+
+- **Windows Setup** detects an existing EncodeIt install, replaces the app files with the new version, and **keeps** settings / queue / media by default. On the host-integrations page, check **Clean install** to wipe previous settings and plugins instead (you will be asked whether to also delete media folders).
+- **macOS PKG** upgrades in place the same way. If previous EncodeIt data is found, the installer offers **Keep Settings** (default) or **Clean Install**.
+- **Linux .deb** upgrades in place and keeps data by default. With a GUI session (zenity), install can offer **Clean Install**; or set `ENCODEIT_CLEAN_INSTALL=1` before `dpkg`/`apt`.
+- **DMG / portable / AppImage**: replace the app file; settings stay in Application Support / AppData. Use Help → Uninstall (or the uninstall scripts) before replacing if you want a wipe.
+
 ### Uninstalling completely
 
 - **Help → Uninstall EncodeIt…** removes settings, logs, custom presets, workspaces, CEP panels, and known AE / Premiere / Resolve scripts.
 - By default it also deletes Videos/Movies → EncodeIt media folders (`from-ae`, Output, …). Check **Keep media folders** to spare those.
-- Windows Setup uninstall asks the same Yes (wipe media) / No (keep media) question, then removes the installed app.
+- Windows Setup uninstall asks the same Yes (wipe media) / No (keep media) question, then removes the installed app. That wipe is skipped when Setup is only upgrading (use **Clean install** on Setup to wipe during an upgrade).
 - macOS PKG uninstall prompts similarly. DMG installs: use Help → Uninstall, then remove EncodeIt from Applications.
 - Linux: deb remove runs cleanup; AppImage users can run `scripts/encodeit-uninstall.sh` or Help → Uninstall.
 

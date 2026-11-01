@@ -1,4 +1,5 @@
 ; Windows NSIS — Standard vs Custom host integrations (installer).
+; Clean install checkbox: wipe previous settings/plugins (optional media) even on upgrade.
 ; Uninstall: wipe app data + plugins; ask whether to keep Videos\EncodeIt media.
 ; Detection = install folders / Resolve.exe on disk (apps do NOT need to be running).
 ; Standard: pre-checks apps found on this PC (folders only for those).
@@ -6,6 +7,42 @@
 
 !include "nsDialogs.nsh"
 !include "LogicLib.nsh"
+
+; Keep-media flag — installer (Clean install) and uninstaller both use this.
+Var EncodeItKeepMedia
+
+; Shared wipe used by real uninstall and by Clean install during Setup.
+; Call after deciding media: $EncodeItKeepMedia = "1" to spare Videos\EncodeIt trees.
+!macro EncodeItDoWipe
+  SetShellVarContext current
+  ${If} $EncodeItKeepMedia != "1"
+    RMDir /r "$PROFILE\Videos\EncodeIt"
+    RMDir /r "$PROFILE\Videos\Encode This"
+  ${EndIf}
+  RMDir /r "$APPDATA\EncodeIt"
+  RMDir /r "$APPDATA\Encode This"
+  RMDir /r "$LOCALAPPDATA\EncodeIt"
+  RMDir /r "$LOCALAPPDATA\Encode This"
+  RMDir /r "$APPDATA\Adobe\CEP\extensions\encodeit-ae"
+  RMDir /r "$APPDATA\Adobe\CEP\extensions\encode-this-ae"
+  Delete "$APPDATA\Blackmagic Design\DaVinci Resolve\Support\Fusion\Scripts\Utility\send_to_encodeit.py"
+  Delete "$APPDATA\Blackmagic Design\DaVinci Resolve\Support\Fusion\Scripts\Utility\send_to_encode_this.py"
+  Delete "$APPDATA\Blackmagic Design\DaVinci Resolve\Support\Fusion\Scripts\Utility\resolve_deliver_handoff.py"
+  Delete "$APPDATA\Blackmagic Design\DaVinci Resolve\Support\Fusion\Scripts\Utility\resolve_deliver_handoff_encode_this.py"
+  ; Best-effort Adobe Scripts (common year folders; missing paths are ignored)
+  Delete "$PROGRAMFILES\Adobe\Adobe After Effects 2024\Support Files\Scripts\SendToEncodeIt.jsx"
+  Delete "$PROGRAMFILES\Adobe\Adobe After Effects 2025\Support Files\Scripts\SendToEncodeIt.jsx"
+  Delete "$PROGRAMFILES\Adobe\Adobe After Effects 2026\Support Files\Scripts\SendToEncodeIt.jsx"
+  Delete "$PROGRAMFILES\Adobe\Adobe After Effects 2024\Support Files\Scripts\SendToEncodeThis.jsx"
+  Delete "$PROGRAMFILES\Adobe\Adobe After Effects 2025\Support Files\Scripts\SendToEncodeThis.jsx"
+  Delete "$PROGRAMFILES\Adobe\Adobe After Effects 2026\Support Files\Scripts\SendToEncodeThis.jsx"
+  Delete "$PROGRAMFILES\Adobe\Adobe Premiere Pro 2024\Scripts\SendToEncodeIt.jsx"
+  Delete "$PROGRAMFILES\Adobe\Adobe Premiere Pro 2025\Scripts\SendToEncodeIt.jsx"
+  Delete "$PROGRAMFILES\Adobe\Adobe Premiere Pro 2026\Scripts\SendToEncodeIt.jsx"
+  Delete "$PROGRAMFILES\Adobe\Adobe Premiere Pro 2024\Scripts\SendToEncodeThis.jsx"
+  Delete "$PROGRAMFILES\Adobe\Adobe Premiere Pro 2025\Scripts\SendToEncodeThis.jsx"
+  Delete "$PROGRAMFILES\Adobe\Adobe Premiere Pro 2026\Scripts\SendToEncodeThis.jsx"
+!macroend
 
 !macro customPageAfterChangeDir
   !ifndef BUILD_UNINSTALLER
@@ -20,40 +57,20 @@
 !macroend
 
 ; Full clean uninstall (media wipe by default; user can Keep Media via No).
+; When the Setup installer upgrades an existing install, electron-builder runs this
+; uninstaller with --updated: skip data wipe so settings/queue/media survive, while
+; the old Program Files copy is still replaced by the new version.
+; (Use the Clean install checkbox on Setup to wipe during an upgrade instead.)
 !macro customUnInstall
-  MessageBox MB_YESNO|MB_ICONEXCLAMATION|MB_DEFBUTTON1 \
-    "Remove EncodeIt completely?$\r$\n$\r$\nYes — delete settings, plugins/scripts, AND media folders$\r$\n(Videos\EncodeIt including from-ae / Output).$\r$\n$\r$\nNo — delete settings and plugins but KEEP media folders." \
-    IDYES encodeit_wipe_media
-  Goto encodeit_clean_rest
-
-  encodeit_wipe_media:
-    RMDir /r "$PROFILE\Videos\EncodeIt"
-    RMDir /r "$PROFILE\Videos\Encode This"
-
-  encodeit_clean_rest:
-    RMDir /r "$APPDATA\EncodeIt"
-    RMDir /r "$APPDATA\Encode This"
-    RMDir /r "$LOCALAPPDATA\EncodeIt"
-    RMDir /r "$LOCALAPPDATA\Encode This"
-    RMDir /r "$APPDATA\Adobe\CEP\extensions\encodeit-ae"
-    RMDir /r "$APPDATA\Adobe\CEP\extensions\encode-this-ae"
-    Delete "$APPDATA\Blackmagic Design\DaVinci Resolve\Support\Fusion\Scripts\Utility\send_to_encodeit.py"
-    Delete "$APPDATA\Blackmagic Design\DaVinci Resolve\Support\Fusion\Scripts\Utility\send_to_encode_this.py"
-    Delete "$APPDATA\Blackmagic Design\DaVinci Resolve\Support\Fusion\Scripts\Utility\resolve_deliver_handoff.py"
-    Delete "$APPDATA\Blackmagic Design\DaVinci Resolve\Support\Fusion\Scripts\Utility\resolve_deliver_handoff_encode_this.py"
-    ; Best-effort Adobe Scripts (common year folders; missing paths are ignored)
-    Delete "$PROGRAMFILES\Adobe\Adobe After Effects 2024\Support Files\Scripts\SendToEncodeIt.jsx"
-    Delete "$PROGRAMFILES\Adobe\Adobe After Effects 2025\Support Files\Scripts\SendToEncodeIt.jsx"
-    Delete "$PROGRAMFILES\Adobe\Adobe After Effects 2026\Support Files\Scripts\SendToEncodeIt.jsx"
-    Delete "$PROGRAMFILES\Adobe\Adobe After Effects 2024\Support Files\Scripts\SendToEncodeThis.jsx"
-    Delete "$PROGRAMFILES\Adobe\Adobe After Effects 2025\Support Files\Scripts\SendToEncodeThis.jsx"
-    Delete "$PROGRAMFILES\Adobe\Adobe After Effects 2026\Support Files\Scripts\SendToEncodeThis.jsx"
-    Delete "$PROGRAMFILES\Adobe\Adobe Premiere Pro 2024\Scripts\SendToEncodeIt.jsx"
-    Delete "$PROGRAMFILES\Adobe\Adobe Premiere Pro 2025\Scripts\SendToEncodeIt.jsx"
-    Delete "$PROGRAMFILES\Adobe\Adobe Premiere Pro 2026\Scripts\SendToEncodeIt.jsx"
-    Delete "$PROGRAMFILES\Adobe\Adobe Premiere Pro 2024\Scripts\SendToEncodeThis.jsx"
-    Delete "$PROGRAMFILES\Adobe\Adobe Premiere Pro 2025\Scripts\SendToEncodeThis.jsx"
-    Delete "$PROGRAMFILES\Adobe\Adobe Premiere Pro 2026\Scripts\SendToEncodeThis.jsx"
+  ${ifNot} ${isUpdated}
+    StrCpy $EncodeItKeepMedia "0"
+    MessageBox MB_YESNO|MB_ICONEXCLAMATION|MB_DEFBUTTON1 \
+      "Remove EncodeIt completely?$\r$\n$\r$\nYes — delete settings, plugins/scripts, AND media folders$\r$\n(Videos\EncodeIt including from-ae / Output).$\r$\n$\r$\nNo — delete settings and plugins but KEEP media folders." \
+      IDYES encodeit_un_wipe
+    StrCpy $EncodeItKeepMedia "1"
+    encodeit_un_wipe:
+    !insertmacro EncodeItDoWipe
+  ${endIf}
 !macroend
 
 !ifndef BUILD_UNINSTALLER
@@ -63,10 +80,12 @@
   Var EncodeItCheckAE
   Var EncodeItCheckResolve
   Var EncodeItCheckPremiere
+  Var EncodeItCheckClean
   Var EncodeItInstallAE
   Var EncodeItInstallResolve
   Var EncodeItInstallPremiere
   Var EncodeItInstallMode
+  Var EncodeItCleanInstall
   Var EncodeItHasAE
   Var EncodeItHasResolve
   Var EncodeItHasPremiere
@@ -141,7 +160,7 @@
       Abort
     ${EndIf}
 
-    ${NSD_CreateLabel} 0 0 100% 24u "Standard sets up apps found on this PC. Custom lets you tick After Effects, Resolve, and/or Premiere yourself."
+    ${NSD_CreateLabel} 0 0 100% 20u "Standard sets up apps found on this PC. Custom lets you tick After Effects, Resolve, and/or Premiere yourself."
     Pop $0
 
     ; Detection summary so greyed Standard state is understandable
@@ -162,22 +181,28 @@
         ${EndIf}
       ${EndIf}
     ${EndIf}
-    ${NSD_CreateLabel} 0 26u 100% 14u "$EncodeItDetectNote"
+    ${NSD_CreateLabel} 0 22u 100% 12u "$EncodeItDetectNote"
     Pop $0
 
-    ${NSD_CreateRadioButton} 0 46u 100% 14u "Standard install — set up every detected host app"
+    ${NSD_CreateRadioButton} 0 40u 100% 12u "Standard install — set up every detected host app"
     Pop $EncodeItRadioStandard
     ${NSD_Check} $EncodeItRadioStandard
 
-    ${NSD_CreateRadioButton} 0 64u 100% 14u "Custom install — choose applications"
+    ${NSD_CreateRadioButton} 0 56u 100% 12u "Custom install — choose applications"
     Pop $EncodeItRadioCustom
 
-    ${NSD_CreateCheckbox} 18u 90u 100% 12u "After Effects"
+    ${NSD_CreateCheckbox} 18u 78u 100% 12u "After Effects"
     Pop $EncodeItCheckAE
-    ${NSD_CreateCheckbox} 18u 108u 100% 12u "DaVinci Resolve"
+    ${NSD_CreateCheckbox} 18u 94u 100% 12u "DaVinci Resolve"
     Pop $EncodeItCheckResolve
-    ${NSD_CreateCheckbox} 18u 126u 100% 12u "Premiere Pro"
+    ${NSD_CreateCheckbox} 18u 110u 100% 12u "Premiere Pro"
     Pop $EncodeItCheckPremiere
+
+    ${NSD_CreateCheckbox} 0 132u 100% 12u "Clean install — wipe previous settings and plugins"
+    Pop $EncodeItCheckClean
+    ${NSD_Uncheck} $EncodeItCheckClean
+    ${NSD_CreateLabel} 18u 146u 100% 16u "Leave unchecked to upgrade and keep settings / queue / media. If checked, you will be asked whether to also delete media folders."
+    Pop $0
 
     ; Default checks from detection (Standard)
     ${If} $EncodeItHasAE == "1"
@@ -243,6 +268,13 @@
   FunctionEnd
 
   Function EncodeItIntegrationsPageLeave
+    ${NSD_GetState} $EncodeItCheckClean $0
+    ${If} $0 == ${BST_CHECKED}
+      StrCpy $EncodeItCleanInstall "1"
+    ${Else}
+      StrCpy $EncodeItCleanInstall "0"
+    ${EndIf}
+
     ${NSD_GetState} $EncodeItRadioCustom $0
     ${If} $0 == ${BST_CHECKED}
       StrCpy $EncodeItInstallMode "custom"
@@ -284,10 +316,25 @@
     ${EndIf}
   FunctionEnd
 
+  Function EncodeItMaybeCleanInstall
+    ${If} $EncodeItCleanInstall != "1"
+      Return
+    ${EndIf}
+
+    StrCpy $EncodeItKeepMedia "0"
+    MessageBox MB_YESNO|MB_ICONEXCLAMATION|MB_DEFBUTTON2 \
+      "Clean install will remove previous EncodeIt settings and plugins.$\r$\n$\r$\nYes — also delete media folders$\r$\n(Videos\EncodeIt including from-ae / Output).$\r$\n$\r$\nNo — keep media folders; only wipe settings and plugins." \
+      IDYES encodeit_ci_wipe
+    StrCpy $EncodeItKeepMedia "1"
+    encodeit_ci_wipe:
+    !insertmacro EncodeItDoWipe
+  FunctionEnd
+
   Function EncodeItRunHostSetup
     ${If} $EncodeItInstallMode == ""
       Call EncodeItDetectHostApps
       StrCpy $EncodeItInstallMode "standard"
+      StrCpy $EncodeItCleanInstall "0"
       ${If} $EncodeItHasAE == "1"
         StrCpy $EncodeItInstallAE "true"
       ${Else}
@@ -304,6 +351,8 @@
         StrCpy $EncodeItInstallPremiere "false"
       ${EndIf}
     ${EndIf}
+
+    Call EncodeItMaybeCleanInstall
 
     CreateDirectory "$PROFILE\Videos\EncodeIt"
     CreateDirectory "$PROFILE\Videos\EncodeIt\Output"
