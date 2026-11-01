@@ -96,47 +96,44 @@ Var EncodeItThemeParent
   Pop $0
 !macroend
 
-Function EncodeItThemeChildWindows
-  !insertmacro EncodeItThemeChildWindowsImpl
-FunctionEnd
-Function un.EncodeItThemeChildWindows
-  !insertmacro EncodeItThemeChildWindowsImpl
-FunctionEnd
-
-Function EncodeItThemeInnerDialog
-  !insertmacro EncodeItThemeInnerDialogImpl ""
-FunctionEnd
-Function un.EncodeItThemeInnerDialog
-  !insertmacro EncodeItThemeInnerDialogImpl "un."
-FunctionEnd
-
-Function EncodeItThemeOuter
-  !insertmacro EncodeItThemeOuterImpl
-FunctionEnd
-Function un.EncodeItThemeOuter
-  !insertmacro EncodeItThemeOuterImpl
-FunctionEnd
-
-Function EncodeItGuiInit
-  Call EncodeItThemeOuter
-FunctionEnd
-Function un.EncodeItGuiInit
-  Call un.EncodeItThemeOuter
-FunctionEnd
-
-Function EncodeItThemePageShow
-  Call EncodeItThemeOuter
-  Call EncodeItThemeInnerDialog
-FunctionEnd
-Function un.EncodeItThemePageShow
-  Call un.EncodeItThemeOuter
-  Call un.EncodeItThemeInnerDialog
-FunctionEnd
-
+; Only emit the function set this makensis pass will reference (-WX treats
+; unused installer/uninstaller counterparts as errors).
 !ifndef BUILD_UNINSTALLER
+  Function EncodeItThemeChildWindows
+    !insertmacro EncodeItThemeChildWindowsImpl
+  FunctionEnd
+  Function EncodeItThemeInnerDialog
+    !insertmacro EncodeItThemeInnerDialogImpl ""
+  FunctionEnd
+  Function EncodeItThemeOuter
+    !insertmacro EncodeItThemeOuterImpl
+  FunctionEnd
+  Function EncodeItGuiInit
+    Call EncodeItThemeOuter
+  FunctionEnd
+  Function EncodeItThemePageShow
+    Call EncodeItThemeOuter
+    Call EncodeItThemeInnerDialog
+  FunctionEnd
   !define MUI_CUSTOMFUNCTION_GUIINIT EncodeItGuiInit
   !define MUI_PAGE_CUSTOMFUNCTION_SHOW EncodeItThemePageShow
 !else
+  Function un.EncodeItThemeChildWindows
+    !insertmacro EncodeItThemeChildWindowsImpl
+  FunctionEnd
+  Function un.EncodeItThemeInnerDialog
+    !insertmacro EncodeItThemeInnerDialogImpl "un."
+  FunctionEnd
+  Function un.EncodeItThemeOuter
+    !insertmacro EncodeItThemeOuterImpl
+  FunctionEnd
+  Function un.EncodeItGuiInit
+    Call un.EncodeItThemeOuter
+  FunctionEnd
+  Function un.EncodeItThemePageShow
+    Call un.EncodeItThemeOuter
+    Call un.EncodeItThemeInnerDialog
+  FunctionEnd
   !define MUI_CUSTOMFUNCTION_UNGUIINIT un.EncodeItGuiInit
   !define MUI_PAGE_CUSTOMFUNCTION_SHOW un.EncodeItThemePageShow
 !endif
