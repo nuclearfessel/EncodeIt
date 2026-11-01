@@ -41,9 +41,11 @@ jobs:
       - name: Unit tests
         run: npm test
 
-      # No GH_TOKEN here — publish is disabled; we only attach installers below (no auto-update).
+      # GITHUB_TOKEN authenticates FFmpeg release API lookups (avoids anonymous 403s).
       - name: Download FFmpeg + build + package
         run: npm run dist -- --${{ matrix.platform }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Package AE CEP zip
         if: matrix.platform == 'win'
