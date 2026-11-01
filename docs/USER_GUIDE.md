@@ -3,18 +3,28 @@
 In-app: **Help → Documentation** (or press **F1**).
 
 <p align="center">
-  <img src="assets/encodeit-logo.svg" alt="EncodeIt" width="96" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/readme-banner-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="assets/readme-banner-light.svg">
+    <img src="assets/readme-banner-light.svg" alt="EncodeIt — Open-source batch media encoding. Powered by FFmpeg. Windows, macOS, and Linux." width="100%">
+  </picture>
 </p>
 
 ---
 
 ## Overview
 
-![What EncodeIt is](assets/what-is-encodeit.svg)
-
 EncodeIt is a batch media encoder with an queue and preset browser powered by FFmpeg.
 
 Add media, choose a preset, start the queue, and FFmpeg encodes each job. Watch folders let After Effects, Premiere Pro, and DaVinci Resolve hand off renders without scripts.
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/workflow-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="assets/workflow-light.svg">
+    <img src="assets/workflow-light.svg" alt="EncodeIt workflow: add media, choose a preset, start the queue, then deliver encoded files to your chosen output path." width="100%">
+  </picture>
+</p>
 
 ---
 
@@ -78,6 +88,14 @@ Presets map to open FFmpeg recipes for common delivery targets.
 ---
 
 ## Watch folders
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/integrations-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="assets/integrations-light.svg">
+    <img src="assets/integrations-light.svg" alt="After Effects, Premiere Pro, and DaVinci Resolve export to watch folders. After files settle, the EncodeIt queue uses FFmpeg to encode them to Output." width="100%">
+  </picture>
+</p>
 
 Watch folders automatically queue new media that appears in a directory. This is the primary way After Effects, Premiere Pro, and DaVinci Resolve hand work to EncodeIt — no scripts required.
 

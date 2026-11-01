@@ -5,7 +5,7 @@ import {
   type DocBlock,
   type DocSection
 } from '../docs/userGuide'
-import { applyThemeMode } from '../theme'
+import { applyThemeMode, type ResolvedTheme } from '../theme'
 import { Splitter } from './Splitter'
 import { WindowControls } from './WindowControls'
 
@@ -30,7 +30,7 @@ function renderInline(text: string): ReactNode[] {
   })
 }
 
-function DocBlocks({ blocks }: { blocks: DocBlock[] }) {
+function DocBlocks({ blocks, theme }: { blocks: DocBlock[]; theme: ResolvedTheme }) {
   return (
     <>
       {blocks.map((block, i) => {
@@ -110,21 +110,23 @@ function DocBlocks({ blocks }: { blocks: DocBlock[] }) {
                 </table>
               </div>
             )
-          case 'figure':
+          case 'figure': {
+            const src = theme === 'dark' && block.srcDark ? block.srcDark : block.src
             return (
               <figure key={i} className="help-docs-figure">
-                <img className="help-docs-figure-img" src={block.src} alt={block.alt} />
+                <img className="help-docs-figure-img" src={src} alt={block.alt} />
                 {block.caption ? (
                   <figcaption className="help-docs-figure-caption">{block.caption}</figcaption>
                 ) : null}
               </figure>
             )
+          }
           case 'sub':
             return (
               <section key={i} className="help-docs-sub">
                 <h4 className="help-docs-sub-title">{block.title}</h4>
                 <div className="help-docs-sub-body">
-                  <DocBlocks blocks={block.blocks} />
+                  <DocBlocks blocks={block.blocks} theme={theme} />
                 </div>
               </section>
             )
@@ -136,14 +138,20 @@ function DocBlocks({ blocks }: { blocks: DocBlock[] }) {
   )
 }
 
-function SectionArticle({ section }: { section: DocSection }) {
+function SectionArticle({
+  section,
+  theme
+}: {
+  section: DocSection
+  theme: ResolvedTheme
+}) {
   return (
     <article className="help-docs-article">
       <header className="help-docs-article-header">
         <h3>{section.title}</h3>
       </header>
       <div className="help-docs-article-body">
-        <DocBlocks blocks={section.blocks} />
+        <DocBlocks blocks={section.blocks} theme={theme} />
       </div>
     </article>
   )
@@ -153,12 +161,15 @@ function SectionArticle({ section }: { section: DocSection }) {
 export function HelpDocumentationWindow() {
   const [sectionId, setSectionId] = useState(USER_GUIDE_SECTIONS[0]?.id ?? 'overview')
   const [navWidth, setNavWidth] = useState(NAV_WIDTH_DEFAULT)
+  const [theme, setTheme] = useState<ResolvedTheme>('dark')
   const section =
     USER_GUIDE_SECTIONS.find((s) => s.id === sectionId) ?? USER_GUIDE_SECTIONS[0]
 
   useEffect(() => {
-    void window.EncodeIt.getSettings().then((cfg) => applyThemeMode(cfg.themeMode))
-    const off = window.EncodeIt.onSettingsChanged((cfg) => applyThemeMode(cfg.themeMode))
+    void window.EncodeIt.getSettings().then((cfg) => setTheme(applyThemeMode(cfg.themeMode)))
+    const off = window.EncodeIt.onSettingsChanged((cfg) =>
+      setTheme(applyThemeMode(cfg.themeMode))
+    )
     return () => {
       off()
     }
@@ -202,7 +213,9 @@ export function HelpDocumentationWindow() {
           onReset={() => setNavWidth(NAV_WIDTH_DEFAULT)}
         />
 
-        <div className="help-docs-panel">{section ? <SectionArticle section={section} /> : null}</div>
+        <div className="help-docs-panel">
+          {section ? <SectionArticle section={section} theme={theme} /> : null}
+        </div>
       </div>
     </div>
   )
