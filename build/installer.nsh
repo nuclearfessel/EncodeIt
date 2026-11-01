@@ -38,15 +38,21 @@
 Var EncodeItKeepMedia
 Var EncodeItThemeParent
 
-; Soft coral on asphalt — match app dark theme as far as classic Win32 controls allow.
+; Soft coral on asphalt — match app dark theme as far as classic Win32 allows.
 ; Installer and uninstaller each need their own functions (NSIS cannot Call across).
+; Per-page SHOW is re-armed in build/assistedInstaller.nsh (MUI undefs it each page).
+
+!macro EncodeItFlatControl HWND_ FG_ BG_
+  System::Call 'uxtheme::SetWindowTheme(p${HWND_}, w" ", w" ")'
+  SetCtlColors ${HWND_} ${FG_} ${BG_}
+!macroend
+
 !macro EncodeItThemeChildWindowsImpl
   Exch $EncodeItThemeParent
   Push $0
   System::Call 'user32::GetWindow(p$EncodeItThemeParent, i5) p.r0' ; GW_CHILD
   ${While} $0 != 0
-    System::Call 'uxtheme::SetWindowTheme(p$0, w" ", w" ")'
-    SetCtlColors $0 0xE8EAED 0x101214
+    !insertmacro EncodeItFlatControl $0 0xE8EAED 0x101214
     System::Call 'user32::GetWindow(p$0, i2) p.r0' ; GW_HWNDNEXT
   ${EndWhile}
   Pop $0
@@ -57,12 +63,20 @@ Var EncodeItThemeParent
   Push $0
   FindWindow $0 "#32770" "" $HWNDPARENT
   ${If} $0 != 0
-    System::Call 'uxtheme::SetWindowTheme(p$0, w" ", w" ")'
-    SetCtlColors $0 0xE8EAED 0x101214
+    !insertmacro EncodeItFlatControl $0 0xE8EAED 0x101214
     Push $0
     Call ${UNPREFIX}EncodeItThemeChildWindows
   ${EndIf}
   Pop $0
+!macroend
+
+!macro EncodeItThemeButtonImpl CTRL
+  GetDlgItem $0 $HWNDPARENT ${CTRL}
+  ${If} $0 != 0
+    ; Elevated asphalt face — not the stock white classic buttons.
+    !insertmacro EncodeItFlatControl $0 0xE8EAED 0x212529
+    System::Call 'user32::InvalidateRect(p$0, p0, i1)'
+  ${EndIf}
 !macroend
 
 !macro EncodeItThemeOuterImpl
@@ -75,24 +89,34 @@ Var EncodeItThemeParent
   ${EndIf}
   GetDlgItem $0 $HWNDPARENT 1037 ; header title
   ${If} $0 != 0
-    SetCtlColors $0 0xE8EAED 0x101214
+    !insertmacro EncodeItFlatControl $0 0xE8EAED 0x101214
   ${EndIf}
   GetDlgItem $0 $HWNDPARENT 1038 ; header subtitle
   ${If} $0 != 0
-    SetCtlColors $0 0xA8ADB4 0x101214
+    !insertmacro EncodeItFlatControl $0 0xA8ADB4 0x101214
   ${EndIf}
-  GetDlgItem $0 $HWNDPARENT 1028 ; branding strip
+
+  ; Hide MUI /BRANDING embossed “EncodeIt 1.0.0” (reads as a drop shadow).
+  GetDlgItem $0 $HWNDPARENT 1256
   ${If} $0 != 0
-    SetCtlColors $0 0xA8ADB4 0x101214
+    ShowWindow $0 ${SW_HIDE}
   ${EndIf}
-  GetDlgItem $0 $HWNDPARENT 1256 ; branding text
+  GetDlgItem $0 $HWNDPARENT 1028 ; branding strip behind it
   ${If} $0 != 0
-    SetCtlColors $0 0xA8ADB4 0x101214
+    !insertmacro EncodeItFlatControl $0 0x101214 0x101214
   ${EndIf}
-  GetDlgItem $0 $HWNDPARENT 1035 ; separator line under header
+
+  ; Kill the bright hairline under the header
+  GetDlgItem $0 $HWNDPARENT 1035
   ${If} $0 != 0
-    SetCtlColors $0 "" 0x2C3136
+    ShowWindow $0 ${SW_HIDE}
   ${EndIf}
+
+  ; Next / Cancel / Back
+  !insertmacro EncodeItThemeButtonImpl 1
+  !insertmacro EncodeItThemeButtonImpl 2
+  !insertmacro EncodeItThemeButtonImpl 3
+
   Pop $0
 !macroend
 
@@ -116,7 +140,6 @@ Var EncodeItThemeParent
     Call EncodeItThemeInnerDialog
   FunctionEnd
   !define MUI_CUSTOMFUNCTION_GUIINIT EncodeItGuiInit
-  !define MUI_PAGE_CUSTOMFUNCTION_SHOW EncodeItThemePageShow
 !else
   Function un.EncodeItThemeChildWindows
     !insertmacro EncodeItThemeChildWindowsImpl
@@ -135,7 +158,6 @@ Var EncodeItThemeParent
     Call un.EncodeItThemeInnerDialog
   FunctionEnd
   !define MUI_CUSTOMFUNCTION_UNGUIINIT un.EncodeItGuiInit
-  !define MUI_PAGE_CUSTOMFUNCTION_SHOW un.EncodeItThemePageShow
 !endif
 
 ; Shared wipe used by real uninstall and by Clean install during Setup.
@@ -290,11 +312,12 @@ Var EncodeItThemeParent
     ${If} $EncodeItIntegrationsDialog == error
       Abort
     ${EndIf}
-    SetCtlColors $EncodeItIntegrationsDialog 0xE8EAED 0x101214
+    Call EncodeItThemeOuter
+    !insertmacro EncodeItFlatControl $EncodeItIntegrationsDialog 0xE8EAED 0x101214
 
     ${NSD_CreateLabel} 0 0 100% 12u "Standard uses apps found on this PC. Custom lets you pick AE, Resolve, and/or Premiere."
     Pop $0
-    SetCtlColors $0 0xE8EAED 0x101214
+    !insertmacro EncodeItFlatControl $0 0xE8EAED 0x101214
 
     ; Detection summary so greyed Standard state is understandable
     StrCpy $EncodeItDetectNote "Detected:"
@@ -316,31 +339,31 @@ Var EncodeItThemeParent
     ${EndIf}
     ${NSD_CreateLabel} 0 14u 100% 10u "$EncodeItDetectNote"
     Pop $0
-    SetCtlColors $0 0xA8ADB4 0x101214
+    !insertmacro EncodeItFlatControl $0 0xA8ADB4 0x101214
 
     ${NSD_CreateRadioButton} 0 28u 100% 12u "Standard install — set up every detected host app"
     Pop $EncodeItRadioStandard
-    SetCtlColors $EncodeItRadioStandard 0xE8EAED 0x101214
+    !insertmacro EncodeItFlatControl $EncodeItRadioStandard 0xE8EAED 0x101214
     ${NSD_Check} $EncodeItRadioStandard
 
     ${NSD_CreateRadioButton} 0 42u 100% 12u "Custom install — choose applications"
     Pop $EncodeItRadioCustom
-    SetCtlColors $EncodeItRadioCustom 0xE8EAED 0x101214
+    !insertmacro EncodeItFlatControl $EncodeItRadioCustom 0xE8EAED 0x101214
 
     ${NSD_CreateCheckbox} 18u 58u 100% 12u "After Effects"
     Pop $EncodeItCheckAE
-    SetCtlColors $EncodeItCheckAE 0xE8EAED 0x101214
+    !insertmacro EncodeItFlatControl $EncodeItCheckAE 0xE8EAED 0x101214
     ${NSD_CreateCheckbox} 18u 72u 100% 12u "DaVinci Resolve"
     Pop $EncodeItCheckResolve
-    SetCtlColors $EncodeItCheckResolve 0xE8EAED 0x101214
+    !insertmacro EncodeItFlatControl $EncodeItCheckResolve 0xE8EAED 0x101214
     ${NSD_CreateCheckbox} 18u 86u 100% 12u "Premiere Pro"
     Pop $EncodeItCheckPremiere
-    SetCtlColors $EncodeItCheckPremiere 0xE8EAED 0x101214
+    !insertmacro EncodeItFlatControl $EncodeItCheckPremiere 0xE8EAED 0x101214
 
     ; Ends ~112u — fully inside the pane. Media keep/wipe is asked on Install if checked.
     ${NSD_CreateCheckbox} 0 104u 100% 12u "Clean install — wipe previous settings and plugins"
     Pop $EncodeItCheckClean
-    SetCtlColors $EncodeItCheckClean 0xE8EAED 0x101214
+    !insertmacro EncodeItFlatControl $EncodeItCheckClean 0xE8EAED 0x101214
     ${NSD_Uncheck} $EncodeItCheckClean
 
     ; Default checks from detection (Standard)
