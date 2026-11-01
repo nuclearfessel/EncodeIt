@@ -34,6 +34,16 @@
   !define MUI_DIRECTORYPAGE_TEXTCOLOR E8EAED
 !endif
 
+; Finish.nsh only SetWindowTheme’s run/readme checkboxes in high-contrast unless
+; this is set — without it, visual styles keep near-black label text (bug #443).
+!ifndef MUI_FORCECLASSICCONTROLS
+  !define MUI_FORCECLASSICCONTROLS
+!endif
+
+; Empty branding string — MUI’s SetCtlColors /BRANDING draws an embossed
+; “drop shadow” on $(^Branding); blanking it removes the ghosted EncodeIt 1.0.0.
+BrandingText " "
+
 ; Keep-media flag — installer (Clean install) and uninstaller both use this.
 Var EncodeItKeepMedia
 Var EncodeItThemeParent
@@ -70,6 +80,22 @@ Var EncodeItThemeParent
   Pop $0
 !macroend
 
+; Finish / welcome replace dialog item 1044 with an nsDialog. The usual
+; #32770 walk never reaches “Run EncodeIt”. Theme 1044 + its children
+; (FlatControl strips uxtheme — MUI bug #443).
+!macro EncodeItThemeFinishRunImpl UNPREFIX
+  Push $0
+
+  GetDlgItem $0 $HWNDPARENT 1044
+  ${If} $0 != 0
+    !insertmacro EncodeItFlatControl $0 0xE8EAED 0x101214
+    Push $0
+    Call ${UNPREFIX}EncodeItThemeChildWindows
+  ${EndIf}
+
+  Pop $0
+!macroend
+
 !macro EncodeItThemeButtonImpl CTRL
   GetDlgItem $0 $HWNDPARENT ${CTRL}
   ${If} $0 != 0
@@ -96,14 +122,24 @@ Var EncodeItThemeParent
     !insertmacro EncodeItFlatControl $0 0xA8ADB4 0x101214
   ${EndIf}
 
-  ; Hide MUI /BRANDING embossed “EncodeIt 1.0.0” (reads as a drop shadow).
-  GetDlgItem $0 $HWNDPARENT 1256
-  ${If} $0 != 0
-    ShowWindow $0 ${SW_HIDE}
+  ; Kill MUI /BRANDING emboss (offset “drop shadow”) on the footer version.
+  ; Prefer MUI’s cached HWNDs; also flatten colors in case the control is reshown.
+  StrCpy $0 $mui.Branding.Text
+  ${If} $0 == 0
+    GetDlgItem $0 $HWNDPARENT 1256
   ${EndIf}
-  GetDlgItem $0 $HWNDPARENT 1028 ; branding strip behind it
   ${If} $0 != 0
     !insertmacro EncodeItFlatControl $0 0x101214 0x101214
+    SendMessage $0 ${WM_SETTEXT} 0 "STR: "
+    ShowWindow $0 ${SW_HIDE}
+  ${EndIf}
+  StrCpy $0 $mui.Branding.Background
+  ${If} $0 == 0
+    GetDlgItem $0 $HWNDPARENT 1028
+  ${EndIf}
+  ${If} $0 != 0
+    !insertmacro EncodeItFlatControl $0 0x101214 0x101214
+    ShowWindow $0 ${SW_HIDE}
   ${EndIf}
 
   ; Kill the bright hairline under the header
@@ -135,9 +171,13 @@ Var EncodeItThemeParent
   Function EncodeItGuiInit
     Call EncodeItThemeOuter
   FunctionEnd
+  Function EncodeItThemeFinishRun
+    !insertmacro EncodeItThemeFinishRunImpl ""
+  FunctionEnd
   Function EncodeItThemePageShow
     Call EncodeItThemeOuter
     Call EncodeItThemeInnerDialog
+    Call EncodeItThemeFinishRun
   FunctionEnd
   !define MUI_CUSTOMFUNCTION_GUIINIT EncodeItGuiInit
 !else
@@ -153,9 +193,13 @@ Var EncodeItThemeParent
   Function un.EncodeItGuiInit
     Call un.EncodeItThemeOuter
   FunctionEnd
+  Function un.EncodeItThemeFinishRun
+    !insertmacro EncodeItThemeFinishRunImpl "un."
+  FunctionEnd
   Function un.EncodeItThemePageShow
     Call un.EncodeItThemeOuter
     Call un.EncodeItThemeInnerDialog
+    Call un.EncodeItThemeFinishRun
   FunctionEnd
   !define MUI_CUSTOMFUNCTION_UNGUIINIT un.EncodeItGuiInit
 !endif
@@ -385,13 +429,24 @@ Var EncodeItThemeParent
 
     ${NSD_OnClick} $EncodeItRadioStandard EncodeItOnInstallMode
     ${NSD_OnClick} $EncodeItRadioCustom EncodeItOnInstallMode
+    ; Keep host checks enabled — DisableWindow draws embossed “shadow” labels on dark UI.
+    ; Under Standard, clicks snap back to detection via EncodeItLockHostChecks.
+    ${NSD_OnClick} $EncodeItCheckAE EncodeItLockHostChecks
+    ${NSD_OnClick} $EncodeItCheckResolve EncodeItLockHostChecks
+    ${NSD_OnClick} $EncodeItCheckPremiere EncodeItLockHostChecks
     Call EncodeItApplyStandardMode
 
     nsDialogs::Show
   FunctionEnd
 
+  Function EncodeItThemeHostChecks
+    !insertmacro EncodeItFlatControl $EncodeItCheckAE 0xE8EAED 0x101214
+    !insertmacro EncodeItFlatControl $EncodeItCheckResolve 0xE8EAED 0x101214
+    !insertmacro EncodeItFlatControl $EncodeItCheckPremiere 0xE8EAED 0x101214
+  FunctionEnd
+
   Function EncodeItApplyStandardMode
-    ; Grey out checkboxes under Standard (selection is detection-driven)
+    ; Selection is detection-driven — leave controls enabled so labels stay crisp.
     ${If} $EncodeItHasAE == "1"
       ${NSD_Check} $EncodeItCheckAE
     ${Else}
@@ -407,16 +462,19 @@ Var EncodeItThemeParent
     ${Else}
       ${NSD_Uncheck} $EncodeItCheckPremiere
     ${EndIf}
-    EnableWindow $EncodeItCheckAE 0
-    EnableWindow $EncodeItCheckResolve 0
-    EnableWindow $EncodeItCheckPremiere 0
+    Call EncodeItThemeHostChecks
   FunctionEnd
 
   Function EncodeItApplyCustomMode
-    ; Custom: always allow choosing any host app
-    EnableWindow $EncodeItCheckAE 1
-    EnableWindow $EncodeItCheckResolve 1
-    EnableWindow $EncodeItCheckPremiere 1
+    Call EncodeItThemeHostChecks
+  FunctionEnd
+
+  Function EncodeItLockHostChecks
+    ; Ignore toggles while Standard is selected
+    ${NSD_GetState} $EncodeItRadioCustom $0
+    ${If} $0 != ${BST_CHECKED}
+      Call EncodeItApplyStandardMode
+    ${EndIf}
   FunctionEnd
 
   Function EncodeItOnInstallMode
