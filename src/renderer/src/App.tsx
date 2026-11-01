@@ -650,6 +650,7 @@ function MainApp() {
 
       <StatusBar
         status={updateStatus}
+        fallbackVersion={APP_VERSION}
         onDownload={() => void window.EncodeIt.openUpdateDownload()}
         onDismiss={() => {
           void window.EncodeIt.dismissUpdate().then((s) => {

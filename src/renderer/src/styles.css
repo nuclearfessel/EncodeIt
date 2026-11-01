@@ -667,12 +667,19 @@ body.is-row-resizing * {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  min-height: 32px;
-  padding: 4px 12px;
+  min-height: 28px;
+  padding: 3px 12px;
   border-top: 1px solid var(--border);
-  background: #162032;
+  background: var(--bg-panel);
+  color: var(--text-dim);
+  font-size: 11px;
+  line-height: 1.2;
+}
+
+.app-status-bar.has-update {
   color: var(--text);
-  font-size: 12px;
+  background: #1a222c;
+  border-top-color: var(--border-strong);
 }
 
 .app-status-bar-text {
@@ -687,6 +694,17 @@ body.is-row-resizing * {
   align-items: center;
   gap: 6px;
   flex: 0 0 auto;
+}
+
+.app-status-bar-idle {
+  color: var(--text-mute);
+}
+
+.app-status-bar-actions button {
+  min-height: 22px;
+  height: 22px;
+  padding: 0 8px;
+  font-size: 11px;
 }
 
 .uninstall-dialog {

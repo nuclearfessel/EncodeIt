@@ -230,9 +230,9 @@ A JSON inbox folder (shown in Preferences) is also polled for dropped job files.
 ### Checking for updates
 
 - **Preferences → Updates → Check for updates** enables automatic checks on launch and about once a day (on by default).
-- When a newer version exists, a status bar appears at the bottom of the window.
+- The bottom status bar is always visible; it shows the app version, and update actions when a newer release exists.
 - **Download…** opens the release in your browser — nothing is downloaded automatically.
-- **Not now** hides the notice for that version until a newer one ships.
+- **Not now** clears the update notice for that version until a newer one ships.
 - **Help → Check for Updates…** or Preferences → Updates → **Check now** runs a check immediately.
 
 ### Uninstalling completely
