@@ -10,6 +10,7 @@ import {
   type DockEdge,
   type WorkspaceState
 } from '../shared/workspaceLayout'
+import { loadAppIcon } from './appIcon'
 import {
   cloneWorkspace,
   createNamedWorkspace,
@@ -340,6 +341,7 @@ export class PanelWindowManager {
       display.workArea.y + display.workArea.height - defaults.height
     )
 
+    const icon = loadAppIcon()
     const win = new BrowserWindow({
       width: defaults.width,
       height: defaults.height,
@@ -351,6 +353,7 @@ export class PanelWindowManager {
       backgroundColor: '#eceef1',
       frame: false,
       show: false,
+      ...(icon ? { icon } : {}),
       webPreferences: {
         preload: this.preloadPath,
         contextIsolation: true,

@@ -18,6 +18,7 @@ export {
   GripVertical,
   LoaderCircle,
   Menu,
+  Moon,
   MoreHorizontal,
   PanelLeftOpen,
   PanelsTopLeft,
@@ -28,6 +29,9 @@ export {
   Square,
   X
 } from '@keyline-icons/react'
+
+/** Fill sun — solid disc reads clearer at title-bar size than stroke sun. */
+export { Sun as SunFill } from '@keyline-icons/react/fill'
 
 export const iconSize = {
   sm: 14,

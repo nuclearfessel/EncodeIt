@@ -1,6 +1,6 @@
 {
   "name": "encodeit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Open-source batch media encoder powered by FFmpeg",
   "main": "./out/main/index.js",
   "author": "nuclearfessel <nuclearfessel@users.noreply.github.com>",
@@ -47,6 +47,7 @@
   "build": {
     "appId": "com.encodeit.app",
     "productName": "EncodeIt",
+    "icon": "build/icon.png",
     "directories": {
       "output": "release"
     },
@@ -61,11 +62,20 @@
         "filter": [
           "**/*"
         ]
+      },
+      {
+        "from": "resources/icon.png",
+        "to": "icon.png"
+      },
+      {
+        "from": "build/icon.ico",
+        "to": "icon.ico"
       }
     ],
     "publish": null,
     "mac": {
       "category": "public.app-category.video",
+      "icon": "build/icon.png",
       "target": [
         "dmg",
         "zip",
@@ -82,12 +92,14 @@
       "differentialPackage": false
     },
     "win": {
+      "icon": "build/icon.ico",
       "target": [
         "nsis",
         "portable"
       ]
     },
     "linux": {
+      "icon": "build/icon.png",
       "target": [
         "AppImage",
         "deb"

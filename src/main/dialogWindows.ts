@@ -1,6 +1,7 @@
 import { BrowserWindow, screen } from 'electron'
 import path from 'path'
 import type { ThemeMode } from '../shared/types'
+import { loadAppIcon } from './appIcon'
 
 type DialogKind = 'prefs' | 'exportSettings'
 
@@ -81,6 +82,7 @@ export class DialogWindowManager {
     const bg = WINDOW_BG[resolveTheme(this.getThemeMode(), this.systemDark())]
     const title = kind === 'prefs' ? 'Preferences' : 'Export Settings'
 
+    const icon = loadAppIcon()
     const win = new BrowserWindow({
       width: size.width,
       height: size.height,
@@ -94,6 +96,7 @@ export class DialogWindowManager {
       show: false,
       resizable: true,
       maximizable: true,
+      ...(icon ? { icon } : {}),
       webPreferences: {
         preload: this.preloadPath,
         contextIsolation: true,
