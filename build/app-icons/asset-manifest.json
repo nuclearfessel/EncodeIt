@@ -1,0 +1,710 @@
+{
+  "app": "EncodeIt",
+  "platforms": [
+    "macOS",
+    "Windows",
+    "Linux"
+  ],
+  "files": [
+    {
+      "path": "Apple/README.md",
+      "bytes": 1355,
+      "sha256": "dcb46b7fbc27c5d0d464a63bc7431d6f70dfe621b94c813cfcf1dd00779aaca5"
+    },
+    {
+      "path": "Apple/macOS/Assets.xcassets/AppIcon.appiconset/Contents.json",
+      "bytes": 1276,
+      "sha256": "fc6afe47effadd27d3d4c5425608770032aa0269886a719cb929fe981c2885db"
+    },
+    {
+      "path": "Apple/macOS/Assets.xcassets/AppIcon.appiconset/icon-mac-128@1x.png",
+      "bytes": 8205,
+      "sha256": "f50dff62911ca793a7bd18f5c6dd04d13ba6334e63669da277c530e33e6f4c99"
+    },
+    {
+      "path": "Apple/macOS/Assets.xcassets/AppIcon.appiconset/icon-mac-128@2x.png",
+      "bytes": 19412,
+      "sha256": "c01da4b837d4d7a061afd9f8a5cff9c43102d443ee49ba37289ee640d7e6a48d"
+    },
+    {
+      "path": "Apple/macOS/Assets.xcassets/AppIcon.appiconset/icon-mac-16@1x.png",
+      "bytes": 1013,
+      "sha256": "77a5c18fc18d50166b870dad7683181e0f303189570f6ae0e54b8dabd0cb7506"
+    },
+    {
+      "path": "Apple/macOS/Assets.xcassets/AppIcon.appiconset/icon-mac-16@2x.png",
+      "bytes": 1858,
+      "sha256": "dafeb78af14a14ee946456ff91a96efacfbf572bf8c801c942d457c26802077a"
+    },
+    {
+      "path": "Apple/macOS/Assets.xcassets/AppIcon.appiconset/icon-mac-256@1x.png",
+      "bytes": 19412,
+      "sha256": "c01da4b837d4d7a061afd9f8a5cff9c43102d443ee49ba37289ee640d7e6a48d"
+    },
+    {
+      "path": "Apple/macOS/Assets.xcassets/AppIcon.appiconset/icon-mac-256@2x.png",
+      "bytes": 43948,
+      "sha256": "0e429969b786e97025dbf6e8795cc6d1546ccaf27387a90e34663b9db9a056cc"
+    },
+    {
+      "path": "Apple/macOS/Assets.xcassets/AppIcon.appiconset/icon-mac-32@1x.png",
+      "bytes": 1858,
+      "sha256": "dafeb78af14a14ee946456ff91a96efacfbf572bf8c801c942d457c26802077a"
+    },
+    {
+      "path": "Apple/macOS/Assets.xcassets/AppIcon.appiconset/icon-mac-32@2x.png",
+      "bytes": 3762,
+      "sha256": "fd6173aabaee6e8f7a2e23620a5bda7a08a43c21a4723ae3d13a1057140eb6f5"
+    },
+    {
+      "path": "Apple/macOS/Assets.xcassets/AppIcon.appiconset/icon-mac-512@1x.png",
+      "bytes": 43948,
+      "sha256": "0e429969b786e97025dbf6e8795cc6d1546ccaf27387a90e34663b9db9a056cc"
+    },
+    {
+      "path": "Apple/macOS/Assets.xcassets/AppIcon.appiconset/icon-mac-512@2x.png",
+      "bytes": 82000,
+      "sha256": "82a2f542d0481dc4856affcd1a58c0894b3d855886cd2756cf1bb8628b7bd132"
+    },
+    {
+      "path": "Apple/macOS/Assets.xcassets/Contents.json",
+      "bytes": 60,
+      "sha256": "f5fb0e1f3a8142892ed092efb5955c1c2cc537003a89ad7bbdb9dade7fe8985f"
+    },
+    {
+      "path": "Apple/macOS/EncodeIt.icns",
+      "bytes": 160262,
+      "sha256": "b8e86562df63e1f534c68173538b55ee6b43cff195148a4bbbae43cc051e9e35"
+    },
+    {
+      "path": "Apple/macOS/encodeit-macos-app-store-1024.png",
+      "bytes": 82000,
+      "sha256": "82a2f542d0481dc4856affcd1a58c0894b3d855886cd2756cf1bb8628b7bd132"
+    },
+    {
+      "path": "Apple/macOS/encodeit-macos-app-store-1024.svg",
+      "bytes": 4586,
+      "sha256": "50ee9b36397a0b433d872bc3083456cd587bf1b7f2cf51e30e148e8480e52d86"
+    },
+    {
+      "path": "Artwork/encodeit-app-store-1024.png",
+      "bytes": 82000,
+      "sha256": "82a2f542d0481dc4856affcd1a58c0894b3d855886cd2756cf1bb8628b7bd132"
+    },
+    {
+      "path": "Artwork/encodeit-app-store-1024.svg",
+      "bytes": 4586,
+      "sha256": "50ee9b36397a0b433d872bc3083456cd587bf1b7f2cf51e30e148e8480e52d86"
+    },
+    {
+      "path": "Artwork/foreground-1024.png",
+      "bytes": 101438,
+      "sha256": "4f36c1f99572f16d1b2a93fdc8cb39bb07c4f779ed505b39cc74ccc94c4d1ae2"
+    },
+    {
+      "path": "Artwork/foreground-1024.svg",
+      "bytes": 4524,
+      "sha256": "1f10c677c220a88724c67b0baa17c4bb9222f69396673c68d84c5fb8d1cde395"
+    },
+    {
+      "path": "Linux/.DirIcon",
+      "bytes": 23457,
+      "sha256": "9600aa52fdc3fddfac21346397649b7a78362b99348ba36d437f9ea103bb7e4d"
+    },
+    {
+      "path": "Linux/README.md",
+      "bytes": 775,
+      "sha256": "be07ab414e3236d663c6db8b4a2b2b1d737225536552c6a383f434d912cd2f12"
+    },
+    {
+      "path": "Linux/encodeit.desktop.example",
+      "bytes": 159,
+      "sha256": "71c95bb48fbf42cfd8db9a3d8a49e0befce7a28159872957570dfee1d41d5049"
+    },
+    {
+      "path": "Linux/hicolor/128x128/apps/encodeit.png",
+      "bytes": 9740,
+      "sha256": "1ada1c4868e58272b002355270d54c600bedc398bd4c09f554b7e484fc48e3e9"
+    },
+    {
+      "path": "Linux/hicolor/16x16/apps/encodeit.png",
+      "bytes": 1121,
+      "sha256": "753577645534b33316da0418cd58b0abf44c96ca0309de4317b9143f49dac2e1"
+    },
+    {
+      "path": "Linux/hicolor/22x22/apps/encodeit.png",
+      "bytes": 1497,
+      "sha256": "430846495dab5bcc66fa7d0302f30fd4af9a4d6c91a352beb00c58a760f1f9df"
+    },
+    {
+      "path": "Linux/hicolor/24x24/apps/encodeit.png",
+      "bytes": 1624,
+      "sha256": "75537b8dc5c67b6c165a4fc132cf781028fe8bb491f754a1558b0a3b783982d8"
+    },
+    {
+      "path": "Linux/hicolor/256x256/apps/encodeit.png",
+      "bytes": 23457,
+      "sha256": "9600aa52fdc3fddfac21346397649b7a78362b99348ba36d437f9ea103bb7e4d"
+    },
+    {
+      "path": "Linux/hicolor/32x32/apps/encodeit.png",
+      "bytes": 2215,
+      "sha256": "065fcee1e9112018d545316e94c9024d88b9cc44e7410865b400dcc2786cf640"
+    },
+    {
+      "path": "Linux/hicolor/48x48/apps/encodeit.png",
+      "bytes": 3369,
+      "sha256": "973f5f014e180b37b27b30e06168adbdd760f46f45771ace61bea2e2b6b76afb"
+    },
+    {
+      "path": "Linux/hicolor/512x512/apps/encodeit.png",
+      "bytes": 56566,
+      "sha256": "bb02f50ecbde8b9c378415da85aa87b0c92acc8f1eaf1386e79fb7ca3d82fc57"
+    },
+    {
+      "path": "Linux/hicolor/64x64/apps/encodeit.png",
+      "bytes": 4580,
+      "sha256": "7335108ff07ec63d4a9ecad3eb3474275d1a012d79bcb6bb484991b77c6c78eb"
+    },
+    {
+      "path": "Linux/hicolor/scalable/apps/encodeit.svg",
+      "bytes": 4539,
+      "sha256": "420b748747c57e937074a2eb0c4aa9d729df0cfcdb8b7e8f9c6a883988a612d0"
+    },
+    {
+      "path": "README.md",
+      "bytes": 970,
+      "sha256": "d681615cc7ca7aa139389a13f5b35fd49835f19f9440f1f44958cd02ebf4e282"
+    },
+    {
+      "path": "Windows/PACKAGE-MANIFEST-SNIPPET.md",
+      "bytes": 1127,
+      "sha256": "f21e9f1edfe1a059e2bc6b4503957d4b595c4a43a3c05b03fee43314042e1601"
+    },
+    {
+      "path": "Windows/README.md",
+      "bytes": 1135,
+      "sha256": "16452e283465fb3a6b63e4129097b41622c458bc57ca622d8023316e35f3d755"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-16.png",
+      "bytes": 1121,
+      "sha256": "753577645534b33316da0418cd58b0abf44c96ca0309de4317b9143f49dac2e1"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-16_altform-lightunplated.png",
+      "bytes": 1121,
+      "sha256": "753577645534b33316da0418cd58b0abf44c96ca0309de4317b9143f49dac2e1"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-16_altform-unplated.png",
+      "bytes": 1121,
+      "sha256": "753577645534b33316da0418cd58b0abf44c96ca0309de4317b9143f49dac2e1"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-20.png",
+      "bytes": 1398,
+      "sha256": "dce3817b14cfc5218bb34bb891d3663a50b6d5d5da27b5818bfc4f64fd66cba4"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-20_altform-lightunplated.png",
+      "bytes": 1398,
+      "sha256": "dce3817b14cfc5218bb34bb891d3663a50b6d5d5da27b5818bfc4f64fd66cba4"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-20_altform-unplated.png",
+      "bytes": 1398,
+      "sha256": "dce3817b14cfc5218bb34bb891d3663a50b6d5d5da27b5818bfc4f64fd66cba4"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-24.png",
+      "bytes": 1624,
+      "sha256": "75537b8dc5c67b6c165a4fc132cf781028fe8bb491f754a1558b0a3b783982d8"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-24_altform-lightunplated.png",
+      "bytes": 1624,
+      "sha256": "75537b8dc5c67b6c165a4fc132cf781028fe8bb491f754a1558b0a3b783982d8"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-24_altform-unplated.png",
+      "bytes": 1624,
+      "sha256": "75537b8dc5c67b6c165a4fc132cf781028fe8bb491f754a1558b0a3b783982d8"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-256.png",
+      "bytes": 23457,
+      "sha256": "9600aa52fdc3fddfac21346397649b7a78362b99348ba36d437f9ea103bb7e4d"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-256_altform-lightunplated.png",
+      "bytes": 23457,
+      "sha256": "9600aa52fdc3fddfac21346397649b7a78362b99348ba36d437f9ea103bb7e4d"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-256_altform-unplated.png",
+      "bytes": 23457,
+      "sha256": "9600aa52fdc3fddfac21346397649b7a78362b99348ba36d437f9ea103bb7e4d"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-30.png",
+      "bytes": 2064,
+      "sha256": "1d8df7ee512a25260a6ecaba8440b9c32194ec2e527b0453a04bc1a257ec3d9e"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-30_altform-lightunplated.png",
+      "bytes": 2064,
+      "sha256": "1d8df7ee512a25260a6ecaba8440b9c32194ec2e527b0453a04bc1a257ec3d9e"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-30_altform-unplated.png",
+      "bytes": 2064,
+      "sha256": "1d8df7ee512a25260a6ecaba8440b9c32194ec2e527b0453a04bc1a257ec3d9e"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-32.png",
+      "bytes": 2215,
+      "sha256": "065fcee1e9112018d545316e94c9024d88b9cc44e7410865b400dcc2786cf640"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-32_altform-lightunplated.png",
+      "bytes": 2215,
+      "sha256": "065fcee1e9112018d545316e94c9024d88b9cc44e7410865b400dcc2786cf640"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-32_altform-unplated.png",
+      "bytes": 2215,
+      "sha256": "065fcee1e9112018d545316e94c9024d88b9cc44e7410865b400dcc2786cf640"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-36.png",
+      "bytes": 2472,
+      "sha256": "ac8f37d8aa57b148b00f44d7c9964d3577a364b0dee20581afc717f27a91252e"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-36_altform-lightunplated.png",
+      "bytes": 2472,
+      "sha256": "ac8f37d8aa57b148b00f44d7c9964d3577a364b0dee20581afc717f27a91252e"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-36_altform-unplated.png",
+      "bytes": 2472,
+      "sha256": "ac8f37d8aa57b148b00f44d7c9964d3577a364b0dee20581afc717f27a91252e"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-40.png",
+      "bytes": 2765,
+      "sha256": "3cbe00f5171c4317033b1e4c6c512fda64aeba1ce9b58f6ac24fcc1623f82d1e"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-40_altform-lightunplated.png",
+      "bytes": 2765,
+      "sha256": "3cbe00f5171c4317033b1e4c6c512fda64aeba1ce9b58f6ac24fcc1623f82d1e"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-40_altform-unplated.png",
+      "bytes": 2765,
+      "sha256": "3cbe00f5171c4317033b1e4c6c512fda64aeba1ce9b58f6ac24fcc1623f82d1e"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-48.png",
+      "bytes": 3369,
+      "sha256": "973f5f014e180b37b27b30e06168adbdd760f46f45771ace61bea2e2b6b76afb"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-48_altform-lightunplated.png",
+      "bytes": 3369,
+      "sha256": "973f5f014e180b37b27b30e06168adbdd760f46f45771ace61bea2e2b6b76afb"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-48_altform-unplated.png",
+      "bytes": 3369,
+      "sha256": "973f5f014e180b37b27b30e06168adbdd760f46f45771ace61bea2e2b6b76afb"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-60.png",
+      "bytes": 4276,
+      "sha256": "2128e40cee4b1ef3f49d6acbe1dc6d014f18acaa6c0f4d6ed49a04d911710708"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-60_altform-lightunplated.png",
+      "bytes": 4276,
+      "sha256": "2128e40cee4b1ef3f49d6acbe1dc6d014f18acaa6c0f4d6ed49a04d911710708"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-60_altform-unplated.png",
+      "bytes": 4276,
+      "sha256": "2128e40cee4b1ef3f49d6acbe1dc6d014f18acaa6c0f4d6ed49a04d911710708"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-64.png",
+      "bytes": 4580,
+      "sha256": "7335108ff07ec63d4a9ecad3eb3474275d1a012d79bcb6bb484991b77c6c78eb"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-64_altform-lightunplated.png",
+      "bytes": 4580,
+      "sha256": "7335108ff07ec63d4a9ecad3eb3474275d1a012d79bcb6bb484991b77c6c78eb"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-64_altform-unplated.png",
+      "bytes": 4580,
+      "sha256": "7335108ff07ec63d4a9ecad3eb3474275d1a012d79bcb6bb484991b77c6c78eb"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-72.png",
+      "bytes": 5114,
+      "sha256": "bad41bfaec59f0006b3a97a5ed172bc1f5ff4e85f6c4cdd20b8d93db03d9f267"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-72_altform-lightunplated.png",
+      "bytes": 5114,
+      "sha256": "bad41bfaec59f0006b3a97a5ed172bc1f5ff4e85f6c4cdd20b8d93db03d9f267"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-72_altform-unplated.png",
+      "bytes": 5114,
+      "sha256": "bad41bfaec59f0006b3a97a5ed172bc1f5ff4e85f6c4cdd20b8d93db03d9f267"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-80.png",
+      "bytes": 5809,
+      "sha256": "c555fa526861f129f0b4dbf476846426b427aa6c01fed466015a3f921e25e8b0"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-80_altform-lightunplated.png",
+      "bytes": 5809,
+      "sha256": "c555fa526861f129f0b4dbf476846426b427aa6c01fed466015a3f921e25e8b0"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-80_altform-unplated.png",
+      "bytes": 5809,
+      "sha256": "c555fa526861f129f0b4dbf476846426b427aa6c01fed466015a3f921e25e8b0"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-96.png",
+      "bytes": 7059,
+      "sha256": "301e9e00d94ce996f552f3d66363645890fed09c7833bf566fb5830a4f17e99a"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-96_altform-lightunplated.png",
+      "bytes": 7059,
+      "sha256": "301e9e00d94ce996f552f3d66363645890fed09c7833bf566fb5830a4f17e99a"
+    },
+    {
+      "path": "Windows/app-list/AppList.targetsize-96_altform-unplated.png",
+      "bytes": 7059,
+      "sha256": "301e9e00d94ce996f552f3d66363645890fed09c7833bf566fb5830a4f17e99a"
+    },
+    {
+      "path": "Windows/encodeit-windows.ico",
+      "bytes": 31872,
+      "sha256": "7707063c28c6dd1a2c24fcc82e6ae84b5b38f5003def785ad472a51125d8dc32"
+    },
+    {
+      "path": "Windows/package/images/Square150x150Logo.png",
+      "bytes": 11506,
+      "sha256": "378423a4d25cf2bb7008d7b336180906dded84bf7bc80a55b276cdf2a70e68d5"
+    },
+    {
+      "path": "Windows/package/images/Square150x150Logo.scale-100.png",
+      "bytes": 11506,
+      "sha256": "378423a4d25cf2bb7008d7b336180906dded84bf7bc80a55b276cdf2a70e68d5"
+    },
+    {
+      "path": "Windows/package/images/Square150x150Logo.scale-125.png",
+      "bytes": 15119,
+      "sha256": "da3aa5a252757e254f21deff02f4676b88f1b699805b1c85220618a44682659d"
+    },
+    {
+      "path": "Windows/package/images/Square150x150Logo.scale-150.png",
+      "bytes": 19135,
+      "sha256": "49ff64579b5b029f5b2ea558d7ba4629bbdf5e4caedb6e252ae05dd94606cb25"
+    },
+    {
+      "path": "Windows/package/images/Square150x150Logo.scale-200.png",
+      "bytes": 27707,
+      "sha256": "1ab1f97931c8373fdf30e34c381b221d6cd36eea757e397685ed65233c3f879b"
+    },
+    {
+      "path": "Windows/package/images/Square150x150Logo.scale-400.png",
+      "bytes": 70105,
+      "sha256": "5a14637bc02b091353e775345519dfa525ca7207b3be0619d54dfa7369d22015"
+    },
+    {
+      "path": "Windows/package/images/Square310x310Logo.png",
+      "bytes": 29323,
+      "sha256": "0b560e6747f35c5975ebdaf8d177d23c2c58e2391759ceb01934d442fcfcfafb"
+    },
+    {
+      "path": "Windows/package/images/Square310x310Logo.scale-100.png",
+      "bytes": 29323,
+      "sha256": "0b560e6747f35c5975ebdaf8d177d23c2c58e2391759ceb01934d442fcfcfafb"
+    },
+    {
+      "path": "Windows/package/images/Square310x310Logo.scale-125.png",
+      "bytes": 38654,
+      "sha256": "92b31b97d03b3dcbed43e75df838b0a0e871c44722f43b51445a0473dad4880f"
+    },
+    {
+      "path": "Windows/package/images/Square310x310Logo.scale-150.png",
+      "bytes": 50346,
+      "sha256": "0f8c60af7a465560ee4955082b3f7ced4e6015c0fa3ccae593e0327a7892317d"
+    },
+    {
+      "path": "Windows/package/images/Square310x310Logo.scale-200.png",
+      "bytes": 73509,
+      "sha256": "a74d376d56ec7da8490482b366c367febb0fe449f10ff120ef869e2c6f8bcc03"
+    },
+    {
+      "path": "Windows/package/images/Square310x310Logo.scale-400.png",
+      "bytes": 197159,
+      "sha256": "fa4440ea9306a81c2e06fcc29ebbecae0f92cfbe0aa869fed5e1b13e1fcfc0a4"
+    },
+    {
+      "path": "Windows/package/images/Square44x44Logo.png",
+      "bytes": 3109,
+      "sha256": "3c47a1d6ece2943637ea5226a37b20e7cce02c70db328546ef49cf5c70affea2"
+    },
+    {
+      "path": "Windows/package/images/Square44x44Logo.scale-100.png",
+      "bytes": 3109,
+      "sha256": "3c47a1d6ece2943637ea5226a37b20e7cce02c70db328546ef49cf5c70affea2"
+    },
+    {
+      "path": "Windows/package/images/Square44x44Logo.scale-125.png",
+      "bytes": 3878,
+      "sha256": "3a8c4103a2c99a6376fe717ead4afef642fc00f5a904d04c40c0758c71e4e1e1"
+    },
+    {
+      "path": "Windows/package/images/Square44x44Logo.scale-150.png",
+      "bytes": 4659,
+      "sha256": "a9e79572a4be8fc99c170c6ff1cb4b14ecdcee9ee8a88b3e83f128c48e2507a5"
+    },
+    {
+      "path": "Windows/package/images/Square44x44Logo.scale-200.png",
+      "bytes": 6338,
+      "sha256": "6f72c96bc4a33d9a6713fb3db4054d8194f2b6ce85e1208b4659ac7d49d8cb64"
+    },
+    {
+      "path": "Windows/package/images/Square44x44Logo.scale-400.png",
+      "bytes": 14021,
+      "sha256": "291ab507e00fc9b02da6f9e6be11930f121eb091c50478ae7ec083a8acecd1f6"
+    },
+    {
+      "path": "Windows/package/images/Square71x71Logo.png",
+      "bytes": 5028,
+      "sha256": "2f3eb8d8bc513746ba0d6b1349f8e53ba86b38285c5f7872cd40776b818eb872"
+    },
+    {
+      "path": "Windows/package/images/Square71x71Logo.scale-100.png",
+      "bytes": 5028,
+      "sha256": "2f3eb8d8bc513746ba0d6b1349f8e53ba86b38285c5f7872cd40776b818eb872"
+    },
+    {
+      "path": "Windows/package/images/Square71x71Logo.scale-125.png",
+      "bytes": 6406,
+      "sha256": "ed36ead376c6cbcd47a9c328dbc32bd0a48c8446b07337e93eb2260067e34885"
+    },
+    {
+      "path": "Windows/package/images/Square71x71Logo.scale-150.png",
+      "bytes": 7878,
+      "sha256": "0b562d51d08a209494cba5fa715d3099fb4375c7bc9e7f0c43075751f95ff2a3"
+    },
+    {
+      "path": "Windows/package/images/Square71x71Logo.scale-200.png",
+      "bytes": 10741,
+      "sha256": "6b426eb3fa9257e5021f6d5a86f312937ddfc83ec7a168a5c518a2ac2a2ff861"
+    },
+    {
+      "path": "Windows/package/images/Square71x71Logo.scale-400.png",
+      "bytes": 25953,
+      "sha256": "b18cf6a63223d9fc2aef443dde7040119fc3aec0008632541f61f40478ba0133"
+    },
+    {
+      "path": "Windows/package/images/StoreLogo.png",
+      "bytes": 3496,
+      "sha256": "0ca5079bc7d0ff3fc92f38c09a123ccf5656a0aeb22c57d38548d0f6073fc518"
+    },
+    {
+      "path": "Windows/package/images/StoreLogo.scale-100.png",
+      "bytes": 3496,
+      "sha256": "0ca5079bc7d0ff3fc92f38c09a123ccf5656a0aeb22c57d38548d0f6073fc518"
+    },
+    {
+      "path": "Windows/package/images/StoreLogo.scale-100_altform-colorful_theme-light.png",
+      "bytes": 3205,
+      "sha256": "7d7e25f52f2109a33b9b66328d9bdbdb7f7b37fdf67426da91e4432a8a7f4567"
+    },
+    {
+      "path": "Windows/package/images/StoreLogo.scale-125.png",
+      "bytes": 4454,
+      "sha256": "501eaf919972382a1ec46fd1edf0644c7e8904e6c8529c543f17e7b99660684d"
+    },
+    {
+      "path": "Windows/package/images/StoreLogo.scale-125_altform-colorful_theme-light.png",
+      "bytes": 4018,
+      "sha256": "3e4f333370670dc836adaa06910feececbb89210dc9a0e7933846c8a0880713f"
+    },
+    {
+      "path": "Windows/package/images/StoreLogo.scale-150.png",
+      "bytes": 5282,
+      "sha256": "c791651c109b016df4ce14a927240cb1ac191908a19fd89ee18d6cec147fe9c8"
+    },
+    {
+      "path": "Windows/package/images/StoreLogo.scale-150_altform-colorful_theme-light.png",
+      "bytes": 4914,
+      "sha256": "037e244c471d9eb20080b043018d34fb44c842f15d99d86e8437f93ef57c4371"
+    },
+    {
+      "path": "Windows/package/images/StoreLogo.scale-200.png",
+      "bytes": 7371,
+      "sha256": "bc3e63bfdf88d214dba1d023a561bf2cb2789b9ec09ad5fad59857dab120e234"
+    },
+    {
+      "path": "Windows/package/images/StoreLogo.scale-200_altform-colorful_theme-light.png",
+      "bytes": 6804,
+      "sha256": "cb720c6ba20afccab8f55d17a167b835d61c7d466c1648522fda4b33ff245381"
+    },
+    {
+      "path": "Windows/package/images/StoreLogo.scale-400.png",
+      "bytes": 16577,
+      "sha256": "31aae0d81ab16b066e4c43c4d7f4f2e45183fbe0f3494dbbb46404eac1e20d1e"
+    },
+    {
+      "path": "Windows/package/images/StoreLogo.scale-400_altform-colorful_theme-light.png",
+      "bytes": 15231,
+      "sha256": "500f1c3f5adf74ad2e9ee694d64047ebe52dddce6c881084c1051659952976d8"
+    },
+    {
+      "path": "Windows/package/images/Wide310x150Logo.png",
+      "bytes": 12037,
+      "sha256": "1acd716b1f757c8756a321578fd6708b1eab07e61833f51a70208914a9f96b2a"
+    },
+    {
+      "path": "Windows/package/images/Wide310x150Logo.scale-100.png",
+      "bytes": 12037,
+      "sha256": "1acd716b1f757c8756a321578fd6708b1eab07e61833f51a70208914a9f96b2a"
+    },
+    {
+      "path": "Windows/package/images/Wide310x150Logo.scale-125.png",
+      "bytes": 15890,
+      "sha256": "aaa512f620f030eb07b5343db0a8315f9b16b347f4ef7af143dc532936048fed"
+    },
+    {
+      "path": "Windows/package/images/Wide310x150Logo.scale-150.png",
+      "bytes": 20114,
+      "sha256": "6bdd4b7a61365aed65c3981a540ae3be36bd234fdd221d72ea1fe5cc27c08316"
+    },
+    {
+      "path": "Windows/package/images/Wide310x150Logo.scale-200.png",
+      "bytes": 29520,
+      "sha256": "41083897acdde2838b86348ab59d1d5040d5f814b70112659721e9d83ce8a315"
+    },
+    {
+      "path": "Windows/package/images/Wide310x150Logo.scale-400.png",
+      "bytes": 75905,
+      "sha256": "e9d084e55d23ec96be64f3fbac4f72f91003de3287e107feb98d6a997852f6a1"
+    },
+    {
+      "path": "Windows/tiles/LargeTile.scale-100.png",
+      "bytes": 18934,
+      "sha256": "7fa38a9f0727aa928c2c79a37af2a0126848ffddccf0d8c3cba60716c8213862"
+    },
+    {
+      "path": "Windows/tiles/LargeTile.scale-125.png",
+      "bytes": 25421,
+      "sha256": "b1ebc401e88f4f5aea6ab9b4eabe68f8cf605a00c2ae6d6204f44597f9340c2f"
+    },
+    {
+      "path": "Windows/tiles/LargeTile.scale-150.png",
+      "bytes": 32657,
+      "sha256": "7bce5572025dc9405826c515def6fee9591de59d1b36a395dab548e829b22eac"
+    },
+    {
+      "path": "Windows/tiles/LargeTile.scale-200.png",
+      "bytes": 48012,
+      "sha256": "37502a68f7843eca626f0fe236a3d1d258c4a86705d9632d3916e56bf45ba451"
+    },
+    {
+      "path": "Windows/tiles/LargeTile.scale-400.png",
+      "bytes": 131461,
+      "sha256": "7f66cb533d198d8fe390734aa87f1b0ad1c703201839c00d012835d8bf8625ec"
+    },
+    {
+      "path": "Windows/tiles/MedTile.scale-100.png",
+      "bytes": 7918,
+      "sha256": "51c25a5260eeae8f3fc5fafa5f9b623f4f9bee2fcc33552cf2e54646cd47670f"
+    },
+    {
+      "path": "Windows/tiles/MedTile.scale-125.png",
+      "bytes": 10021,
+      "sha256": "853da699a761a02871bc8820c30882e37726ed7b9c6f843235d2bcb7c2ac35a3"
+    },
+    {
+      "path": "Windows/tiles/MedTile.scale-150.png",
+      "bytes": 12411,
+      "sha256": "03d293d4974f7eb8faec2fa9aa36782ef28ff5142092a8552155be2e31b1b7af"
+    },
+    {
+      "path": "Windows/tiles/MedTile.scale-200.png",
+      "bytes": 18342,
+      "sha256": "577b1a411e5967c595135081ad2e6b73e82980865cc7f2fbc6147bf24a03f7a5"
+    },
+    {
+      "path": "Windows/tiles/MedTile.scale-400.png",
+      "bytes": 46354,
+      "sha256": "c2631d5613b24f357362415c93734187165c9160fe0aef02c1c8223d771acc7d"
+    },
+    {
+      "path": "Windows/tiles/SmallTile.scale-100.png",
+      "bytes": 3463,
+      "sha256": "26478614a9f7c990d8387ef03e725c5a4fd7c3bae9449e5c15d6bfc7c9df2bc7"
+    },
+    {
+      "path": "Windows/tiles/SmallTile.scale-125.png",
+      "bytes": 4354,
+      "sha256": "e3ee3d88194a75e81ff6b1860e08c7f1dd5c6b9e2eb7276cfbfb395dc8f71167"
+    },
+    {
+      "path": "Windows/tiles/SmallTile.scale-150.png",
+      "bytes": 5264,
+      "sha256": "d7e4f4e8bb9716b41693b8c3c08f36da71cf5361d266bad1210766ec0d2e27f1"
+    },
+    {
+      "path": "Windows/tiles/SmallTile.scale-200.png",
+      "bytes": 7452,
+      "sha256": "6426f381953e4e636190cb066f91faf1544509ab6136cd15060f60b1e3752750"
+    },
+    {
+      "path": "Windows/tiles/SmallTile.scale-400.png",
+      "bytes": 17061,
+      "sha256": "33587ce9256e29b433ccc304cdce1537c3e39d5634633518c33e480f530e7ca9"
+    },
+    {
+      "path": "Windows/tiles/WideTile.scale-100.png",
+      "bytes": 8250,
+      "sha256": "9f632176f758951d2cf3063fa51b310c13df686d089feaf1eab726bfd32aa7f1"
+    },
+    {
+      "path": "Windows/tiles/WideTile.scale-125.png",
+      "bytes": 10637,
+      "sha256": "70126b1693cf57e5f98b0d5fff255ec10e5e536e13dbf4138dd15f09cb2db642"
+    },
+    {
+      "path": "Windows/tiles/WideTile.scale-150.png",
+      "bytes": 13206,
+      "sha256": "92b0695c9fdb6359c361c9800a920a19b255e71a6d533a4c19f91e9f3b3aafd9"
+    },
+    {
+      "path": "Windows/tiles/WideTile.scale-200.png",
+      "bytes": 19572,
+      "sha256": "3522c67772699021a1a974d8a5493c96353e1659c89e2268a3acf2e62d952a07"
+    },
+    {
+      "path": "Windows/tiles/WideTile.scale-400.png",
+      "bytes": 50966,
+      "sha256": "5c057caefc32917e8dbc62ddf9585b67f93d6cc3636a5de84e49953aa89727af"
+    }
+  ]
+}

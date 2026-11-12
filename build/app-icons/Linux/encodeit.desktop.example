@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=EncodeIt
+Comment=Media encoder and decoder
+Exec=encodeit
+Icon=encodeit
+Terminal=false
+Categories=AudioVideo;Audio;Video;

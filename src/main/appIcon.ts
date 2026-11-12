@@ -5,6 +5,7 @@ import path from 'path'
 /**
  * Dev: repo `build/icon.ico` (Windows) or `resources/icon.png`.
  * Packaged: `icon.png` / `icon.ico` under process.resourcesPath.
+ * Refresh from the platform handoff with `npm run sync:app-icons`.
  */
 export function resolveAppIconPath(): string {
   const base = app.isPackaged
