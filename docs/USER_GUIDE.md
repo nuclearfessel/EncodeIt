@@ -66,6 +66,7 @@ Presets map to open FFmpeg recipes for common delivery targets.
   - the Encoding panel button
   - clicking the **Preset** or **Format** cell on a queue row
   - **Edit → Export Settings…**
+- Preferences and Export Settings can open as floating windows.
 - Changing settings writes **per-job overrides** on top of the chosen preset. A **custom** badge appears on the queue when overrides differ from the preset.
 - **Save as Custom Preset** in Export Settings stores a reusable preset under the **User** group in the Preset Browser (delete with the × next to the name).
 - Applying a different preset to a job clears overrides.
@@ -75,6 +76,12 @@ Presets map to open FFmpeg recipes for common delivery targets.
 - **Preferences → General** — default output folder, max concurrent encodes (1–8), and overwrite behavior.
 - If overwrite is off, jobs fail when the output file already exists.
 - Hardware encodes that fail may automatically retry with software encoding.
+
+---
+
+## Appearance
+
+Use the theme control in the title bar (or Preferences) to choose **light** or **dark**. The app chrome follows that choice; in-app documentation graphics also switch with the active theme.
 
 ---
 

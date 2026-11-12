@@ -12,6 +12,8 @@ Open-source batch media encoder with a queue and preset browser, powered by FFmp
 
 Cross-platform (**Windows, macOS, Linux**) via Electron + FFmpeg.
 
+**Site:** [encodeit app page](https://nuclearfessel.github.io/EncodeIt/) · **Guide:** [Using EncodeIt](https://nuclearfessel.github.io/EncodeIt/guide.html)
+
 ## Workflow
 
 <p align="center">
@@ -83,3 +85,5 @@ curl -X POST http://127.0.0.1:47821/queue/add \
 ```
 
 Documentation artwork notes: [`docs/GRAPHICS.md`](docs/GRAPHICS.md). App icons: `npm run sync:app-icons` (see `build/app-icons/`).
+
+GitHub Pages (same IA as Shopped): `docs/index.html` (app page) and `docs/guide.html` (user guide), published from the `docs/` folder on `main`.

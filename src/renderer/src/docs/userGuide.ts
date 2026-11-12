@@ -107,7 +107,7 @@ export const USER_GUIDE_SECTIONS: DocSection[] = [
         type: 'ul',
         items: [
           'Encoding panel — quick edits: export tracks, resolution, frame rate, bitrate/CRF, audio codec, output path, hardware.',
-          'Export Settings… — full dialog from the Encoding panel, queue Preset/Format cells, or Edit → Export Settings…',
+          'Export Settings… — full dialog from the Encoding panel, queue Preset/Format cells, or Edit → Export Settings… Preferences and Export Settings can float in their own windows.',
           'Per-job overrides sit on top of the preset; a custom badge appears when they differ. Applying another preset clears overrides.',
           'Save as Custom Preset stores a User preset in the Preset Browser.',
           'Multi-select jobs before Export Settings to apply the same overrides together.',
@@ -117,6 +117,16 @@ export const USER_GUIDE_SECTIONS: DocSection[] = [
           'If overwrite is off, jobs fail when the output file already exists.',
           'Hardware encodes that fail may automatically retry with software encoding.'
         ]
+      }
+    ]
+  },
+  {
+    id: 'appearance',
+    title: 'Appearance',
+    blocks: [
+      {
+        type: 'p',
+        text: 'Use the theme control in the title bar (or Preferences) to choose light or dark. The app chrome follows that choice; in-app documentation graphics also switch with the active theme.'
       }
     ]
   },
