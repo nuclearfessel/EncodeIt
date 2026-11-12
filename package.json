@@ -1,6 +1,6 @@
 {
   "name": "encodeit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Open-source batch media encoder powered by FFmpeg",
   "main": "./out/main/index.js",
   "author": "nuclearfessel <nuclearfessel@users.noreply.github.com>",
@@ -15,6 +15,7 @@
     "smoke": "tsx scripts/smoke-encode.ts",
     "download-ffmpeg": "node scripts/download-ffmpeg.mjs",
     "postinstall": "node scripts/download-ffmpeg.mjs",
+    "sync:app-icons": "node scripts/sync-app-icons.mjs",
     "regen:installer-art": "node scripts/regen-installer-art.mjs",
     "patch:nsis": "node scripts/patch-nsis-assisted.mjs",
     "pack": "npm run download-ffmpeg && npm run build && npm run patch:nsis && electron-builder --dir",
@@ -78,7 +79,7 @@
     "publish": null,
     "mac": {
       "category": "public.app-category.video",
-      "icon": "build/icon.png",
+      "icon": "build/icon.icns",
       "target": [
         "dmg",
         "zip",
@@ -107,7 +108,7 @@
       ]
     },
     "linux": {
-      "icon": "build/icon.png",
+      "icon": "build/icons",
       "target": [
         "AppImage",
         "deb"

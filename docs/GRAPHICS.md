@@ -75,6 +75,17 @@ The three logos preserve the approved ribbon paths, proportions, and transparent
 </picture>
 ```
 
+## App icons (OS packages)
+
+Platform app icons live under `build/app-icons/` (Windows `.ico`, macOS `.icns` + asset catalog, Linux hicolor, plus `Artwork/` masters). Wire them into Electron build destinations with:
+
+```bash
+npm run sync:app-icons
+npm run regen:installer-art
+```
+
+`sync:app-icons` updates `build/icon.ico` / `icon.icns` / `icon.png`, `build/icons/` (Linux), installer/uninstaller `.ico`, `resources/icon.png`, and the in-app / docs `encodeit-logo` assets. `regen:installer-art` rebuilds NSIS sidebar/header BMPs from the Artwork master without overwriting the platform-native icons.
+
 ## Visual system and production notes
 
 Precise editorial layout, graphite surfaces, restrained vermillion accents, and quiet production-tool typography. DejaVu Sans regular/bold and DejaVu Sans Mono were taken from locally installed fonts. All visible typography is converted to vector paths: the SVGs require no external fonts, stylesheets, linked images, or network resources. SVG titles, descriptions, and text-group labels preserve textual context; use the supplied HTML alt text when embedding as images.

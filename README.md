@@ -82,4 +82,4 @@ curl -X POST http://127.0.0.1:47821/queue/add \
   -d '{"paths":["/path/to/clip.mp4"],"presetId":"h264-match-source-high-bitrate","start":true}'
 ```
 
-Documentation artwork notes: [`docs/GRAPHICS.md`](docs/GRAPHICS.md).
+Documentation artwork notes: [`docs/GRAPHICS.md`](docs/GRAPHICS.md). App icons: `npm run sync:app-icons` (see `build/app-icons/`).

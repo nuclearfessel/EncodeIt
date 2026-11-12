@@ -1,12 +1,16 @@
 /**
- * Regenerate Windows installer branding + app icons from the color logo.
- * - build/icon.png, resources/icon.png (512)
- * - build/icon.ico / installerIcon.ico / uninstallerIcon.ico (multi-size)
- * - build/installerSidebar.bmp (164×314, 24-bit)
- * - build/installerHeader.bmp (150×57, 24-bit)
+ * Regenerate Windows NSIS installer BMPs from the approved app-icon artwork.
+ * Prefer: npm run sync:app-icons  (platform .ico / .icns / PNGs from handoff)
+ * Then:   npm run regen:installer-art
  *
- * Crops the transparent padding so the mark fills icon/BMP canvases the way
- * it does in the app, then area-averages when downscaling for sharp edges.
+ * Writes (does not replace platform-native .ico/.icns from the handoff):
+ * - build/installerSidebar.bmp / uninstallerSidebar.bmp (164×314, 24-bit)
+ * - build/installerHeader.bmp (150×57, 24-bit)
+ * - Also refreshes build/icon.png + resources/icon.png + .ico as a fallback
+ *   when running without sync:app-icons.
+ *
+ * Crops transparent padding so the mark fills canvases, then area-averages
+ * when downscaling for sharp edges.
  */
 import fs from 'node:fs'
 import path from 'node:path'
@@ -15,9 +19,10 @@ import { fileURLToPath } from 'node:url'
 import pngToIco from 'png-to-ico'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+// Prefer transparent foreground master; RGB store master works too (no alpha).
 const LOGO =
   process.argv[2] ||
-  path.join(ROOT, 'src/renderer/src/assets/encodeit-logo.png')
+  path.join(ROOT, 'build/app-icons/Artwork/foreground-1024.png')
 
 const BG = { r: 0x10, g: 0x12, b: 0x14 }
 const PANEL = { r: 0x17, g: 0x1a, b: 0x1d }
@@ -375,19 +380,24 @@ console.log('logo', {
 fs.mkdirSync(path.join(ROOT, 'build'), { recursive: true })
 fs.mkdirSync(path.join(ROOT, 'resources'), { recursive: true })
 
-const png512 = encodePng(512, 512, resizeRgba(mark.rgba, mark.w, mark.h, 512, 512))
-fs.writeFileSync(path.join(ROOT, 'build/icon.png'), png512)
-fs.writeFileSync(path.join(ROOT, 'resources/icon.png'), png512)
+const withIcons = process.argv.includes('--with-icons')
+if (withIcons) {
+  const png512 = encodePng(512, 512, resizeRgba(mark.rgba, mark.w, mark.h, 512, 512))
+  fs.writeFileSync(path.join(ROOT, 'build/icon.png'), png512)
+  fs.writeFileSync(path.join(ROOT, 'resources/icon.png'), png512)
 
-const icoSizes = [16, 24, 32, 48, 64, 128, 256]
-const icoPngs = icoSizes.map((s) =>
-  encodePng(s, s, resizeRgba(mark.rgba, mark.w, mark.h, s, s))
-)
-const ico = await pngToIco(icoPngs)
-fs.writeFileSync(path.join(ROOT, 'build/icon.ico'), ico)
-fs.writeFileSync(path.join(ROOT, 'build/installerIcon.ico'), ico)
-fs.writeFileSync(path.join(ROOT, 'build/uninstallerIcon.ico'), ico)
-console.log('wrote icon.ico', ico.length)
+  const icoSizes = [16, 24, 32, 48, 64, 128, 256]
+  const icoPngs = icoSizes.map((s) =>
+    encodePng(s, s, resizeRgba(mark.rgba, mark.w, mark.h, s, s))
+  )
+  const ico = await pngToIco(icoPngs)
+  fs.writeFileSync(path.join(ROOT, 'build/icon.ico'), ico)
+  fs.writeFileSync(path.join(ROOT, 'build/installerIcon.ico'), ico)
+  fs.writeFileSync(path.join(ROOT, 'build/uninstallerIcon.ico'), ico)
+  console.log('wrote fallback icon.png / icon.ico', ico.length)
+} else {
+  console.log('skipping .png/.ico (use sync:app-icons, or pass --with-icons)')
+}
 
 const sidebar = makeSidebar(mark.rgba, mark.w, mark.h)
 const header = makeHeader(mark.rgba, mark.w, mark.h)
