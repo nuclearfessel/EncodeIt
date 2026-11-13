@@ -4,9 +4,9 @@ In-app: **Help → Documentation** (or press **F1**).
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/readme-banner-dark.svg">
-    <source media="(prefers-color-scheme: light)" srcset="assets/readme-banner-light.svg">
-    <img src="assets/readme-banner-light.svg" alt="EncodeIt — Open-source batch media encoding. Powered by FFmpeg. Windows, macOS, and Linux." width="100%">
+    <source media="(prefers-color-scheme: dark)" srcset="assets/brand/Graphics/readme-banner-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="assets/brand/Graphics/readme-banner-light.svg">
+    <img src="assets/brand/Graphics/readme-banner-light.svg" alt="EncodeIt — Open-source batch media encoding. Powered by FFmpeg. Windows, macOS, and Linux." width="100%">
   </picture>
 </p>
 
@@ -20,9 +20,9 @@ Add media, choose a preset, start the queue, and FFmpeg encodes each job. Watch 
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/workflow-dark.svg">
-    <source media="(prefers-color-scheme: light)" srcset="assets/workflow-light.svg">
-    <img src="assets/workflow-light.svg" alt="EncodeIt workflow: add media, choose a preset, start the queue, then deliver encoded files to your chosen output path." width="100%">
+    <source media="(prefers-color-scheme: dark)" srcset="assets/brand/Graphics/workflow-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="assets/brand/Graphics/workflow-light.svg">
+    <img src="assets/brand/Graphics/workflow-light.svg" alt="EncodeIt workflow: add media, choose a preset, start the queue, then deliver encoded files to your chosen output path." width="100%">
   </picture>
 </p>
 
@@ -98,9 +98,9 @@ Use the theme control in the title bar (or Preferences) to choose **light** or *
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/integrations-dark.svg">
-    <source media="(prefers-color-scheme: light)" srcset="assets/integrations-light.svg">
-    <img src="assets/integrations-light.svg" alt="After Effects, Premiere Pro, and DaVinci Resolve export to watch folders. After files settle, the EncodeIt queue uses FFmpeg to encode them to Output." width="100%">
+    <source media="(prefers-color-scheme: dark)" srcset="assets/brand/Graphics/integrations-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="assets/brand/Graphics/integrations-light.svg">
+    <img src="assets/brand/Graphics/integrations-light.svg" alt="After Effects, Premiere Pro, and DaVinci Resolve export to watch folders. After files settle, the EncodeIt queue uses FFmpeg to encode them to Output." width="100%">
   </picture>
 </p>
 

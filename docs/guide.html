@@ -13,527 +13,626 @@
       property="og:description"
       content="User guide for EncodeIt — batch encoding powered by FFmpeg."
     />
-    <meta property="og:image" content="assets/readme-banner-dark.png" />
-    <link rel="icon" href="assets/encodeit-logo.png" type="image/png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@500&family=Source+Sans+3:opsz,wght@8..60,500;8..60,700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap"
-      rel="stylesheet"
+    <meta
+      property="og:image"
+      content="https://nuclearfessel.github.io/EncodeIt/assets/brand/Graphics/social-card-dark.png"
     />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <link rel="icon" href="assets/brand/Brand/logo-color.png" type="image/png" />
+    <link rel="stylesheet" href="assets/brand/Web/brand.css" />
     <link rel="stylesheet" href="site.css" />
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("encodeit-theme");
+          if (t === "light" || t === "dark")
+            document.documentElement.setAttribute("data-theme", t);
+        } catch (e) {}
+      })();
+    </script>
   </head>
-  <body>
-    <div class="wrap guide-wrap">
+  <body class="brand-site">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="site-shell">
       <header class="site-header">
-        <a class="mark" href="./">
+        <a class="site-brand" href="./">
           <img
-            src="assets/encodeit-logo.png"
-            alt=""
-            width="1024"
-            height="1024"
+            class="only-dark"
+            src="assets/brand/Brand/encodeit-horizontal-dark.svg"
+            width="832"
+            height="160"
+            alt="EncodeIt"
           />
-          <span class="mark-text">EncodeIt</span>
+          <img
+            class="only-light"
+            src="assets/brand/Brand/encodeit-horizontal-light.svg"
+            width="832"
+            height="160"
+            alt="EncodeIt"
+          />
         </a>
-        <nav class="nav" aria-label="Primary">
+        <nav class="site-nav" aria-label="Primary">
           <a href="./#download">Download</a>
           <a href="guide.html" aria-current="page">Guide</a>
           <a href="https://github.com/nuclearfessel/EncodeIt">Source</a>
+          <button type="button" class="theme-toggle" id="theme-toggle">Dark</button>
         </nav>
       </header>
 
-      <main>
+      <main id="main">
         <header class="guide-intro">
-          <p class="eyebrow">User Guide</p>
+          <p class="eyebrow">User guide</p>
           <h1>Using EncodeIt</h1>
           <p class="lede">
-            Queue, presets, watch folders, host integrations, appearance,
-            updates, and uninstall — how to use EncodeIt on every screen.
+            In the app, open <strong>Help → Documentation</strong> (or press
+            <kbd>F1</kbd>). This page is the same walkthrough on the web.
           </p>
         </header>
 
-        <details class="guide-toc" id="toc" open>
-          <summary class="guide-toc-summary">On this page</summary>
-          <nav class="guide-toc-links" aria-label="Guide sections">
-            <a href="#overview">Overview</a>
-            <a href="#quick-start">Quick start</a>
-            <a href="#queue">Queue</a>
-            <a href="#presets">Presets &amp; formats</a>
-            <a href="#encoding">Encoding options</a>
-            <a href="#appearance">Appearance</a>
-            <a href="#workspace">Workspace</a>
-            <a href="#watch-folders">Watch folders</a>
-            <a href="#host-integrations">Host integrations</a>
-            <a href="#after-effects">After Effects</a>
-            <a href="#resolve">DaVinci Resolve</a>
-            <a href="#premiere">Premiere Pro</a>
-            <a href="#intake-api">Host intake API</a>
-            <a href="#updates">Updates &amp; uninstall</a>
-            <a href="#shortcuts">Keyboard shortcuts</a>
-            <a href="#troubleshooting">Troubleshooting</a>
-          </nav>
-        </details>
+        <div class="guide-layout">
+          <aside class="guide-nav guide-nav-desktop" aria-label="On this page">
+            <div class="guide-toc-groups" id="toc">
+              <div class="guide-toc-group">
+                <strong>Getting started</strong>
+                <a href="#overview">Overview</a>
+                <a href="#quick-start">Quick start</a>
+              </div>
+              <div class="guide-toc-group">
+                <strong>Encoding</strong>
+                <a href="#queue">Queue</a>
+                <a href="#presets">Presets &amp; formats</a>
+                <a href="#encoding">Encoding options</a>
+                <a href="#appearance">Appearance</a>
+                <a href="#workspace">Workspace</a>
+              </div>
+              <div class="guide-toc-group">
+                <strong>Integrations</strong>
+                <a href="#watch-folders">Watch folders</a>
+                <a href="#host-integrations">Host integrations</a>
+                <a href="#after-effects">After Effects</a>
+                <a href="#resolve">DaVinci Resolve</a>
+                <a href="#premiere">Premiere Pro</a>
+                <a href="#intake-api">Host intake API</a>
+              </div>
+              <div class="guide-toc-group">
+                <strong>Maintenance</strong>
+                <a href="#updates">Updates &amp; uninstall</a>
+                <a href="#shortcuts">Keyboard shortcuts</a>
+                <a href="#troubleshooting">Troubleshooting</a>
+              </div>
+            </div>
+          </aside>
 
-        <article class="guide-body">
-          <p>
-            In the app, open <strong>Help → Documentation</strong> (or press
-            <strong>F1</strong>). This page is the same walkthrough on the web.
-          </p>
+          <div>
+            <details class="guide-toc-mobile" id="toc-mobile">
+              <summary>On this page</summary>
+              <div class="guide-toc-groups">
+                <div class="guide-toc-group">
+                  <strong>Getting started</strong>
+                  <a href="#overview">Overview</a>
+                  <a href="#quick-start">Quick start</a>
+                </div>
+                <div class="guide-toc-group">
+                  <strong>Encoding</strong>
+                  <a href="#queue">Queue</a>
+                  <a href="#presets">Presets &amp; formats</a>
+                  <a href="#encoding">Encoding options</a>
+                  <a href="#appearance">Appearance</a>
+                  <a href="#workspace">Workspace</a>
+                </div>
+                <div class="guide-toc-group">
+                  <strong>Integrations</strong>
+                  <a href="#watch-folders">Watch folders</a>
+                  <a href="#host-integrations">Host integrations</a>
+                  <a href="#after-effects">After Effects</a>
+                  <a href="#resolve">DaVinci Resolve</a>
+                  <a href="#premiere">Premiere Pro</a>
+                  <a href="#intake-api">Host intake API</a>
+                </div>
+                <div class="guide-toc-group">
+                  <strong>Maintenance</strong>
+                  <a href="#updates">Updates &amp; uninstall</a>
+                  <a href="#shortcuts">Keyboard shortcuts</a>
+                  <a href="#troubleshooting">Troubleshooting</a>
+                </div>
+              </div>
+            </details>
 
-          <h2 id="overview">Overview</h2>
-          <p>
-            EncodeIt is a batch media encoder with a queue and preset browser
-            powered by FFmpeg.
-          </p>
-          <p>
-            Add media, choose a preset, start the queue, and FFmpeg encodes each
-            job. Watch folders let After Effects, Premiere Pro, and DaVinci
-            Resolve hand off renders without scripts.
-          </p>
-          <figure class="guide-figure">
-            <img
-              src="assets/workflow-dark.svg"
-              width="1600"
-              height="560"
-              alt="EncodeIt workflow: add media, choose a preset, start the queue, then deliver encoded files."
-            />
-          </figure>
+            <article class="guide-body">
+              <h2 id="overview">Overview</h2>
+              <p>
+                EncodeIt is a batch media encoder with a queue and preset browser
+                powered by FFmpeg. Add media, choose a preset, start the queue.
+                Watch folders let After Effects, Premiere Pro, and DaVinci Resolve
+                hand off renders without scripts.
+              </p>
 
-          <h2 id="quick-start">Quick start</h2>
-          <ol>
-            <li>Click <strong>Add Source…</strong> (<code>Ctrl+O</code>), or drag files onto the window.</li>
-            <li>Select a preset in the Preset Browser (or keep the default).</li>
-            <li>Confirm the output path in Encoding / Source · Output if needed.</li>
-            <li>Click <strong>Start Queue</strong> (<code>Ctrl+Enter</code>).</li>
-            <li>Watch progress in the queue. Use <strong>Stop</strong> (<code>Ctrl+.</code>) to cancel.</li>
-          </ol>
+              <h2 id="quick-start">Quick start</h2>
+              <ol>
+                <li>
+                  Click <strong>Add Source…</strong> (<kbd>Ctrl+O</kbd>), or drag
+                  files onto the window.
+                </li>
+                <li>Select a preset in the Preset Browser (or keep the default).</li>
+                <li>Confirm the output path in Encoding / Source · Output if needed.</li>
+                <li>Click <strong>Start Queue</strong> (<kbd>Ctrl+Enter</kbd>).</li>
+                <li>
+                  Watch progress in the queue. Use <strong>Stop</strong>
+                  (<kbd>Ctrl+.</kbd>) to cancel.
+                </li>
+              </ol>
+              <figure class="section-figure">
+                <img
+                  class="only-dark"
+                  src="assets/brand/Graphics/workflow-dark.svg"
+                  width="1600"
+                  height="560"
+                  alt="EncodeIt workflow: add media, choose a preset, start the queue, then deliver encoded files."
+                />
+                <img
+                  class="only-light"
+                  src="assets/brand/Graphics/workflow-light.svg"
+                  width="1600"
+                  height="560"
+                  alt="EncodeIt workflow: add media, choose a preset, start the queue, then deliver encoded files."
+                />
+              </figure>
+              <p>
+                Stages: add source → choose preset → start queue → deliver output.
+                The diagram is illustrative, not a screenshot of the app.
+              </p>
 
-          <h2 id="queue">Queue</h2>
-          <ul>
-            <li>Each row is one encode job: source, preset, status, and progress.</li>
-            <li>Multi-select jobs to change preset, output path, or export tracks together.</li>
-            <li><strong>Clear Done</strong> removes finished jobs from the list.</li>
-            <li>Output files go to each job’s output path.</li>
-          </ul>
-          <p class="guide-note">
-            <strong>Note:</strong> Default output folder is Videos (Windows) or
-            Movies (macOS) → <code>EncodeIt</code> → <code>Output</code>.
-          </p>
+              <h2 id="queue">Queue</h2>
+              <ul>
+                <li>Each row is one encode job: source, preset, status, and progress.</li>
+                <li>Multi-select jobs to change preset, output path, or export tracks together.</li>
+                <li><strong>Clear Done</strong> removes finished jobs from the list.</li>
+                <li>Output files go to each job’s output path.</li>
+              </ul>
+              <p class="guide-note">
+                <strong>Note:</strong> Default output folder is Videos (Windows) or
+                Movies (macOS) → <code>EncodeIt</code> → <code>Output</code>.
+              </p>
 
-          <h2 id="presets">Presets &amp; formats</h2>
-          <p>
-            The Preset Browser groups presets by delivery target — social,
-            broadcast, mezzanine, and more. Presets map to open FFmpeg recipes
-            for common delivery targets.
-          </p>
-          <p class="guide-note">
-            <strong>Note:</strong> Proprietary certified wrappers (full Dolby
-            Vision packages, DCP packaging, certified AS-11, etc.) are not
-            claimed. Broadcast options are best-effort FFmpeg mappings.
-          </p>
+              <h2 id="presets">Presets &amp; formats</h2>
+              <p>
+                The Preset Browser groups presets by delivery target — social,
+                broadcast, mezzanine, and more. Presets map to open FFmpeg recipes.
+              </p>
+              <p class="guide-note">
+                <strong>Note:</strong> Proprietary certified wrappers (full Dolby
+                Vision packages, DCP packaging, certified AS-11, etc.) are not
+                claimed. Broadcast options are best-effort FFmpeg mappings.
+              </p>
 
-          <h2 id="encoding">Encoding options</h2>
-          <ul>
-            <li>
-              <strong>Encoding panel</strong> — quick edits for the selected
-              job(s): export video/audio, resolution, frame rate, bitrate/CRF,
-              audio codec, output path, and hardware acceleration.
-            </li>
-            <li>
-              <strong>Export Settings…</strong> — full dialog for deeper
-              video/audio/advanced options. Open it from the Encoding panel,
-              from the Preset or Format cell on a queue row, or
-              <strong>Edit → Export Settings…</strong>. Preferences and Export
-              Settings can float in their own windows.
-            </li>
-            <li>
-              Changing settings writes <strong>per-job overrides</strong> on top
-              of the chosen preset. A <strong>custom</strong> badge appears when
-              overrides differ from the preset.
-            </li>
-            <li>
-              <strong>Save as Custom Preset</strong> stores a reusable preset
-              under the <strong>User</strong> group (delete with the × next to
-              the name).
-            </li>
-            <li>Applying a different preset to a job clears overrides.</li>
-            <li>
-              Multi-select jobs before opening Export Settings to apply the same
-              overrides to all selected waiting jobs.
-            </li>
-            <li>
-              <strong>Hardware</strong> — NVENC, QSV, AMF, or VideoToolbox when
-              bundled FFmpeg and your GPU support them.
-            </li>
-            <li>
-              <strong>Preferences → Hardware</strong> — see what was detected on
-              this machine.
-            </li>
-            <li>
-              <strong>Preferences → General</strong> — default output folder, max
-              concurrent encodes (1–8), and overwrite behavior.
-            </li>
-          </ul>
-          <p>
-            If overwrite is off, jobs fail when the output file already exists.
-            Hardware encodes that fail may automatically retry with software
-            encoding.
-          </p>
+              <h2 id="encoding">Encoding options</h2>
+              <ul>
+                <li>
+                  <strong>Encoding panel</strong> — quick edits for the selected
+                  job(s): export video/audio, resolution, frame rate, bitrate/CRF,
+                  audio codec, output path, and hardware acceleration.
+                </li>
+                <li>
+                  <strong>Export Settings…</strong> — full dialog from the Encoding
+                  panel, queue Preset/Format cells, or
+                  <strong>Edit → Export Settings…</strong>. Preferences and Export
+                  Settings can float in their own windows.
+                </li>
+                <li>
+                  Changing settings writes <strong>per-job overrides</strong> on
+                  top of the chosen preset. A <strong>custom</strong> badge appears
+                  when overrides differ. Applying a different preset clears overrides.
+                </li>
+                <li>
+                  <strong>Save as Custom Preset</strong> stores a reusable preset
+                  under the <strong>User</strong> group (delete with the × next to
+                  the name).
+                </li>
+                <li>
+                  Multi-select jobs before opening Export Settings to apply the same
+                  overrides to all selected waiting jobs.
+                </li>
+                <li>
+                  <strong>Hardware</strong> — NVENC, QSV, AMF, or VideoToolbox when
+                  bundled FFmpeg and your GPU support them.
+                </li>
+                <li>
+                  <strong>Preferences → Hardware</strong> — see what was detected
+                  on this machine.
+                </li>
+                <li>
+                  <strong>Preferences → General</strong> — default output folder,
+                  max concurrent encodes (1–8), and overwrite behavior.
+                </li>
+              </ul>
+              <p>
+                If overwrite is off, jobs fail when the output file already exists.
+                Hardware encodes that fail may automatically retry with software
+                encoding.
+              </p>
 
-          <h2 id="appearance">Appearance</h2>
-          <p>
-            Use the theme control in the title bar (or Preferences) to choose
-            light or dark. The app chrome follows that choice; documentation
-            graphics also switch with the active theme in-app.
-          </p>
+              <h2 id="appearance">Appearance</h2>
+              <p>
+                Use the theme control in the title bar (or Preferences) to choose
+                light or dark. The app chrome follows that choice; in-app
+                documentation graphics also switch with the active theme.
+              </p>
 
-          <h2 id="workspace">Workspace</h2>
-          <ul>
-            <li>Dock, split, and undock panels in a flexible workspace layout.</li>
-            <li>Drag a panel header to tear it off or drop it on another edge.</li>
-            <li>
-              <strong>View → Dock All Panels</strong> /
-              <strong>Show All Panels</strong> restores visibility.
-            </li>
-            <li>
-              <strong>Media Browser</strong> browses folders and can add media to
-              the queue.
-            </li>
-          </ul>
+              <h2 id="workspace">Workspace</h2>
+              <ul>
+                <li>Dock, split, and undock panels in a flexible workspace layout.</li>
+                <li>Drag a panel header to tear it off or drop it on another edge.</li>
+                <li>
+                  <strong>View → Dock All Panels</strong> /
+                  <strong>Show All Panels</strong> restores visibility.
+                </li>
+                <li>
+                  <strong>Media Browser</strong> browses folders and can add media
+                  to the queue.
+                </li>
+              </ul>
 
-          <h2 id="watch-folders">Watch folders</h2>
-          <figure class="guide-figure">
-            <img
-              src="assets/integrations-dark.svg"
-              width="1600"
-              height="680"
-              alt="After Effects, Premiere Pro, and DaVinci Resolve export to watch folders; EncodeIt encodes to Output."
-            />
-          </figure>
-          <p>
-            Watch folders automatically queue new media that appears in a
-            directory. This is the primary way After Effects, Premiere Pro, and
-            DaVinci Resolve hand work to EncodeIt — no scripts required.
-          </p>
-          <h3>How to set one up</h3>
-          <ol>
-            <li>
-              Open <strong>Edit → Preferences → Integrations</strong> to see
-              install paths and active watches.
-            </li>
-            <li>
-              Each watch has a folder path, a preset used for new files, and an
-              encode output folder.
-            </li>
-            <li>Keep EncodeIt running while the host app finishes writing the file.</li>
-            <li>
-              When a new media file appears and its size stays stable across
-              polls, it is added to the queue with that watch’s preset.
-            </li>
-            <li>
-              Per watch: enable/disable, auto-start queue, and optional
-              subfolder watching.
-            </li>
-          </ol>
-          <p class="guide-note">
-            <strong>Note:</strong> Files already in the folder when you add or
-            enable a watch are ignored — only new arrivals are queued.
-            Incomplete writes are held until size settles.
-            <strong>Help → Open Log File</strong> shows the app log. The queue
-            is restored after restart.
-          </p>
+              <h2 id="watch-folders">Watch folders</h2>
+              <figure class="section-figure">
+                <img
+                  class="only-dark"
+                  src="assets/brand/Graphics/integrations-dark.svg"
+                  width="1600"
+                  height="680"
+                  alt="After Effects, Premiere Pro, and DaVinci Resolve export to watch folders; EncodeIt encodes to Output."
+                />
+                <img
+                  class="only-light"
+                  src="assets/brand/Graphics/integrations-light.svg"
+                  width="1600"
+                  height="680"
+                  alt="After Effects, Premiere Pro, and DaVinci Resolve export to watch folders; EncodeIt encodes to Output."
+                />
+              </figure>
+              <p>
+                Watch folders automatically queue new media that appears in a
+                directory. This is the primary way After Effects, Premiere Pro, and
+                DaVinci Resolve hand work to EncodeIt — no scripts required.
+              </p>
+              <h3>How to set one up</h3>
+              <ol>
+                <li>
+                  Open <strong>Edit → Preferences → Integrations</strong> to see
+                  install paths and active watches.
+                </li>
+                <li>
+                  Each watch has a folder path, a preset used for new files, and an
+                  encode output folder.
+                </li>
+                <li>Keep EncodeIt running while the host app finishes writing the file.</li>
+                <li>
+                  When a new media file appears and its size stays stable across
+                  polls, it is added to the queue with that watch’s preset.
+                </li>
+                <li>
+                  Per watch: enable/disable, auto-start queue, and optional
+                  subfolder watching.
+                </li>
+              </ol>
+              <p class="guide-note">
+                <strong>Note:</strong> Files already in the folder when you add or
+                enable a watch are ignored — only new arrivals are queued.
+                Incomplete writes are held until size settles.
+                <strong>Help → Open Log File</strong> shows the app log. The queue
+                is restored after restart.
+              </p>
 
-          <h2 id="host-integrations">Host integrations</h2>
-          <p>
-            EncodeIt integrates with After Effects, Premiere Pro, and DaVinci
-            Resolve by watching shared folders. Point each host’s render/export
-            destination at the matching folder; EncodeIt picks up finished files
-            and encodes them with FFmpeg presets.
-          </p>
-          <h3>Install modes</h3>
-          <p>
-            On install (or first launch), EncodeIt detects which host apps are
-            installed on disk. They do <strong>not</strong> need to be running
-            for detection.
-          </p>
-          <ul>
-            <li>
-              <strong>Standard</strong> — creates folders and watches only for
-              detected apps.
-            </li>
-            <li>
-              <strong>Custom</strong> — choose After Effects, DaVinci Resolve,
-              and/or Premiere Pro yourself (even if not installed yet).
-            </li>
-          </ul>
-          <h3>Folder layout</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Folder</th>
-                <th>Host destination</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>from-ae</code></td>
-                <td>After Effects Output Module / render output</td>
-              </tr>
-              <tr>
-                <td><code>from-resolve</code></td>
-                <td>DaVinci Resolve Deliver destination</td>
-              </tr>
-              <tr>
-                <td><code>from-premiere</code></td>
-                <td>Premiere Pro export / Media Export location</td>
-              </tr>
-              <tr>
-                <td><code>Output</code></td>
-                <td>Default EncodeIt encode output</td>
-              </tr>
-            </tbody>
-          </table>
-          <table>
-            <thead>
-              <tr>
-                <th>Platform</th>
-                <th>Root path</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Windows</td>
-                <td><code>%USERPROFILE%\Videos\EncodeIt\</code></td>
-              </tr>
-              <tr>
-                <td>macOS</td>
-                <td><code>~/Movies/EncodeIt/</code></td>
-              </tr>
-            </tbody>
-          </table>
-          <h3>Shared setup steps</h3>
-          <ol>
-            <li>Install EncodeIt (or complete first-launch integration setup) so the folders exist.</li>
-            <li>Confirm paths under <strong>Edit → Preferences → Integrations</strong>.</li>
-            <li>In the host app, set render/export output to the matching <code>from-*</code> folder.</li>
-            <li>Leave EncodeIt running, then render/export as usual.</li>
-            <li>New files appear in the EncodeIt queue; <strong>Start Queue</strong> if it is not already running.</li>
-          </ol>
-          <p class="guide-note">
-            <strong>Note:</strong> EncodeIt does not replace AE/Premiere/Resolve
-            codecs or Deliver UI. It encodes <strong>after</strong> the host
-            writes a file. Optional scripts/CEP live in the GitHub
-            <code>integrations/</code> folder.
-          </p>
+              <h2 id="host-integrations">Host integrations</h2>
+              <p>
+                EncodeIt integrates with After Effects, Premiere Pro, and DaVinci
+                Resolve by watching shared folders. Point each host’s render/export
+                destination at the matching folder; EncodeIt picks up finished files
+                and encodes them with FFmpeg presets.
+              </p>
+              <h3>Install modes</h3>
+              <p>
+                On install (or first launch), EncodeIt detects which host apps are
+                installed on disk. They do <strong>not</strong> need to be running
+                for detection.
+              </p>
+              <ul>
+                <li>
+                  <strong>Standard</strong> — creates folders and watches only for
+                  detected apps.
+                </li>
+                <li>
+                  <strong>Custom</strong> — choose After Effects, DaVinci Resolve,
+                  and/or Premiere Pro yourself (even if not installed yet).
+                </li>
+              </ul>
+              <h3>Folder layout</h3>
+              <div class="table-scroll">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Folder</th>
+                      <th>Host destination</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><code>from-ae</code></td>
+                      <td>After Effects Output Module / render output</td>
+                    </tr>
+                    <tr>
+                      <td><code>from-resolve</code></td>
+                      <td>DaVinci Resolve Deliver destination</td>
+                    </tr>
+                    <tr>
+                      <td><code>from-premiere</code></td>
+                      <td>Premiere Pro export / Media Export location</td>
+                    </tr>
+                    <tr>
+                      <td><code>Output</code></td>
+                      <td>Default EncodeIt encode output</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="table-scroll">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Platform</th>
+                      <th>Root path</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Windows</td>
+                      <td><code>%USERPROFILE%\Videos\EncodeIt\</code></td>
+                    </tr>
+                    <tr>
+                      <td>macOS</td>
+                      <td><code>~/Movies/EncodeIt/</code></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <h3>Shared setup steps</h3>
+              <ol>
+                <li>Install EncodeIt (or complete first-launch integration setup) so the folders exist.</li>
+                <li>Confirm paths under <strong>Edit → Preferences → Integrations</strong>.</li>
+                <li>In the host app, set render/export output to the matching <code>from-*</code> folder.</li>
+                <li>Leave EncodeIt running, then render/export as usual.</li>
+                <li>New files appear in the EncodeIt queue; <strong>Start Queue</strong> if it is not already running.</li>
+              </ol>
+              <p class="guide-note">
+                <strong>Note:</strong> EncodeIt does not replace AE/Premiere/Resolve
+                codecs or Deliver UI. It encodes <strong>after</strong> the host
+                writes a file. Optional scripts/CEP live in the GitHub
+                <code>integrations/</code> folder.
+              </p>
 
-          <h2 id="after-effects">After Effects</h2>
-          <p>
-            Recommended workflow: render compositions into the EncodeIt
-            <code>from-ae</code> watch folder. No scripts or panels required.
-          </p>
-          <ol>
-            <li>Confirm <code>from-ae</code> exists (<strong>Preferences → Integrations</strong>).</li>
-            <li>In After Effects, open <strong>Composition → Add to Render Queue</strong>.</li>
-            <li>Set the Output Module’s output file into the <code>from-ae</code> folder.</li>
-            <li>Use a high-quality intermediate in AE when you want EncodeIt to handle delivery codecs.</li>
-            <li>Keep EncodeIt running, then <strong>Render</strong>.</li>
-          </ol>
-          <p>
-            Change the AE watch preset under
-            <strong>Preferences → Integrations</strong>. Optional
-            <code>SendToEncodeIt.jsx</code> and CEP panel live in
-            <code>integrations/after-effects</code>.
-          </p>
+              <h2 id="after-effects">After Effects</h2>
+              <p>
+                Recommended workflow: render compositions into the EncodeIt
+                <code>from-ae</code> watch folder. No scripts or panels required.
+              </p>
+              <ol>
+                <li>Confirm <code>from-ae</code> exists (<strong>Preferences → Integrations</strong>).</li>
+                <li>In After Effects, open <strong>Composition → Add to Render Queue</strong>.</li>
+                <li>Set the Output Module’s output file into the <code>from-ae</code> folder.</li>
+                <li>Use a high-quality intermediate in AE when you want EncodeIt to handle delivery codecs.</li>
+                <li>Keep EncodeIt running, then <strong>Render</strong>.</li>
+              </ol>
+              <p>
+                Change the AE watch preset under
+                <strong>Preferences → Integrations</strong>. Optional
+                <code>SendToEncodeIt.jsx</code> and CEP panel live in
+                <code>integrations/after-effects</code>.
+              </p>
 
-          <h2 id="resolve">DaVinci Resolve</h2>
-          <p>
-            Resolve does not allow replacing Deliver codecs with a third-party
-            encoder. The supported path is <strong>Deliver</strong> into
-            <code>from-resolve</code>, then let EncodeIt re-encode for delivery.
-          </p>
-          <ol>
-            <li>Confirm <code>from-resolve</code> exists.</li>
-            <li>On the Deliver page, set Filename / Location to that folder.</li>
-            <li>Choose a high-quality master or intermediate in Deliver.</li>
-            <li><strong>Add to Render Queue</strong> and <strong>Start Render</strong> while EncodeIt is running.</li>
-          </ol>
+              <h2 id="resolve">DaVinci Resolve</h2>
+              <p>
+                Resolve does not allow replacing Deliver codecs with a third-party
+                encoder. The supported path is <strong>Deliver</strong> into
+                <code>from-resolve</code>, then let EncodeIt re-encode for delivery.
+              </p>
+              <ol>
+                <li>Confirm <code>from-resolve</code> exists.</li>
+                <li>On the Deliver page, set Filename / Location to that folder.</li>
+                <li>Choose a high-quality master or intermediate in Deliver.</li>
+                <li><strong>Add to Render Queue</strong> and <strong>Start Render</strong> while EncodeIt is running.</li>
+              </ol>
 
-          <h2 id="premiere">Premiere Pro</h2>
-          <p>
-            Export sequences into <code>from-premiere</code>. EncodeIt then
-            applies FFmpeg presets for batch delivery.
-          </p>
-          <ol>
-            <li>Confirm <code>from-premiere</code> exists.</li>
-            <li>Use <strong>File → Export → Media</strong> (or the Export panel).</li>
-            <li>Set the Output Name / location to the <code>from-premiere</code> folder.</li>
-            <li>Keep EncodeIt running, then <strong>Export</strong>.</li>
-          </ol>
+              <h2 id="premiere">Premiere Pro</h2>
+              <p>
+                Export sequences into <code>from-premiere</code>. EncodeIt then
+                applies FFmpeg presets for batch delivery.
+              </p>
+              <ol>
+                <li>Confirm <code>from-premiere</code> exists.</li>
+                <li>Use <strong>File → Export → Media</strong> (or the Export panel).</li>
+                <li>Set the Output Name / location to the <code>from-premiere</code> folder.</li>
+                <li>Keep EncodeIt running, then <strong>Export</strong>.</li>
+              </ol>
 
-          <h2 id="intake-api">Host intake API</h2>
-          <p>
-            Optional localhost API for scripts and tools
-            (<strong>Preferences → Integrations</strong>). Default base URL:
-            <code>http://127.0.0.1:47821</code>
-          </p>
-          <table>
-            <thead>
-              <tr>
-                <th>Endpoint</th>
-                <th>Purpose</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>GET /health</code></td>
-                <td>Check that intake is running</td>
-              </tr>
-              <tr>
-                <td><code>GET /presets</code></td>
-                <td>List preset ids and names</td>
-              </tr>
-              <tr>
-                <td><code>POST /queue/add</code></td>
-                <td>Queue paths; optional <code>presetId</code> and <code>start</code></td>
-              </tr>
-            </tbody>
-          </table>
-          <pre><code>{
+              <h2 id="intake-api">Host intake API</h2>
+              <p>
+                Optional localhost API for scripts and tools
+                (<strong>Preferences → Integrations</strong>). Default base URL:
+                <code>http://127.0.0.1:47821</code>. This endpoint is local only —
+                it is not remotely accessible.
+              </p>
+              <div class="table-scroll">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Endpoint</th>
+                      <th>Purpose</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><code>GET /health</code></td>
+                      <td>Check that intake is running</td>
+                    </tr>
+                    <tr>
+                      <td><code>GET /presets</code></td>
+                      <td>List preset ids and names</td>
+                    </tr>
+                    <tr>
+                      <td><code>POST /queue/add</code></td>
+                      <td>Queue paths; optional <code>presetId</code> and <code>start</code></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <pre><code>{
   "paths": ["D:/renders/clip.mov"],
   "presetId": "h264-match-source-high-bitrate",
   "start": true
 }</code></pre>
-          <p>
-            A JSON inbox folder (shown in Preferences) is also polled for
-            dropped job files.
-          </p>
+              <p>
+                A JSON inbox folder (shown in Preferences) is also polled for
+                dropped job files.
+              </p>
 
-          <h2 id="updates">Updates &amp; uninstall</h2>
-          <h3>Checking for updates</h3>
-          <ul>
-            <li>
-              <strong>Preferences → Updates → Check for updates</strong> enables
-              automatic checks on launch and about once a day (on by default).
-            </li>
-            <li>
-              The bottom status bar shows the app version and update actions when
-              a newer release exists.
-            </li>
-            <li>
-              <strong>Download…</strong> opens the release in your browser —
-              nothing is downloaded automatically.
-            </li>
-            <li>
-              <strong>Help → Check for Updates…</strong> or Preferences → Updates
-              → <strong>Check now</strong> runs a check immediately.
-            </li>
-          </ul>
-          <h3>Installing a newer version</h3>
-          <ul>
-            <li>
-              <strong>Windows Setup</strong> detects an existing install,
-              replaces the app, and keeps settings / queue / media by default.
-              Check <strong>Clean install</strong> on the host-integrations page
-              to wipe previous settings and plugins.
-            </li>
-            <li>
-              <strong>macOS PKG</strong> upgrades in place; if prior data exists
-              it offers Keep Settings or Clean Install.
-            </li>
-            <li>
-              <strong>Linux .deb</strong> upgrades in place and keeps data by
-              default; GUI installs can offer Clean Install (or set
-              <code>ENCODEIT_CLEAN_INSTALL=1</code>).
-            </li>
-            <li>
-              <strong>DMG / portable / AppImage</strong>: replace the app file;
-              settings stay in Application Support / AppData.
-            </li>
-          </ul>
-          <h3>Uninstalling completely</h3>
-          <ul>
-            <li>
-              <strong>Help → Uninstall EncodeIt…</strong> removes settings, logs,
-              custom presets, workspaces, CEP panels, and known host scripts.
-            </li>
-            <li>
-              By default it also deletes Videos/Movies → EncodeIt media folders.
-              Check <strong>Keep media folders</strong> to spare those.
-            </li>
-          </ul>
+              <h2 id="updates">Updates &amp; uninstall</h2>
+              <h3>Checking for updates</h3>
+              <ul>
+                <li>
+                  <strong>Preferences → Updates → Check for updates</strong> enables
+                  automatic checks on launch and about once a day (on by default).
+                </li>
+                <li>
+                  The bottom status bar shows the app version and update actions when
+                  a newer release exists.
+                </li>
+                <li>
+                  <strong>Download…</strong> opens the release in your browser —
+                  nothing is downloaded automatically.
+                </li>
+                <li>
+                  <strong>Help → Check for Updates…</strong> or Preferences → Updates
+                  → <strong>Check now</strong> runs a check immediately.
+                </li>
+              </ul>
+              <h3>Installing a newer version</h3>
+              <ul>
+                <li>
+                  <strong>Windows Setup</strong> detects an existing install,
+                  replaces the app, and keeps settings / queue / media by default.
+                  Check <strong>Clean install</strong> on the host-integrations page
+                  to wipe previous settings and plugins.
+                </li>
+                <li>
+                  <strong>macOS PKG</strong> upgrades in place; if prior data exists
+                  it offers Keep Settings or Clean Install.
+                </li>
+                <li>
+                  <strong>Linux .deb</strong> upgrades in place and keeps data by
+                  default; GUI installs can offer Clean Install (or set
+                  <code>ENCODEIT_CLEAN_INSTALL=1</code>).
+                </li>
+                <li>
+                  <strong>DMG / portable / AppImage</strong>: replace the app file;
+                  settings stay in Application Support / AppData.
+                </li>
+              </ul>
+              <h3>Uninstalling completely</h3>
+              <p class="guide-warn">
+                <strong>Warning:</strong> Uninstall is destructive and separate from
+                updating. By default it deletes settings and media folders under
+                Videos/Movies → EncodeIt. Check <strong>Keep media folders</strong>
+                to spare those.
+              </p>
+              <ul>
+                <li>
+                  <strong>Help → Uninstall EncodeIt…</strong> removes settings, logs,
+                  custom presets, workspaces, CEP panels, and known host scripts.
+                </li>
+                <li>
+                  By default it also deletes Videos/Movies → EncodeIt media folders.
+                  Check <strong>Keep media folders</strong> to spare those.
+                </li>
+              </ul>
 
-          <h2 id="shortcuts">Keyboard shortcuts</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Shortcut</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>Ctrl+O</code></td>
-                <td>Add Source…</td>
-              </tr>
-              <tr>
-                <td><code>Ctrl+Enter</code></td>
-                <td>Start Queue</td>
-              </tr>
-              <tr>
-                <td><code>Ctrl+.</code></td>
-                <td>Stop Queue</td>
-              </tr>
-              <tr>
-                <td><code>Ctrl+,</code></td>
-                <td>Preferences</td>
-              </tr>
-              <tr>
-                <td><code>F1</code></td>
-                <td>Documentation</td>
-              </tr>
-              <tr>
-                <td><code>Alt+F4</code></td>
-                <td>Quit</td>
-              </tr>
-            </tbody>
-          </table>
+              <h2 id="shortcuts">Keyboard shortcuts</h2>
+              <div class="table-scroll">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Shortcut</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><kbd>Ctrl+O</kbd></td>
+                      <td>Add Source…</td>
+                    </tr>
+                    <tr>
+                      <td><kbd>Ctrl+Enter</kbd></td>
+                      <td>Start Queue</td>
+                    </tr>
+                    <tr>
+                      <td><kbd>Ctrl+.</kbd></td>
+                      <td>Stop Queue</td>
+                    </tr>
+                    <tr>
+                      <td><kbd>Ctrl+,</kbd></td>
+                      <td>Preferences</td>
+                    </tr>
+                    <tr>
+                      <td><kbd>F1</kbd></td>
+                      <td>Documentation</td>
+                    </tr>
+                    <tr>
+                      <td><kbd>Alt+F4</kbd></td>
+                      <td>Quit</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
 
-          <h2 id="troubleshooting">Troubleshooting</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Problem</th>
-                <th>What to try</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Queue does nothing</td>
-                <td>Confirm jobs are Waiting, a preset is selected, and Start Queue is enabled.</td>
-              </tr>
-              <tr>
-                <td>Hardware encode fails</td>
-                <td>Set acceleration to None or Auto, or refresh detection under Preferences → Hardware.</td>
-              </tr>
-              <tr>
-                <td>Watch folder misses files</td>
-                <td>Keep EncodeIt running; wait until the host finishes writing; only new files after the watch is enabled are queued.</td>
-              </tr>
-              <tr>
-                <td>Host app not detected</td>
-                <td>Detection looks under Program Files (Windows) or Applications (macOS). Use Custom install, or add a watch manually.</td>
-              </tr>
-              <tr>
-                <td>Host file never queues</td>
-                <td>Confirm the host writes into the matching <code>from-*</code> path and that the watch is enabled.</td>
-              </tr>
-              <tr>
-                <td>Wrong preset on handoffs</td>
-                <td>Edit the watch’s preset under Preferences → Integrations.</td>
-              </tr>
-            </tbody>
-          </table>
-        </article>
+              <h2 id="troubleshooting">Troubleshooting</h2>
+              <div class="table-scroll">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Problem</th>
+                      <th>What to try</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Queue does nothing</td>
+                      <td>Confirm jobs are Waiting, a preset is selected, and Start Queue is enabled.</td>
+                    </tr>
+                    <tr>
+                      <td>Hardware encode fails</td>
+                      <td>Set acceleration to None or Auto, or refresh detection under Preferences → Hardware.</td>
+                    </tr>
+                    <tr>
+                      <td>Watch folder misses files</td>
+                      <td>Keep EncodeIt running; wait until the host finishes writing; only new files after the watch is enabled are queued.</td>
+                    </tr>
+                    <tr>
+                      <td>Host app not detected</td>
+                      <td>Detection looks under Program Files (Windows) or Applications (macOS). Use Custom install, or add a watch manually.</td>
+                    </tr>
+                    <tr>
+                      <td>Host file never queues</td>
+                      <td>Confirm the host writes into the matching <code>from-*</code> path and that the watch is enabled.</td>
+                    </tr>
+                    <tr>
+                      <td>Wrong preset on handoffs</td>
+                      <td>Edit the watch’s preset under Preferences → Integrations.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </article>
+          </div>
+        </div>
       </main>
 
       <footer class="site-footer">
@@ -549,35 +648,16 @@
 
     <a class="back-to-top" id="back-to-top" href="#toc" hidden>Back to top</a>
 
+    <script src="theme.js"></script>
     <script>
       (function () {
         var button = document.getElementById("back-to-top");
-        var toc = document.getElementById("toc");
-        var narrow = window.matchMedia("(max-width: 900px)");
-
         function syncTop() {
           if (!button) return;
           button.hidden = window.scrollY < 1;
         }
-
-        function syncToc() {
-          if (!toc) return;
-          if (narrow.matches) toc.removeAttribute("open");
-          else toc.setAttribute("open", "");
-        }
-
-        function closeTocOutside(event) {
-          if (!toc || !narrow.matches || !toc.open) return;
-          if (toc.contains(event.target)) return;
-          toc.removeAttribute("open");
-        }
-
         window.addEventListener("scroll", syncTop, { passive: true });
-        document.addEventListener("pointerdown", closeTocOutside);
-        if (narrow.addEventListener) narrow.addEventListener("change", syncToc);
-        else narrow.addListener(syncToc);
         syncTop();
-        syncToc();
       })();
     </script>
   </body>

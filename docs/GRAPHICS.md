@@ -22,15 +22,20 @@ Each artwork is provided as an SVG and a PNG with the same base name.
 
 ## Repository destination
 
-The nine SVGs and their PNG equivalents live in `docs/assets/`. Use the SVGs for crisp, resolution-independent GitHub display. PNGs are rendered directly at each SVG’s native dimensions, not enlarged. The following snippets assume a README at the repository root. In `docs/USER_GUIDE.md`, change every `docs/assets/` prefix to `assets/`.
+Canonical artwork lives under `docs/assets/brand/` (`Brand/`, `Graphics/`,
+`Fonts/`, `Licenses/`, `Web/`). Legacy filenames under `docs/assets/` remain as
+aliases for older links. Use the SVGs for crisp, resolution-independent GitHub
+display. The following snippets assume a README at the repository root. In
+`docs/USER_GUIDE.md`, change every `docs/assets/brand/` prefix to
+`assets/brand/`.
 
 ### Theme-aware banner
 
 ```html
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme-banner-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme-banner-light.svg">
-  <img src="docs/assets/readme-banner-light.svg" alt="EncodeIt — Open-source batch media encoding. Powered by FFmpeg. Windows, macOS, and Linux." width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/brand/Graphics/readme-banner-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/assets/brand/Graphics/readme-banner-light.svg">
+  <img src="docs/assets/brand/Graphics/readme-banner-light.svg" alt="EncodeIt — Open-source batch media encoding. Powered by FFmpeg. Windows, macOS, and Linux." width="100%">
 </picture>
 ```
 
@@ -38,9 +43,9 @@ The nine SVGs and their PNG equivalents live in `docs/assets/`. Use the SVGs for
 
 ```html
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/workflow-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="docs/assets/workflow-light.svg">
-  <img src="docs/assets/workflow-light.svg" alt="EncodeIt workflow: add media, choose a preset, start the queue, then deliver encoded files to your chosen output path." width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/brand/Graphics/workflow-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/assets/brand/Graphics/workflow-light.svg">
+  <img src="docs/assets/brand/Graphics/workflow-light.svg" alt="EncodeIt workflow: add media, choose a preset, start the queue, then deliver encoded files to your chosen output path." width="100%">
 </picture>
 ```
 
@@ -48,9 +53,9 @@ The nine SVGs and their PNG equivalents live in `docs/assets/`. Use the SVGs for
 
 ```html
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/integrations-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="docs/assets/integrations-light.svg">
-  <img src="docs/assets/integrations-light.svg" alt="After Effects, Premiere Pro, and DaVinci Resolve export to watch folders. After files settle, the EncodeIt queue uses FFmpeg to encode them to Output. EncodeIt processes files after the host finishes exporting; it is not a native host codec replacement." width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/brand/Graphics/integrations-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/assets/brand/Graphics/integrations-light.svg">
+  <img src="docs/assets/brand/Graphics/integrations-light.svg" alt="After Effects, Premiere Pro, and DaVinci Resolve export to watch folders. After files settle, the EncodeIt queue uses FFmpeg to encode them to Output. EncodeIt processes files after the host finishes exporting; it is not a native host codec replacement." width="100%">
 </picture>
 ```
 
@@ -69,9 +74,9 @@ The three logos preserve the approved ribbon paths, proportions, and transparent
 
 ```html
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/logo-white.svg">
-  <source media="(prefers-color-scheme: light)" srcset="docs/assets/logo-black.svg">
-  <img src="docs/assets/logo-black.svg" alt="EncodeIt" width="112" height="112">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/brand/Brand/logo-white.svg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/assets/brand/Brand/logo-black.svg">
+  <img src="docs/assets/brand/Brand/logo-black.svg" alt="EncodeIt" width="112" height="112">
 </picture>
 ```
 
