@@ -646,19 +646,17 @@
       </footer>
     </div>
 
-    <a class="back-to-top" id="back-to-top" href="#toc" hidden>Back to top</a>
+    <a
+      class="back-to-top"
+      id="back-to-top"
+      href="#toc"
+      aria-label="Back to top"
+      title="Back to top"
+      hidden
+      >Back to top</a
+    >
 
     <script src="theme.js"></script>
-    <script>
-      (function () {
-        var button = document.getElementById("back-to-top");
-        function syncTop() {
-          if (!button) return;
-          button.hidden = window.scrollY < 1;
-        }
-        window.addEventListener("scroll", syncTop, { passive: true });
-        syncTop();
-      })();
-    </script>
+    <script src="back-to-top.js"></script>
   </body>
 </html>
