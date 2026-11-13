@@ -447,6 +447,7 @@
   align-items: center;
   justify-content: center;
   min-height: 2.75rem;
+  max-width: calc(100vw - 2rem);
   padding: 0.55rem 0.9rem;
   border: 1px solid var(--brand-line);
   background: var(--brand-panel);
@@ -454,6 +455,7 @@
   text-decoration: none;
   font-size: 0.85rem;
   font-weight: 650;
+  white-space: nowrap;
 }
 
 .brand-site .back-to-top[hidden] {
