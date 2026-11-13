@@ -433,6 +433,11 @@
   color: var(--brand-ink);
 }
 
+/* Absolute page top for Back to top — ignore generic [id] scroll-margin */
+.brand-site .site-header#toc {
+  scroll-margin-top: 0;
+}
+
 .brand-site .back-to-top {
   position: fixed;
   right: max(1rem, calc((100vw - 1200px) / 2));
