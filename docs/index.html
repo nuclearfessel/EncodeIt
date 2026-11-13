@@ -13,93 +13,186 @@
       property="og:description"
       content="Batch encode with a queue and presets. Powered by FFmpeg. Watch-folder handoff for AE, Premiere, and Resolve."
     />
-    <meta property="og:image" content="assets/readme-banner-dark.png" />
-    <link rel="icon" href="assets/encodeit-logo.png" type="image/png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Source+Sans+3:opsz,wght@8..60,500;8..60,700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap"
-      rel="stylesheet"
+    <meta
+      property="og:image"
+      content="https://nuclearfessel.github.io/EncodeIt/assets/brand/Graphics/social-card-dark.png"
     />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <link rel="icon" href="assets/brand/Brand/logo-color.png" type="image/png" />
+    <link rel="stylesheet" href="assets/brand/Web/brand.css" />
     <link rel="stylesheet" href="site.css" />
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("encodeit-theme");
+          if (t === "light" || t === "dark")
+            document.documentElement.setAttribute("data-theme", t);
+        } catch (e) {}
+      })();
+    </script>
   </head>
-  <body>
-    <div class="wrap">
+  <body class="brand-site">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="site-shell">
       <header class="site-header">
-        <a class="mark" href="./">
+        <a class="site-brand" href="./">
           <img
-            src="assets/encodeit-logo.png"
-            alt=""
-            width="1024"
-            height="1024"
+            class="only-dark"
+            src="assets/brand/Brand/encodeit-horizontal-dark.svg"
+            width="832"
+            height="160"
+            alt="EncodeIt"
           />
-          <span class="mark-text">EncodeIt</span>
+          <img
+            class="only-light"
+            src="assets/brand/Brand/encodeit-horizontal-light.svg"
+            width="832"
+            height="160"
+            alt="EncodeIt"
+          />
         </a>
-        <nav class="nav" aria-label="Primary">
+        <nav class="site-nav" aria-label="Primary">
           <a href="#download">Download</a>
           <a href="guide.html">Guide</a>
           <a href="https://github.com/nuclearfessel/EncodeIt">Source</a>
+          <button type="button" class="theme-toggle" id="theme-toggle">Dark</button>
         </nav>
       </header>
 
-      <main>
+      <main id="main">
         <section class="hero" aria-label="EncodeIt">
-          <img
-            class="hero-banner"
-            src="assets/readme-banner-dark.svg"
-            width="1600"
-            height="520"
-            alt="EncodeIt — Open-source batch media encoding. Powered by FFmpeg. Windows, macOS, and Linux."
-          />
           <div class="hero-copy">
-            <p class="eyebrow">Queue · Presets · FFmpeg</p>
-            <h1>Encode once. Deliver everywhere.</h1>
+            <p class="eyebrow">Open-source · Powered by FFmpeg</p>
+            <h1>EncodeIt</h1>
             <p class="lede">
-              Open-source batch media encoding with a queue and preset browser —
-              on Windows, macOS, and Linux. Watch folders hand off from After
-              Effects, Premiere Pro, and DaVinci Resolve.
+              Batch media encoding with a queue and preset browser — on macOS,
+              Windows, and Linux.
             </p>
+            <ul class="signal-path" aria-label="Signal path">
+              <li>Source</li>
+              <li>Preset</li>
+              <li>Queue</li>
+            </ul>
             <div class="cta-row">
               <a class="button button-primary" href="#download">Get EncodeIt 1.0.2</a>
+              <a class="button button-secondary" href="guide.html">Read the guide</a>
               <a
                 class="button button-secondary"
                 href="https://github.com/nuclearfessel/EncodeIt"
-                >View on GitHub</a
+                >View source</a
               >
             </div>
           </div>
+          <div class="hero-mark" aria-hidden="true">
+            <img
+              class="only-dark"
+              src="assets/brand/Brand/logo-color.svg"
+              width="512"
+              height="512"
+              alt=""
+            />
+            <img
+              class="only-light"
+              src="assets/brand/Brand/logo-color.svg"
+              width="512"
+              height="512"
+              alt=""
+            />
+          </div>
         </section>
 
-        <section class="section" aria-labelledby="look-heading">
-          <h2 id="look-heading">In the app</h2>
+        <section class="section" aria-labelledby="workflow-heading">
+          <h2 id="workflow-heading">Workflow</h2>
           <p>
-            Dark asphalt chrome and coral accents — add sources, pick a preset,
-            start the queue, then deliver to your output path. Host apps export
-            into watch folders; EncodeIt encodes after the file settles.
+            Four stages: add a source, choose a preset, start the queue, deliver
+            output. Diagrams are illustrations of the process — not screenshots of
+            the app.
+            <a href="guide.html#quick-start">Quick start in the guide</a>.
           </p>
-          <div class="shots">
+          <ol>
+            <li>Add media with <strong>Add Source…</strong> or drag files onto the window.</li>
+            <li>Choose a delivery preset (or keep the default).</li>
+            <li>Confirm the output path, then <strong>Start Queue</strong>.</li>
+            <li>Encoded files land in each job’s output folder.</li>
+          </ol>
+          <figure class="section-figure">
             <img
-              class="shot"
-              src="assets/workflow-dark.svg"
+              class="only-dark"
+              src="assets/brand/Graphics/workflow-dark.svg"
               width="1600"
               height="560"
               alt="EncodeIt workflow: add media, choose a preset, start the queue, then deliver encoded files."
             />
             <img
-              class="shot"
-              src="assets/integrations-dark.svg"
+              class="only-light"
+              src="assets/brand/Graphics/workflow-light.svg"
+              width="1600"
+              height="560"
+              alt="EncodeIt workflow: add media, choose a preset, start the queue, then deliver encoded files."
+            />
+          </figure>
+        </section>
+
+        <section class="section" aria-labelledby="toolset-heading">
+          <h2 id="toolset-heading">Toolset</h2>
+          <p>Core surfaces for day-to-day encoding work.</p>
+          <div class="toolset">
+            <article>
+              <h3>Queue</h3>
+              <p>
+                Progress, start/stop, multi-select jobs, and clear finished rows.
+                Output goes to each job’s path.
+              </p>
+            </article>
+            <article>
+              <h3>Presets</h3>
+              <p>
+                Delivery targets grouped for social, broadcast, mezzanine, and
+                more — open FFmpeg recipes, not proprietary certified wrappers.
+              </p>
+            </article>
+            <article>
+              <h3>Encoding</h3>
+              <p>
+                Per-job overrides, Export Settings, hardware acceleration when
+                FFmpeg and your GPU support it, with software retry on failure.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" aria-labelledby="handoffs-heading">
+          <h2 id="handoffs-heading">Host handoffs</h2>
+          <p>
+            After Effects, Premiere Pro, and DaVinci Resolve export into watch
+            folders. EncodeIt queues files <strong>after</strong> the host finishes
+            writing — it does not replace host codecs or Resolve’s Deliver UI.
+            <a href="guide.html#watch-folders">Watch folders in the guide</a>.
+          </p>
+          <figure class="section-figure">
+            <img
+              class="only-dark"
+              src="assets/brand/Graphics/integrations-dark.svg"
               width="1600"
               height="680"
               alt="After Effects, Premiere Pro, and DaVinci Resolve export to watch folders; EncodeIt encodes to Output."
             />
-          </div>
+            <img
+              class="only-light"
+              src="assets/brand/Graphics/integrations-light.svg"
+              width="1600"
+              height="680"
+              alt="After Effects, Premiere Pro, and DaVinci Resolve export to watch folders; EncodeIt encodes to Output."
+            />
+          </figure>
         </section>
 
         <section class="section" id="download" aria-labelledby="download-heading">
           <h2 id="download-heading">Download</h2>
           <p>
-            Current version 1.0.2. Packaged installers replace an older build and
-            keep your settings. Older packages stay in
+            Current version <strong>1.0.2</strong>. Packaged installers replace an
+            older build and keep your settings. Older packages stay in
             <a href="https://github.com/nuclearfessel/EncodeIt/releases">Releases</a>.
           </p>
           <div class="downloads">
@@ -126,11 +219,11 @@
             </a>
           </div>
           <p class="download-note">
-            Also available: Windows portable, macOS PKG / zip, Linux
-            <code>.deb</code>, and the optional AE CEP zip — see
+            Also on
             <a href="https://github.com/nuclearfessel/EncodeIt/releases/tag/v1.0.2"
               >v1.0.2</a
-            >.
+            >: Windows portable, macOS PKG / zip, Linux <code>.deb</code>, and the
+            optional AE CEP zip.
           </p>
         </section>
       </main>
@@ -145,5 +238,6 @@
         </p>
       </footer>
     </div>
+    <script src="theme.js"></script>
   </body>
 </html>

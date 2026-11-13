@@ -1,0 +1,1699 @@
+[
+  {
+    "file": "Graphics/readme-banner-light.svg",
+    "width": 1472,
+    "height": 780,
+    "alt": "EncodeIt: add media, set a preset and run the FFmpeg queue. Desktop only: macOS, Windows and Linux.",
+    "text": [
+      {
+        "text": "ENCODEIT  /  OPEN-SOURCE MEDIA TOOL",
+        "bounds": [
+          64.0,
+          58.640625,
+          446.279296875,
+          73.669921875
+        ],
+        "baseline": 72,
+        "row": "header"
+      },
+      {
+        "text": "POWERED BY FFMPEG",
+        "bounds": [
+          1224.0283203125,
+          58.640625,
+          1408.0,
+          72.2548828125
+        ],
+        "baseline": 72,
+        "row": "header"
+      },
+      {
+        "text": "EncodeIt",
+        "bounds": [
+          64.0,
+          128.16000000000003,
+          790.438,
+          254.58
+        ],
+        "baseline": 252,
+        "row": null
+      },
+      {
+        "text": "FROM SOURCE",
+        "bounds": [
+          64.0,
+          370.640625,
+          181.6376953125,
+          384.2548828125
+        ],
+        "baseline": 384,
+        "row": "path"
+      },
+      {
+        "text": "TO DELIVERY",
+        "bounds": [
+          1287.9013671875,
+          370.640625,
+          1408.0,
+          384.2548828125
+        ],
+        "baseline": 384,
+        "row": "path"
+      },
+      {
+        "text": "01",
+        "bounds": [
+          87.89990234375,
+          460.16748046875,
+          116.10009765625,
+          479.83251953125
+        ],
+        "baseline": 479.46435546875,
+        "row": null
+      },
+      {
+        "text": "Add media",
+        "bounds": [
+          64.0,
+          547.765,
+          240.493,
+          574.54
+        ],
+        "baseline": 574,
+        "row": "headings"
+      },
+      {
+        "text": "Files in.",
+        "bounds": [
+          64.0,
+          606.1379939573351,
+          134.78530090639973,
+          622.264
+        ],
+        "baseline": 622,
+        "row": "bodies"
+      },
+      {
+        "text": "02",
+        "bounds": [
+          536.1220703125,
+          460.16748046875,
+          563.8779296875,
+          479.83251953125
+        ],
+        "baseline": 479.46435546875,
+        "row": null
+      },
+      {
+        "text": "Set the preset",
+        "bounds": [
+          512.0,
+          547.5608729472774,
+          753.2189999999999,
+          582.64
+        ],
+        "baseline": 574,
+        "row": "headings"
+      },
+      {
+        "text": "Settings chosen.",
+        "bounds": [
+          512.0,
+          606.1379939573351,
+          679.4442006042665,
+          627.104
+        ],
+        "baseline": 622,
+        "row": "bodies"
+      },
+      {
+        "text": "03",
+        "bounds": [
+          983.9951171875,
+          460.16748046875,
+          1012.0048828125,
+          479.83251953125
+        ],
+        "baseline": 479.46435546875,
+        "row": null
+      },
+      {
+        "text": "Run the queue",
+        "bounds": [
+          960.0,
+          548.08,
+          1205.3767078963604,
+          582.64
+        ],
+        "baseline": 574,
+        "row": "headings"
+      },
+      {
+        "text": "Outputs ready.",
+        "bounds": [
+          960.0,
+          606.16,
+          1111.380401208533,
+          626.84
+        ],
+        "baseline": 622,
+        "row": "bodies"
+      },
+      {
+        "text": "Batch encoding. A direct path from input to output.",
+        "bounds": [
+          64.0,
+          723.4284940336314,
+          605.8647258949553,
+          745.336
+        ],
+        "baseline": 740,
+        "row": "footer"
+      },
+      {
+        "text": "MACOS / WINDOWS / LINUX",
+        "bounds": [
+          1156.0859375,
+          726.640625,
+          1408.0,
+          741.669921875
+        ],
+        "baseline": 740,
+        "row": "footer"
+      }
+    ]
+  },
+  {
+    "file": "Graphics/features-light.svg",
+    "width": 1472,
+    "height": 480,
+    "alt": "EncodeIt queue, reusable presets and per-job encoding settings. Hardware support depends on FFmpeg and the GPU.",
+    "text": [
+      {
+        "text": "THE TOOLSET",
+        "bounds": [
+          64.0,
+          62.640625,
+          184.0107421875,
+          76.2548828125
+        ],
+        "baseline": 76,
+        "row": null
+      },
+      {
+        "text": "01",
+        "bounds": [
+          64.0,
+          168.40625,
+          119.400390625,
+          207.736328125
+        ],
+        "baseline": 207,
+        "row": "numbers"
+      },
+      {
+        "text": "Queue",
+        "bounds": [
+          64.0,
+          247.66,
+          202.12638579499597,
+          280.66
+        ],
+        "baseline": 280,
+        "row": "heads"
+      },
+      {
+        "text": "Keep sources and progress together.",
+        "bounds": [
+          64.0,
+          326.16,
+          443.7853009063997,
+          347.104
+        ],
+        "baseline": 342,
+        "row": "body0"
+      },
+      {
+        "text": "Apply changes to selected jobs.",
+        "bounds": [
+          64.0,
+          366.13799395733514,
+          390.7555015106662,
+          387.104
+        ],
+        "baseline": 382,
+        "row": "body1"
+      },
+      {
+        "text": "02",
+        "bounds": [
+          512.0,
+          168.40625,
+          566.51171875,
+          207.736328125
+        ],
+        "baseline": 207,
+        "row": "numbers"
+      },
+      {
+        "text": "Presets",
+        "bounds": [
+          512.0,
+          248.32,
+          670.7293333333333,
+          280.66
+        ],
+        "baseline": 280,
+        "row": "heads"
+      },
+      {
+        "text": "Choose a delivery target.",
+        "bounds": [
+          512.0,
+          326.13799395733514,
+          769.3804012085329,
+          347.104
+        ],
+        "baseline": 342,
+        "row": "body0"
+      },
+      {
+        "text": "Save your own reusable settings.",
+        "bounds": [
+          512.0,
+          366.13799395733514,
+          846.4442006042665,
+          387.104
+        ],
+        "baseline": 382,
+        "row": "body1"
+      },
+      {
+        "text": "03",
+        "bounds": [
+          960.0,
+          168.40625,
+          1015.01953125,
+          207.736328125
+        ],
+        "baseline": 207,
+        "row": "numbers"
+      },
+      {
+        "text": "Encoding",
+        "bounds": [
+          960.0,
+          247.88,
+          1152.5919999999999,
+          291.22
+        ],
+        "baseline": 280,
+        "row": "heads"
+      },
+      {
+        "text": "Adjust video and audio options.",
+        "bounds": [
+          960.0,
+          326.13799395733514,
+          1280.7555015106661,
+          346.84
+        ],
+        "baseline": 342,
+        "row": "body0"
+      },
+      {
+        "text": "Set the output path for each job.",
+        "bounds": [
+          960.0,
+          366.13799395733514,
+          1297.4442006042664,
+          386.84
+        ],
+        "baseline": 382,
+        "row": "body1"
+      },
+      {
+        "text": "Hardware acceleration depends on the bundled FFmpeg build and your GPU.",
+        "bounds": [
+          64.0,
+          426.2275390625,
+          839.30859375,
+          443.8671875
+        ],
+        "baseline": 440,
+        "row": null
+      }
+    ]
+  },
+  {
+    "file": "Graphics/workflow-light.svg",
+    "width": 1472,
+    "height": 560,
+    "alt": "EncodeIt's file-based workflow: add sources, choose a preset, start the queue, and collect files from the chosen output path.",
+    "text": [
+      {
+        "text": "THE ENCODING WORKFLOW",
+        "bounds": [
+          64.0,
+          52.640625,
+          294.423828125,
+          66.2548828125
+        ],
+        "baseline": 66,
+        "row": null
+      },
+      {
+        "text": "From source to delivery.",
+        "bounds": [
+          64.0,
+          110.43,
+          756.9773333333333,
+          170.88
+        ],
+        "baseline": 156,
+        "row": null
+      },
+      {
+        "text": "01",
+        "bounds": [
+          87.89990234375,
+          268.16748046875,
+          116.10009765625,
+          287.83251953125
+        ],
+        "baseline": 287.46435546875,
+        "row": null
+      },
+      {
+        "text": "Add media",
+        "bounds": [
+          64.0,
+          354.1,
+          210.68,
+          376.45
+        ],
+        "baseline": 376,
+        "row": "head"
+      },
+      {
+        "text": "Drop files or browse.",
+        "bounds": [
+          64.0,
+          406.84849391155734,
+          256.7057259132664,
+          426.62
+        ],
+        "baseline": 422,
+        "row": "detail"
+      },
+      {
+        "text": "02",
+        "bounds": [
+          424.1220703125,
+          268.16748046875,
+          451.8779296875,
+          287.83251953125
+        ],
+        "baseline": 287.46435546875,
+        "row": null
+      },
+      {
+        "text": "Choose a preset",
+        "bounds": [
+          400.0,
+          353.95,
+          633.47,
+          383.2
+        ],
+        "baseline": 376,
+        "row": "head"
+      },
+      {
+        "text": "Review the job settings.",
+        "bounds": [
+          400.0,
+          406.84849391155734,
+          626.7057259132664,
+          426.872
+        ],
+        "baseline": 422,
+        "row": "detail"
+      },
+      {
+        "text": "03",
+        "bounds": [
+          759.9951171875,
+          268.16748046875,
+          788.0048828125,
+          287.83251953125
+        ],
+        "baseline": 287.46435546875,
+        "row": null
+      },
+      {
+        "text": "Start the queue",
+        "bounds": [
+          736.0,
+          353.9698615916955,
+          958.56799031477,
+          383.2
+        ],
+        "baseline": 376,
+        "row": "head"
+      },
+      {
+        "text": "Follow FFmpeg progress.",
+        "bounds": [
+          736.0,
+          406.88,
+          971.7057259132664,
+          426.872
+        ],
+        "baseline": 422,
+        "row": "detail"
+      },
+      {
+        "text": "04",
+        "bounds": [
+          1095.6396484375,
+          268.16748046875,
+          1124.3603515625,
+          287.83251953125
+        ],
+        "baseline": 287.46435546875,
+        "row": null
+      },
+      {
+        "text": "Deliver files",
+        "bounds": [
+          1072.0,
+          353.95,
+          1236.77,
+          376.45
+        ],
+        "baseline": 376,
+        "row": "head"
+      },
+      {
+        "text": "Use your output path.",
+        "bounds": [
+          1072.0,
+          406.88,
+          1277.838027130955,
+          426.62
+        ],
+        "baseline": 422,
+        "row": "detail"
+      },
+      {
+        "text": "ADD SOURCE \u2192 PRESET \u2192 QUEUE \u2192 OUTPUT",
+        "bounds": [
+          64.0,
+          506.640625,
+          459.0986328125,
+          522.373046875
+        ],
+        "baseline": 520,
+        "row": null
+      }
+    ]
+  },
+  {
+    "file": "Graphics/integrations-light.svg",
+    "width": 1472,
+    "height": 660,
+    "alt": "After Effects, Premiere Pro and DaVinci Resolve export files into watched folders. EncodeIt waits for writes to settle, then encodes to output. It does not replace host codecs.",
+    "text": [
+      {
+        "text": "FILE-BASED HANDOFFS",
+        "bounds": [
+          64.0,
+          54.640625,
+          269.6025390625,
+          68.2548828125
+        ],
+        "baseline": 68,
+        "row": null
+      },
+      {
+        "text": "Render there. Encode here.",
+        "bounds": [
+          64.0,
+          106.36,
+          848.9773333333333,
+          151.93
+        ],
+        "baseline": 151,
+        "row": null
+      },
+      {
+        "text": "After Effects",
+        "bounds": [
+          64.0,
+          213.95,
+          241.185,
+          236.45
+        ],
+        "baseline": 236,
+        "row": null
+      },
+      {
+        "text": "from-ae",
+        "bounds": [
+          64.0,
+          258.32421875,
+          138.0595703125,
+          272.2548828125
+        ],
+        "baseline": 272,
+        "row": null
+      },
+      {
+        "text": "Premiere Pro",
+        "bounds": [
+          64.0,
+          334.1375,
+          239.8475,
+          356.45
+        ],
+        "baseline": 356,
+        "row": null
+      },
+      {
+        "text": "from-premiere",
+        "bounds": [
+          64.0,
+          378.32421875,
+          204.0595703125,
+          395.744140625
+        ],
+        "baseline": 392,
+        "row": null
+      },
+      {
+        "text": "DaVinci Resolve",
+        "bounds": [
+          64.0,
+          453.95,
+          283.48058991363354,
+          476.45
+        ],
+        "baseline": 476,
+        "row": null
+      },
+      {
+        "text": "from-resolve",
+        "bounds": [
+          64.0,
+          498.2275390625,
+          193.0595703125,
+          512.2548828125
+        ],
+        "baseline": 512,
+        "row": null
+      },
+      {
+        "text": "EncodeIt queue",
+        "bounds": [
+          863.701604519774,
+          332.55999999999995,
+          1072.298395480226,
+          359.44
+        ],
+        "baseline": 352.71999999999997,
+        "row": null
+      },
+      {
+        "text": "OUTPUT",
+        "bounds": [
+          1337.560546875,
+          279.15625,
+          1408.0,
+          294.283203125
+        ],
+        "baseline": 294,
+        "row": null
+      },
+      {
+        "text": "Wait for file size to settle.",
+        "bounds": [
+          824.0,
+          417.5599938962981,
+          1055.5880012207404,
+          432.24
+        ],
+        "baseline": 432,
+        "row": null
+      },
+      {
+        "text": "Keep EncodeIt running. Only new arrivals after a watch is enabled are queued.",
+        "bounds": [
+          64.0,
+          576.5599938962981,
+          768.6260009155552,
+          595.64
+        ],
+        "baseline": 591,
+        "row": null
+      },
+      {
+        "text": "This does not replace the host application's codecs or Deliver interface.",
+        "bounds": [
+          64.0,
+          610.9,
+          718.5280012207404,
+          630.4
+        ],
+        "baseline": 626,
+        "row": null
+      }
+    ]
+  },
+  {
+    "file": "Graphics/social-card-light.svg",
+    "width": 1200,
+    "height": 630,
+    "alt": "EncodeIt social preview. Open-source FFmpeg batch encoding for macOS, Windows and Linux.",
+    "text": [
+      {
+        "text": "OPEN-SOURCE BATCH MEDIA ENCODING",
+        "bounds": [
+          64.0,
+          54.640625,
+          413.6748046875,
+          68.2548828125
+        ],
+        "baseline": 68,
+        "row": null
+      },
+      {
+        "text": "EncodeIt",
+        "bounds": [
+          64.0,
+          144.0,
+          696.475,
+          254.25
+        ],
+        "baseline": 252,
+        "row": null
+      },
+      {
+        "text": "01",
+        "bounds": [
+          64.0,
+          384.9296875,
+          88.79248046875,
+          402.32568359375
+        ],
+        "baseline": 402,
+        "row": "numbers"
+      },
+      {
+        "text": "Add media",
+        "bounds": [
+          64.0,
+          442.1375,
+          207.57750000000001,
+          464.45
+        ],
+        "baseline": 464,
+        "row": "stages"
+      },
+      {
+        "text": "02",
+        "bounds": [
+          421.0,
+          384.9296875,
+          445.3994140625,
+          402.32568359375
+        ],
+        "baseline": 402,
+        "row": "numbers"
+      },
+      {
+        "text": "Set the preset",
+        "bounds": [
+          421.0,
+          441.9673941227312,
+          619.1825,
+          471.2
+        ],
+        "baseline": 464,
+        "row": "stages"
+      },
+      {
+        "text": "03",
+        "bounds": [
+          778.0,
+          384.9296875,
+          802.6240234375,
+          402.32568359375
+        ],
+        "baseline": 402,
+        "row": "numbers"
+      },
+      {
+        "text": "Run the queue",
+        "bounds": [
+          778.0,
+          442.4,
+          979.4805899136336,
+          471.2
+        ],
+        "baseline": 464,
+        "row": "stages"
+      },
+      {
+        "text": "POWERED BY FFMPEG",
+        "bounds": [
+          64.0,
+          570.640625,
+          247.9716796875,
+          584.2548828125
+        ],
+        "baseline": 584,
+        "row": "footer"
+      },
+      {
+        "text": "MACOS / WINDOWS / LINUX",
+        "bounds": [
+          884.0859375,
+          570.640625,
+          1136.0,
+          585.669921875
+        ],
+        "baseline": 584,
+        "row": "footer"
+      }
+    ]
+  },
+  {
+    "file": "Graphics/readme-banner-dark.svg",
+    "width": 1472,
+    "height": 780,
+    "alt": "EncodeIt: add media, set a preset and run the FFmpeg queue. Desktop only: macOS, Windows and Linux.",
+    "text": [
+      {
+        "text": "ENCODEIT  /  OPEN-SOURCE MEDIA TOOL",
+        "bounds": [
+          64.0,
+          58.640625,
+          446.279296875,
+          73.669921875
+        ],
+        "baseline": 72,
+        "row": "header"
+      },
+      {
+        "text": "POWERED BY FFMPEG",
+        "bounds": [
+          1224.0283203125,
+          58.640625,
+          1408.0,
+          72.2548828125
+        ],
+        "baseline": 72,
+        "row": "header"
+      },
+      {
+        "text": "EncodeIt",
+        "bounds": [
+          64.0,
+          128.16000000000003,
+          790.438,
+          254.58
+        ],
+        "baseline": 252,
+        "row": null
+      },
+      {
+        "text": "FROM SOURCE",
+        "bounds": [
+          64.0,
+          370.640625,
+          181.6376953125,
+          384.2548828125
+        ],
+        "baseline": 384,
+        "row": "path"
+      },
+      {
+        "text": "TO DELIVERY",
+        "bounds": [
+          1287.9013671875,
+          370.640625,
+          1408.0,
+          384.2548828125
+        ],
+        "baseline": 384,
+        "row": "path"
+      },
+      {
+        "text": "01",
+        "bounds": [
+          87.89990234375,
+          460.16748046875,
+          116.10009765625,
+          479.83251953125
+        ],
+        "baseline": 479.46435546875,
+        "row": null
+      },
+      {
+        "text": "Add media",
+        "bounds": [
+          64.0,
+          547.765,
+          240.493,
+          574.54
+        ],
+        "baseline": 574,
+        "row": "headings"
+      },
+      {
+        "text": "Files in.",
+        "bounds": [
+          64.0,
+          606.1379939573351,
+          134.78530090639973,
+          622.264
+        ],
+        "baseline": 622,
+        "row": "bodies"
+      },
+      {
+        "text": "02",
+        "bounds": [
+          536.1220703125,
+          460.16748046875,
+          563.8779296875,
+          479.83251953125
+        ],
+        "baseline": 479.46435546875,
+        "row": null
+      },
+      {
+        "text": "Set the preset",
+        "bounds": [
+          512.0,
+          547.5608729472774,
+          753.2189999999999,
+          582.64
+        ],
+        "baseline": 574,
+        "row": "headings"
+      },
+      {
+        "text": "Settings chosen.",
+        "bounds": [
+          512.0,
+          606.1379939573351,
+          679.4442006042665,
+          627.104
+        ],
+        "baseline": 622,
+        "row": "bodies"
+      },
+      {
+        "text": "03",
+        "bounds": [
+          983.9951171875,
+          460.16748046875,
+          1012.0048828125,
+          479.83251953125
+        ],
+        "baseline": 479.46435546875,
+        "row": null
+      },
+      {
+        "text": "Run the queue",
+        "bounds": [
+          960.0,
+          548.08,
+          1205.3767078963604,
+          582.64
+        ],
+        "baseline": 574,
+        "row": "headings"
+      },
+      {
+        "text": "Outputs ready.",
+        "bounds": [
+          960.0,
+          606.16,
+          1111.380401208533,
+          626.84
+        ],
+        "baseline": 622,
+        "row": "bodies"
+      },
+      {
+        "text": "Batch encoding. A direct path from input to output.",
+        "bounds": [
+          64.0,
+          723.4284940336314,
+          605.8647258949553,
+          745.336
+        ],
+        "baseline": 740,
+        "row": "footer"
+      },
+      {
+        "text": "MACOS / WINDOWS / LINUX",
+        "bounds": [
+          1156.0859375,
+          726.640625,
+          1408.0,
+          741.669921875
+        ],
+        "baseline": 740,
+        "row": "footer"
+      }
+    ]
+  },
+  {
+    "file": "Graphics/features-dark.svg",
+    "width": 1472,
+    "height": 480,
+    "alt": "EncodeIt queue, reusable presets and per-job encoding settings. Hardware support depends on FFmpeg and the GPU.",
+    "text": [
+      {
+        "text": "THE TOOLSET",
+        "bounds": [
+          64.0,
+          62.640625,
+          184.0107421875,
+          76.2548828125
+        ],
+        "baseline": 76,
+        "row": null
+      },
+      {
+        "text": "01",
+        "bounds": [
+          64.0,
+          168.40625,
+          119.400390625,
+          207.736328125
+        ],
+        "baseline": 207,
+        "row": "numbers"
+      },
+      {
+        "text": "Queue",
+        "bounds": [
+          64.0,
+          247.66,
+          202.12638579499597,
+          280.66
+        ],
+        "baseline": 280,
+        "row": "heads"
+      },
+      {
+        "text": "Keep sources and progress together.",
+        "bounds": [
+          64.0,
+          326.16,
+          443.7853009063997,
+          347.104
+        ],
+        "baseline": 342,
+        "row": "body0"
+      },
+      {
+        "text": "Apply changes to selected jobs.",
+        "bounds": [
+          64.0,
+          366.13799395733514,
+          390.7555015106662,
+          387.104
+        ],
+        "baseline": 382,
+        "row": "body1"
+      },
+      {
+        "text": "02",
+        "bounds": [
+          512.0,
+          168.40625,
+          566.51171875,
+          207.736328125
+        ],
+        "baseline": 207,
+        "row": "numbers"
+      },
+      {
+        "text": "Presets",
+        "bounds": [
+          512.0,
+          248.32,
+          670.7293333333333,
+          280.66
+        ],
+        "baseline": 280,
+        "row": "heads"
+      },
+      {
+        "text": "Choose a delivery target.",
+        "bounds": [
+          512.0,
+          326.13799395733514,
+          769.3804012085329,
+          347.104
+        ],
+        "baseline": 342,
+        "row": "body0"
+      },
+      {
+        "text": "Save your own reusable settings.",
+        "bounds": [
+          512.0,
+          366.13799395733514,
+          846.4442006042665,
+          387.104
+        ],
+        "baseline": 382,
+        "row": "body1"
+      },
+      {
+        "text": "03",
+        "bounds": [
+          960.0,
+          168.40625,
+          1015.01953125,
+          207.736328125
+        ],
+        "baseline": 207,
+        "row": "numbers"
+      },
+      {
+        "text": "Encoding",
+        "bounds": [
+          960.0,
+          247.88,
+          1152.5919999999999,
+          291.22
+        ],
+        "baseline": 280,
+        "row": "heads"
+      },
+      {
+        "text": "Adjust video and audio options.",
+        "bounds": [
+          960.0,
+          326.13799395733514,
+          1280.7555015106661,
+          346.84
+        ],
+        "baseline": 342,
+        "row": "body0"
+      },
+      {
+        "text": "Set the output path for each job.",
+        "bounds": [
+          960.0,
+          366.13799395733514,
+          1297.4442006042664,
+          386.84
+        ],
+        "baseline": 382,
+        "row": "body1"
+      },
+      {
+        "text": "Hardware acceleration depends on the bundled FFmpeg build and your GPU.",
+        "bounds": [
+          64.0,
+          426.2275390625,
+          839.30859375,
+          443.8671875
+        ],
+        "baseline": 440,
+        "row": null
+      }
+    ]
+  },
+  {
+    "file": "Graphics/workflow-dark.svg",
+    "width": 1472,
+    "height": 560,
+    "alt": "EncodeIt's file-based workflow: add sources, choose a preset, start the queue, and collect files from the chosen output path.",
+    "text": [
+      {
+        "text": "THE ENCODING WORKFLOW",
+        "bounds": [
+          64.0,
+          52.640625,
+          294.423828125,
+          66.2548828125
+        ],
+        "baseline": 66,
+        "row": null
+      },
+      {
+        "text": "From source to delivery.",
+        "bounds": [
+          64.0,
+          110.43,
+          756.9773333333333,
+          170.88
+        ],
+        "baseline": 156,
+        "row": null
+      },
+      {
+        "text": "01",
+        "bounds": [
+          87.89990234375,
+          268.16748046875,
+          116.10009765625,
+          287.83251953125
+        ],
+        "baseline": 287.46435546875,
+        "row": null
+      },
+      {
+        "text": "Add media",
+        "bounds": [
+          64.0,
+          354.1,
+          210.68,
+          376.45
+        ],
+        "baseline": 376,
+        "row": "head"
+      },
+      {
+        "text": "Drop files or browse.",
+        "bounds": [
+          64.0,
+          406.84849391155734,
+          256.7057259132664,
+          426.62
+        ],
+        "baseline": 422,
+        "row": "detail"
+      },
+      {
+        "text": "02",
+        "bounds": [
+          424.1220703125,
+          268.16748046875,
+          451.8779296875,
+          287.83251953125
+        ],
+        "baseline": 287.46435546875,
+        "row": null
+      },
+      {
+        "text": "Choose a preset",
+        "bounds": [
+          400.0,
+          353.95,
+          633.47,
+          383.2
+        ],
+        "baseline": 376,
+        "row": "head"
+      },
+      {
+        "text": "Review the job settings.",
+        "bounds": [
+          400.0,
+          406.84849391155734,
+          626.7057259132664,
+          426.872
+        ],
+        "baseline": 422,
+        "row": "detail"
+      },
+      {
+        "text": "03",
+        "bounds": [
+          759.9951171875,
+          268.16748046875,
+          788.0048828125,
+          287.83251953125
+        ],
+        "baseline": 287.46435546875,
+        "row": null
+      },
+      {
+        "text": "Start the queue",
+        "bounds": [
+          736.0,
+          353.9698615916955,
+          958.56799031477,
+          383.2
+        ],
+        "baseline": 376,
+        "row": "head"
+      },
+      {
+        "text": "Follow FFmpeg progress.",
+        "bounds": [
+          736.0,
+          406.88,
+          971.7057259132664,
+          426.872
+        ],
+        "baseline": 422,
+        "row": "detail"
+      },
+      {
+        "text": "04",
+        "bounds": [
+          1095.6396484375,
+          268.16748046875,
+          1124.3603515625,
+          287.83251953125
+        ],
+        "baseline": 287.46435546875,
+        "row": null
+      },
+      {
+        "text": "Deliver files",
+        "bounds": [
+          1072.0,
+          353.95,
+          1236.77,
+          376.45
+        ],
+        "baseline": 376,
+        "row": "head"
+      },
+      {
+        "text": "Use your output path.",
+        "bounds": [
+          1072.0,
+          406.88,
+          1277.838027130955,
+          426.62
+        ],
+        "baseline": 422,
+        "row": "detail"
+      },
+      {
+        "text": "ADD SOURCE \u2192 PRESET \u2192 QUEUE \u2192 OUTPUT",
+        "bounds": [
+          64.0,
+          506.640625,
+          459.0986328125,
+          522.373046875
+        ],
+        "baseline": 520,
+        "row": null
+      }
+    ]
+  },
+  {
+    "file": "Graphics/integrations-dark.svg",
+    "width": 1472,
+    "height": 660,
+    "alt": "After Effects, Premiere Pro and DaVinci Resolve export files into watched folders. EncodeIt waits for writes to settle, then encodes to output. It does not replace host codecs.",
+    "text": [
+      {
+        "text": "FILE-BASED HANDOFFS",
+        "bounds": [
+          64.0,
+          54.640625,
+          269.6025390625,
+          68.2548828125
+        ],
+        "baseline": 68,
+        "row": null
+      },
+      {
+        "text": "Render there. Encode here.",
+        "bounds": [
+          64.0,
+          106.36,
+          848.9773333333333,
+          151.93
+        ],
+        "baseline": 151,
+        "row": null
+      },
+      {
+        "text": "After Effects",
+        "bounds": [
+          64.0,
+          213.95,
+          241.185,
+          236.45
+        ],
+        "baseline": 236,
+        "row": null
+      },
+      {
+        "text": "from-ae",
+        "bounds": [
+          64.0,
+          258.32421875,
+          138.0595703125,
+          272.2548828125
+        ],
+        "baseline": 272,
+        "row": null
+      },
+      {
+        "text": "Premiere Pro",
+        "bounds": [
+          64.0,
+          334.1375,
+          239.8475,
+          356.45
+        ],
+        "baseline": 356,
+        "row": null
+      },
+      {
+        "text": "from-premiere",
+        "bounds": [
+          64.0,
+          378.32421875,
+          204.0595703125,
+          395.744140625
+        ],
+        "baseline": 392,
+        "row": null
+      },
+      {
+        "text": "DaVinci Resolve",
+        "bounds": [
+          64.0,
+          453.95,
+          283.48058991363354,
+          476.45
+        ],
+        "baseline": 476,
+        "row": null
+      },
+      {
+        "text": "from-resolve",
+        "bounds": [
+          64.0,
+          498.2275390625,
+          193.0595703125,
+          512.2548828125
+        ],
+        "baseline": 512,
+        "row": null
+      },
+      {
+        "text": "EncodeIt queue",
+        "bounds": [
+          863.701604519774,
+          332.55999999999995,
+          1072.298395480226,
+          359.44
+        ],
+        "baseline": 352.71999999999997,
+        "row": null
+      },
+      {
+        "text": "OUTPUT",
+        "bounds": [
+          1337.560546875,
+          279.15625,
+          1408.0,
+          294.283203125
+        ],
+        "baseline": 294,
+        "row": null
+      },
+      {
+        "text": "Wait for file size to settle.",
+        "bounds": [
+          824.0,
+          417.5599938962981,
+          1055.5880012207404,
+          432.24
+        ],
+        "baseline": 432,
+        "row": null
+      },
+      {
+        "text": "Keep EncodeIt running. Only new arrivals after a watch is enabled are queued.",
+        "bounds": [
+          64.0,
+          576.5599938962981,
+          768.6260009155552,
+          595.64
+        ],
+        "baseline": 591,
+        "row": null
+      },
+      {
+        "text": "This does not replace the host application's codecs or Deliver interface.",
+        "bounds": [
+          64.0,
+          610.9,
+          718.5280012207404,
+          630.4
+        ],
+        "baseline": 626,
+        "row": null
+      }
+    ]
+  },
+  {
+    "file": "Graphics/social-card-dark.svg",
+    "width": 1200,
+    "height": 630,
+    "alt": "EncodeIt social preview. Open-source FFmpeg batch encoding for macOS, Windows and Linux.",
+    "text": [
+      {
+        "text": "OPEN-SOURCE BATCH MEDIA ENCODING",
+        "bounds": [
+          64.0,
+          54.640625,
+          413.6748046875,
+          68.2548828125
+        ],
+        "baseline": 68,
+        "row": null
+      },
+      {
+        "text": "EncodeIt",
+        "bounds": [
+          64.0,
+          144.0,
+          696.475,
+          254.25
+        ],
+        "baseline": 252,
+        "row": null
+      },
+      {
+        "text": "01",
+        "bounds": [
+          64.0,
+          384.9296875,
+          88.79248046875,
+          402.32568359375
+        ],
+        "baseline": 402,
+        "row": "numbers"
+      },
+      {
+        "text": "Add media",
+        "bounds": [
+          64.0,
+          442.1375,
+          207.57750000000001,
+          464.45
+        ],
+        "baseline": 464,
+        "row": "stages"
+      },
+      {
+        "text": "02",
+        "bounds": [
+          421.0,
+          384.9296875,
+          445.3994140625,
+          402.32568359375
+        ],
+        "baseline": 402,
+        "row": "numbers"
+      },
+      {
+        "text": "Set the preset",
+        "bounds": [
+          421.0,
+          441.9673941227312,
+          619.1825,
+          471.2
+        ],
+        "baseline": 464,
+        "row": "stages"
+      },
+      {
+        "text": "03",
+        "bounds": [
+          778.0,
+          384.9296875,
+          802.6240234375,
+          402.32568359375
+        ],
+        "baseline": 402,
+        "row": "numbers"
+      },
+      {
+        "text": "Run the queue",
+        "bounds": [
+          778.0,
+          442.4,
+          979.4805899136336,
+          471.2
+        ],
+        "baseline": 464,
+        "row": "stages"
+      },
+      {
+        "text": "POWERED BY FFMPEG",
+        "bounds": [
+          64.0,
+          570.640625,
+          247.9716796875,
+          584.2548828125
+        ],
+        "baseline": 584,
+        "row": "footer"
+      },
+      {
+        "text": "MACOS / WINDOWS / LINUX",
+        "bounds": [
+          884.0859375,
+          570.640625,
+          1136.0,
+          585.669921875
+        ],
+        "baseline": 584,
+        "row": "footer"
+      }
+    ]
+  },
+  {
+    "file": "Brand/encodeit-horizontal-light.svg",
+    "width": 526,
+    "height": 160,
+    "alt": "EncodeIt transparent horizontal logo for light backgrounds.",
+    "text": [
+      {
+        "text": "EncodeIt",
+        "bounds": [
+          140.0,
+          49.13000000000001,
+          493.586,
+          110.87000000000002
+        ],
+        "baseline": 109.61000000000001,
+        "row": null
+      }
+    ]
+  },
+  {
+    "file": "Brand/encodeit-wordmark-light.svg",
+    "width": 418,
+    "height": 126,
+    "alt": "EncodeIt transparent wordmark.",
+    "text": [
+      {
+        "text": "EncodeIt",
+        "bounds": [
+          32.0,
+          32.0,
+          385.586,
+          93.74000000000001
+        ],
+        "baseline": 92.48,
+        "row": null
+      }
+    ]
+  },
+  {
+    "file": "Brand/encodeit-stacked-light.svg",
+    "width": 418,
+    "height": 246,
+    "alt": "EncodeIt transparent stacked logo.",
+    "text": [
+      {
+        "text": "EncodeIt",
+        "bounds": [
+          32.207,
+          152.0,
+          385.793,
+          213.74
+        ],
+        "baseline": 212.48000000000002,
+        "row": null
+      }
+    ]
+  },
+  {
+    "file": "Brand/encodeit-horizontal-dark.svg",
+    "width": 526,
+    "height": 160,
+    "alt": "EncodeIt transparent horizontal logo for dark backgrounds.",
+    "text": [
+      {
+        "text": "EncodeIt",
+        "bounds": [
+          140.0,
+          49.13000000000001,
+          493.586,
+          110.87000000000002
+        ],
+        "baseline": 109.61000000000001,
+        "row": null
+      }
+    ]
+  },
+  {
+    "file": "Brand/encodeit-wordmark-dark.svg",
+    "width": 418,
+    "height": 126,
+    "alt": "EncodeIt transparent wordmark.",
+    "text": [
+      {
+        "text": "EncodeIt",
+        "bounds": [
+          32.0,
+          32.0,
+          385.586,
+          93.74000000000001
+        ],
+        "baseline": 92.48,
+        "row": null
+      }
+    ]
+  },
+  {
+    "file": "Brand/encodeit-stacked-dark.svg",
+    "width": 418,
+    "height": 246,
+    "alt": "EncodeIt transparent stacked logo.",
+    "text": [
+      {
+        "text": "EncodeIt",
+        "bounds": [
+          32.207,
+          152.0,
+          385.793,
+          213.74
+        ],
+        "baseline": 212.48000000000002,
+        "row": null
+      }
+    ]
+  },
+  {
+    "file": "Brand/logo-color.svg",
+    "width": 256,
+    "height": 256,
+    "alt": "EncodeIt approved full-color symbol.",
+    "text": []
+  }
+]
